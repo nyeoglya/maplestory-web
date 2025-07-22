@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
 
-// Dynamically import the PhaserGame component with ssr: false
 const DynamicPhaserGame = dynamic(() => import('./PhaserGame'), {
   ssr: false,
   loading: () => <p>Loading game...</p>,

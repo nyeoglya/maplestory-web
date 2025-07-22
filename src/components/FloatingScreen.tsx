@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react'; // useEffect를 임포트합니다.
+import React, { useState, useRef, useEffect } from 'react';
 import Draggable, { DraggableData } from 'react-draggable';
 
 function clamp(x: number, min: number, max: number) {

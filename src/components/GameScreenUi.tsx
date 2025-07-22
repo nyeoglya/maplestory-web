@@ -1,10 +1,28 @@
 "use client";
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import Image from 'next/image';
 
 import FloatingScreen from './FloatingScreen';
+import PlayerbasicInfoUi from './PlayerBasicInfoUi';
+import PlayerEffectUi from './PlayerEffectUi';
 
 const GameScreenUi: React.FC = () => {
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    // event.preventDefault();
+    if (event.key.toLowerCase() === 'i') {
+      console.log("i 키가 감지되었습니다!");
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <div style={{
@@ -24,14 +42,22 @@ const GameScreenUi: React.FC = () => {
         top: 0,
         left: 0,
       }}>
-        <div style={{
-          position: 'absolute',
-          left: 'calc(25% - 40px)',
-          width: 40,
-          height: 40,
-          backgroundColor: 'red'
-        }}></div>
-        <div style={{
+        <Image
+          id='bossFace'
+          key='bossFace'
+          src={'/assets/bossFace.jpg'}
+          alt={`bossFace`}
+          width={40}
+          height={40}
+          style={{
+            objectFit: 'cover',
+            position: 'absolute',
+            left: 'calc(25% - 40px)',
+            borderBottomLeftRadius: 5,
+            borderBottomRightRadius: 5,
+          }}
+        />
+        <div id='bossHealthBar' style={{
           position: 'absolute',
           left: '25%',
           width: '50%',
@@ -56,25 +82,9 @@ const GameScreenUi: React.FC = () => {
           alignItems: 'center',
         }}>
           <p>남은 시간</p>
-          <p>30분 00초</p>
+          <p id='bossRemainingTime'>30분 00초</p>
         </div>
-        <div style={{
-          position: 'absolute',
-          display: 'flex',
-          flexDirection: 'row',
-          right: 0,
-          backgroundColor: 'purple',
-          width: '25%',
-          height: 200
-        }}>
-          <div style={{
-            position: 'absolute',
-            right: 0,
-            backgroundColor: 'yellow',
-            width: 50,
-            height: 50
-          }}></div>
-        </div>
+        <PlayerEffectUi />
       </div>
       <div style={{
         position: 'absolute',
@@ -83,20 +93,7 @@ const GameScreenUi: React.FC = () => {
         left: 0,
         height: 10,
       }}>
-        <div style={{
-          position: 'absolute',
-          display: 'flex',
-          flexDirection: 'column',
-          width: 200,
-          bottom: 10,
-          left: 'calc(50% - 100px)',
-          backgroundColor: 'green',
-          alignItems: 'center',
-        }}>
-          <p>레벨/이름</p>
-          <p>체력: ???</p>
-          <p>마나: ???</p>
-        </div>
+        <PlayerbasicInfoUi />
         <div style={{
           position: 'absolute',
           display: 'flex',
