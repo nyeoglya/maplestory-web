@@ -1,13 +1,13 @@
 "use client";
 
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import Image from 'next/image';
 
 import PlayerbasicInfoUi from './PlayerBasicInfoUi';
 import PlayerEffectUi from './PlayerEffectUi';
-import DraggableCircle from '@/windows/DraggableCircle';
 import InventoryWindow from '@/windows/InventoryWindow';
 import ArmorWindow from '@/windows/ArmorWindow';
+import DraggableItem from '@/windows/DraggableItem';
 
 const GameScreenUi: React.FC = () => {
 
@@ -36,8 +36,9 @@ const GameScreenUi: React.FC = () => {
       zIndex: 999,
       pointerEvents: 'none',
     }}>
-      <InventoryWindow />
       <ArmorWindow />
+      <InventoryWindow />
+      <DraggableItem />
       <div style={{
         position: 'absolute',
         width: '100%',

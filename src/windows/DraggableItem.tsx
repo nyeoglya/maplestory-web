@@ -1,46 +1,65 @@
 "use client";
 
 import { Vector } from 'matter';
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import windowManager from './WindowManager';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import gameManager from '@/utils/GameManager';
 
-const DragglableItem: React.FC = () => {
-  const positionRef = useRef<Vector>({x: 0, y: 20});
-  const [position, setPosition] = useState<Vector>(positionRef.current);
-  const isDragging = useRef<boolean>(false);
-  const offset = useRef<Vector>({ x: 0, y: 0 });
-  const [zIndex, setZIndex] = useState<number | undefined>(undefined);
+const DraggableItem: React.FC = () => {
+  const [position, setPosition] = useState<Vector>({x: 0, y: 0});
+  const [imgPath, setImgPath] = useState<string>('/assets/item.png');
+  const [isMouseItem, setIsMouseItem] = useState<boolean>(false);
+  const gridSize = 75;
 
-  const initialItemData = {
-    id: 'item',
-    pos: position,
-    posRef: positionRef,
-    setPos: setPosition,
-    isDragging: isDragging,
-    offset: offset,
-    width: 75,
-    height: 75,
-    setZIndex: setZIndex,
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsMouseItem(false);
   }
+
+  const handleMouseMove = (e: MouseEvent) => {
+    setPosition({x: e.clientX - 37.5, y: e.clientY - 37.5});
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    if (gameManager.inventoryManager.mouseItem) {
+      setIsMouseItem(true);
+      setImgPath(gameManager.inventoryManager.mouseItem.itemIconPath);
+    }
+  }, [gameManager.inventoryManager.mouseItem]);
 
   return (
     <div
       style={{
         position: 'absolute',
-        left: position.x,
-        top: position.y,
-        width: 75,
-        height: 75,
+        left: isMouseItem ? position.x : 0,
+        top: isMouseItem ? position.y : 0,
+        width: gridSize,
+        height: gridSize,
         backgroundColor: 'blue',
         cursor: 'grab',
-        display: 'flex',
-        flexDirection: 'column',
         userSelect: 'none',
         pointerEvents: 'auto',
+        zIndex: 9999,
+        visibility: isMouseItem ? 'visible' : 'collapse',
       }}
-      onMouseDown={windowManager.handleMouseDown}
-    ></div>
+      onMouseDown={handleMouseDown}
+    >
+      <Image
+        key={'draggableItem'}
+        src={imgPath}
+        alt={`draggableItem`}
+        width={gridSize}
+        height={gridSize}
+        style={{
+          objectFit: 'cover',
+          pointerEvents: 'none',
+        }}
+      />
+    </div>
   );
 };
 
-export default DragglableItem;
+export default DraggableItem;

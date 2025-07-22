@@ -1,6 +1,6 @@
 import EffectManager from "./Effect";
 import { PlayerStat } from "./interface";
-import InventoryManager from "./Item";
+import InventoryManager from "./InventoryManager";
 
 class GameManager {
   public bossRemainingTime: number = 0;

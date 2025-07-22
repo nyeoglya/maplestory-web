@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import DragglableItem from './DraggableItem';
 import windowManager from './WindowManager';
 import { Vector } from 'matter';
+import gameManager from '@/utils/GameManager';
+import Image from 'next/image';
+import { Item } from '@/utils/Item';
 
 const InventoryWindow: React.FC = () => {
   const positionRef = useRef<Vector>({x: 50, y: 50});
@@ -11,6 +13,8 @@ const InventoryWindow: React.FC = () => {
   const isDragging = useRef<boolean>(false);
   const offset = useRef<Vector>({ x: 0, y: 0 });
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
+  const [currentPlayerInventory, setCurrentPlayerInventory] = useState<Item[]>(gameManager.inventoryManager.currentPlayerInventory);
+  const gridSize = 75;
 
   const initialInventoryWindowData = {
     id: 'inventory',
@@ -19,14 +23,23 @@ const InventoryWindow: React.FC = () => {
     setPos: setPosition,
     isDragging: isDragging,
     offset: offset,
-    width: 300,
-    height: 600,
+    width: gridSize * 4,
+    height: gridSize * 8,
     setZIndex: setZIndex,
   }
 
   useEffect(() => {
     windowManager.addWindow(initialInventoryWindowData);
+    gameManager.inventoryManager.setCurrentPlayerInventory = setCurrentPlayerInventory;
   }, []);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    windowManager.makeTop('inventory');
+    const relativeX = e.clientX - positionRef.current.x;
+    const relativeY = e.clientY - positionRef.current.y;
+    const itemIndex = Math.floor(relativeX / gridSize) + 4 * Math.floor(relativeY / gridSize);
+    gameManager.inventoryManager.moveItem('inventory', 'mouse', itemIndex);
+  };
 
   return (
     <div
@@ -34,24 +47,26 @@ const InventoryWindow: React.FC = () => {
         position: 'absolute',
         left: position.x,
         top: position.y,
-        width: 300,
-        height: 600,
+        width: initialInventoryWindowData.width,
+        height: initialInventoryWindowData.height,
         backgroundColor: 'gray',
-        cursor: 'grab',
         display: 'flex',
         flexDirection: 'column',
         userSelect: 'none',
         pointerEvents: 'auto',
         zIndex: zIndex || 0
       }}
-      onMouseDown={windowManager.handleMouseDown}
     >
-      <div style={{
-        width: '100%',
-        height: 25,
-        display: 'flex',
-        flexDirection: 'row',
-      }}>
+      <div
+        style={{
+          width: '100%',
+          height: 25,
+          display: 'flex',
+          cursor: 'grab',
+          flexDirection: 'row',
+        }}
+        onMouseDown={windowManager.handleMouseDown}
+      >
         <p style={{marginLeft: 10}}>인벤토리</p>
         <div style={{flexGrow: 1}}/>
         <button style={{
@@ -59,11 +74,32 @@ const InventoryWindow: React.FC = () => {
           height: 25,
         }}>X</button>
       </div>
-      <div style={{
-        flexGrow: 1,
-        backgroundColor: 'white',
-      }}>
-        <DragglableItem />
+      <div
+        style={{
+          flexGrow: 1,
+          position: 'relative',
+          backgroundColor: 'white',
+          overflow: 'hidden',
+        }}
+        onMouseDown={handleMouseDown}
+      >
+        {currentPlayerInventory.map((item, index) => (
+          <Image
+            key={item.uuid}
+            src={item.itemIconPath}
+            alt={`Item ${item.name}`}
+            width={gridSize}
+            height={gridSize}
+            style={{
+              objectFit: 'cover',
+              position: 'absolute',
+              left: `${(index % 4) * gridSize}px`,
+              top: `${Math.floor(index / 4) * gridSize}px`,
+              zIndex: 0,
+              pointerEvents: 'none',
+            }}
+          />
+        ))}
       </div>
     </div>
   );

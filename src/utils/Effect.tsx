@@ -37,16 +37,6 @@ class EffectManager {
   public effectList: typeof Effect[] = [EffectTestA, EffectTestB];
   public currentPlayerEffect: Effect[] = [
     new EffectTestA(),
-    new EffectTestA(),
-    new EffectTestA(),
-    new EffectTestA(),
-    new EffectTestA(),
-    new EffectTestA(),
-    new EffectTestA(),
-    new EffectTestA(),
-    new EffectTestA(),
-    new EffectTestA(),
-    new EffectTestA(),
   ];
 
   constructor () {

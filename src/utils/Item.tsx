@@ -1,30 +1,25 @@
-import {PlayerStat} from "./interface";
+import { PlayerStat } from "./interface";
 
-abstract class Item {
+export abstract class Item {
   constructor(
     public name: string,
     public description: string,
     public itemIconPath: string = '',
+    public uuid: string = crypto.randomUUID(),
   ) {}
-}
 
-class ItemTestA extends Item {
-  constructor() {
-    super(
-      '아이템A',
-      '아이템A입니다.',
-      '',
-    );
-  };
-}
-
-class InventoryManager {
-  public itemList: typeof Item[] = [ItemTestA];
-  public currentPlayerInventory: Item[] = [];
-
-  constructor () {
-
+  // 아이템의 성능
+  public itemEffect(data: PlayerStat): PlayerStat {
+    return data;
   }
 }
 
-export default InventoryManager;
+export class ItemTestA extends Item {
+  constructor() {
+    super(
+      '앱솔칼리버',
+      '끝이 있어야 새로운 시작이 있으니, 사라질 운명 그저 감사할 뿐.',
+      '/assets/item.png',
+    );
+  };
+}
