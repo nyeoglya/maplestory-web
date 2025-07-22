@@ -4,6 +4,7 @@ import { Vector } from 'matter';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import gameManager from '@/utils/GameManager';
+import { Item } from '@/utils/Item';
 
 const DraggableItem: React.FC = () => {
   const [position, setPosition] = useState<Vector>({x: 0, y: 0});
@@ -13,6 +14,7 @@ const DraggableItem: React.FC = () => {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsMouseItem(false);
+    gameManager.inventoryManager.moveItem('mouse', 'inventory'); // TODO: 옮기기
   }
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -21,14 +23,23 @@ const DraggableItem: React.FC = () => {
 
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseMove);
-  }, []);
 
-  useEffect(() => {
-    if (gameManager.inventoryManager.mouseItem) {
-      setIsMouseItem(true);
-      setImgPath(gameManager.inventoryManager.mouseItem.itemIconPath);
-    }
-  }, [gameManager.inventoryManager.mouseItem]);
+    const handleMouseItemUpdate = (newItem: Item | null) => {
+      if (newItem) {
+        setIsMouseItem(true);
+        setImgPath(newItem.itemIconPath);
+      } else {
+        setIsMouseItem(false);
+      }
+    };
+
+    gameManager.inventoryManager.setMouseItem = handleMouseItemUpdate;
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      gameManager.inventoryManager.setMouseItem = undefined;
+    };
+  }, []);
 
   return (
     <div
@@ -38,7 +49,6 @@ const DraggableItem: React.FC = () => {
         top: isMouseItem ? position.y : 0,
         width: gridSize,
         height: gridSize,
-        backgroundColor: 'blue',
         cursor: 'grab',
         userSelect: 'none',
         pointerEvents: 'auto',

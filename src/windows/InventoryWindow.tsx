@@ -32,14 +32,11 @@ const InventoryWindow: React.FC = () => {
     windowManager.addWindow(initialInventoryWindowData);
 
     const handleInventoryUpdate = (newInventory: Item[]) => {
-      // 항상 새로운 배열을 생성하여 상태를 업데이트함으로써
-      // React가 변경을 감지하고 UI를 다시 렌더링하도록 합니다.
       setCurrentPlayerInventory([...newInventory]);
     };
 
     gameManager.inventoryManager.setCurrentPlayerInventory = handleInventoryUpdate;
 
-    // 컴포넌트가 언마운트될 때 콜백을 정리하여 메모리 누수를 방지합니다.
     return () => {
       gameManager.inventoryManager.setCurrentPlayerInventory = undefined;
     };
