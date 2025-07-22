@@ -19,7 +19,7 @@ class InventoryManager {
 
   }
 
-  public setCurrentPlayerInventory: React.Dispatch<React.SetStateAction<Item[]>> | null = null;
+  public setCurrentPlayerInventory: ((newInventory: Item[]) => void) | undefined = undefined;
 
   // from에서 dest로 itemIndex 위치의 아이템 이동
   public moveItem(from: string, dest: string, itemIndex: number) {
