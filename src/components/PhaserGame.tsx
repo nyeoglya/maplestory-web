@@ -79,6 +79,11 @@ class ExampleScene extends Phaser.Scene {
       this.cameras.main.setBounds(0, 0, this.physics.world.bounds.width, this.physics.world.bounds.height);
     }
     // ----------------------------------------
+    this.scale.on('resize', (gameSize: Phaser.Structs.Size) => {
+      if (this.cameras.main) {
+        this.cameras.main.setSize(gameSize.width, gameSize.height);
+      }
+    });
   }
 
   update() {
@@ -135,25 +140,8 @@ const PhaserGame = () => {
 
     const game = new Phaser.Game(config);
 
-    // 윈도우 리사이즈 이벤트에 반응하여 Phaser 게임 캔버스 크기를 업데이트
-    const handleResize = () => {
-      if (game.scale && gameContainerRef.current) {
-        const parentWidth = gameContainerRef.current.clientWidth;
-        const parentHeight = gameContainerRef.current.clientHeight;
-        game.scale.resize(parentWidth, parentHeight);
-
-        const scene = game.scene.getScene('ExampleScene') as ExampleScene;
-        if (scene && scene.cameras && scene.physics && scene.physics.world) {
-          scene.cameras.main.setViewport(0, 0, parentWidth, parentHeight);
-        }
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
     return () => {
       game.destroy(true);
-      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
