@@ -3,9 +3,11 @@
 import React, {useState, useEffect} from 'react';
 import Image from 'next/image';
 
-import FloatingScreen from './FloatingScreen';
 import PlayerbasicInfoUi from './PlayerBasicInfoUi';
 import PlayerEffectUi from './PlayerEffectUi';
+import DraggableCircle from '@/windows/DraggableCircle';
+import InventoryWindow from '@/windows/InventoryWindow';
+import ArmorWindow from '@/windows/ArmorWindow';
 
 const GameScreenUi: React.FC = () => {
 
@@ -34,7 +36,8 @@ const GameScreenUi: React.FC = () => {
       zIndex: 999,
       pointerEvents: 'none',
     }}>
-      {/* <FloatingScreen /> */}
+      <InventoryWindow />
+      <ArmorWindow />
       <div style={{
         position: 'absolute',
         width: '100%',

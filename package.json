@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
     "next": "15.4.2",
     "phaser": "^3.90.0",
     "react": "19.1.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "19.1.0",
     "react-draggable": "^4.5.0",
     "react-icons": "^5.5.0"
@@ -20,6 +23,7 @@
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
+    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.2",
