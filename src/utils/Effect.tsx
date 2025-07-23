@@ -29,7 +29,12 @@ class EffectTestA extends Effect {
 // 디버프
 class EffectTestB extends Effect {
   constructor() {
-    super('효과 테스트 B', '테스트용 효과B 입니다.', 10);
+    super(
+      '효과 테스트 B',
+      '테스트용 효과B 입니다.',
+      10,
+      '/assets/effect.png'
+    );
   }
 }
 
@@ -37,6 +42,7 @@ class EffectManager {
   public effectList: typeof Effect[] = [EffectTestA, EffectTestB];
   public currentPlayerEffect: Effect[] = [
     new EffectTestA(),
+    new EffectTestB(),
   ];
 
   constructor () {

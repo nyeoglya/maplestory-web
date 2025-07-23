@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import * as Phaser from 'phaser';
 
 import gameManager from '@/utils/GameManager';
+import {Entity} from '@/utils/Entity';
 
 class ExampleScene extends Phaser.Scene {
   private player: Phaser.Physics.Arcade.Sprite | null = null;
@@ -11,6 +12,7 @@ class ExampleScene extends Phaser.Scene {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys | null = null;
 
   private enemy: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody | null = null;
+  private tempEntityData: Entity = gameManager.entityManager.entityList[0];
 
   constructor() {
     super('ExampleScene');
@@ -39,17 +41,15 @@ class ExampleScene extends Phaser.Scene {
       .refreshBody();
     
     // 적 생성
-    this.enemy = this.physics.add.sprite(50, 300, 'enemy');
+    this.enemy = this.physics.add.sprite(this.tempEntityData.position.x, this.tempEntityData.position.y, 'enemy');
     this.enemy.setScale(0.3, 0.3);
     this.enemy.setCollideWorldBounds(true);
-    this.enemy.setBounce(0.2);
-    // this.enemy.setImmovable(true); // If you want the enemy to not be pushed by collisions
+    this.enemy.setBounce(0);
 
     // 플레이어 생성
     this.player = this.physics.add.sprite(100, this.physics.world.bounds.height - 400, 'player');
     this.player.setScale(0.8, 0.8);
-
-    this.player.setBounce(0.2);
+    this.player.setBounce(0);
     this.player.setCollideWorldBounds(true);
 
     // 플레이어 애니메이션
@@ -98,10 +98,15 @@ class ExampleScene extends Phaser.Scene {
   update() {
     if (!this.enemy) return;
 
-    if (this.enemy.x < 100) {
+    if (this.tempEntityData.position.x < 100) {
       this.enemy.setVelocityX(100);
-    } else if (this.enemy.x > 700) {
+    } else if (this.tempEntityData.position.x > 700) {
       this.enemy.setVelocityX(-100);
+    }
+
+    this.tempEntityData.position = {
+      x: this.enemy.x,
+      y: this.enemy.y
     }
     
     if (!this.player || !this.cursors) {
@@ -126,6 +131,31 @@ class ExampleScene extends Phaser.Scene {
       this.player.setVelocityY(-200);
     }
   }
+}
+
+const spawnDamageText = (scene: Phaser.Scene, x: number, y: number, text: string, duration = 1000, riseHeight = 50) => {
+  // 텍스트 객체 생성
+  const damageText = scene.add.text(x, y, text, {
+    fontSize: '20px',
+    stroke: '#000000',
+    strokeThickness: 2,
+    fontStyle: 'bold',
+  });
+
+  // 텍스트의 원점을 중앙 하단으로 설정하여 숫자가 위로 솟아오르게 함
+  damageText.setOrigin(0.5, 1);
+
+  // 애니메이션 (움직임 + 페이드)
+  scene.tweens.add({
+    targets: damageText,
+    y: y - riseHeight,
+    alpha: { from: 1, to: 0 },
+    duration: duration,
+    ease: 'Power1',
+    onComplete: () => {
+      damageText.destroy();
+    }
+  });
 }
 
 const PhaserGame = () => {

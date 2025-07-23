@@ -1,16 +1,18 @@
 import { Vector } from "matter";
 import { PlayerStat } from "./interface";
+import { randomUUID } from "crypto";
 
-class Entity {
+export class Entity {
   public isDirectingLeft: boolean = true;
 
   constructor(
+    public position: Vector = {x: 0, y: 0},
     public health: number = 100,
+    public maxHealth: number = 100,
     public damage: number = 20,
     public speed: number = 20, 
     public isMove: boolean = true,
     public affectGravity: boolean = true,
-    public position: Vector | null = null,
     public entityImgPath: string = '',
   ) {}
 
@@ -25,7 +27,7 @@ class Entity {
   }
 }
 
-class TestEntityA extends Entity {
+export class TestEntityA extends Entity {
   constructor(initialPos: Vector) {
     super();
     this.position = initialPos;
@@ -42,7 +44,7 @@ class TestEntityA extends Entity {
   }
 }
 
-class BossEntity extends Entity {
+export class BossEntity extends Entity {
   constructor() {
     super();
     this.entityImgPath = '';
@@ -50,22 +52,41 @@ class BossEntity extends Entity {
 }
 
 class EntityManager {
-  public currentEntityList: Entity[] = [
-    new TestEntityA({x: 50, y: 200}),
-  ];
+  public entityList: Entity[] = [];
 
-  constructor() {
-    
+  constructor(
+    spawnLocationList: Vector[] = [],
+    entitySpawnCooltime: number = 30,
+  ) {
+    spawnLocationList.forEach((pos: Vector) => {
+      this.entityList.push(new TestEntityA(pos));
+    });
   }
 
   // 모든 entity에 대해 주변에 공격을 시도.
   public entityAttack(playerData: PlayerStat) {
-    this.currentEntityList.forEach(entity => {
-      if (entity.isAttackAvailable(playerData)) {
+    this.entityList.forEach((entity: Entity) => {
+      console.log(entity);
+      if (entity.health > 0 &&
+        entity.isAttackAvailable(playerData)) {
         playerData = entity.attack(playerData);
       }
     });
     return playerData;
+  }
+
+  // 특정 조건에 맞는 entity를 전부 찾기
+  public findEntity() {
+    
+  }
+
+  // entity에게 데미지를 입히기 (임시)
+  public damageEntity() {
+    this.entityList.forEach((entity: Entity) => {
+      if (entity.health > 0) {
+        entity.health -= Math.min(entity.health, 20);
+      }
+    })
   }
 }
 

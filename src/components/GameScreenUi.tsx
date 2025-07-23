@@ -1,31 +1,14 @@
 "use client";
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import Image from 'next/image';
 
 import PlayerbasicInfoUi from './PlayerBasicInfoUi';
 import PlayerEffectUi from './PlayerEffectUi';
-import InventoryWindow from '@/windows/InventoryWindow';
-import ArmorWindow from '@/windows/ArmorWindow';
+import PlayerSkillUi from './PlayerSkillUi';
 import DraggableItem from '@/windows/DraggableItem';
 
 const GameScreenUi: React.FC = () => {
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    // event.preventDefault();
-    if (event.key.toLowerCase() === 'i') {
-      console.log("i 키가 감지되었습니다!");
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
-
   return (
     <div style={{
       position: 'absolute',
@@ -118,24 +101,7 @@ const GameScreenUi: React.FC = () => {
             height: 50
           }}></div>
         </div>
-        <div style={{
-          position: 'absolute',
-          display: 'flex',
-          flexDirection: 'row',
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'purple',
-          width: '25%',
-          height: 80
-        }}>
-          <div style={{
-            position: 'absolute',
-            right: 0,
-            backgroundColor: 'yellow',
-            width: 40,
-            height: 40
-          }}></div>
-        </div>
+        <PlayerSkillUi />
       </div>
     </div>
   );
