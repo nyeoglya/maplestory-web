@@ -1,15 +1,20 @@
 "use client";
 
-import { Item, ItemTestA } from "./Item";
+import { Item, ItemTestA, ItemTestB, ItemTestC, ItemTestD } from "./Item";
 
 class InventoryManager {
   public itemList: typeof Item[] = [ItemTestA];
   public currentPlayerInventory: Item[] = [
-    new ItemTestA()
+    new ItemTestA(),
+    new ItemTestB(),
+    new ItemTestC(),
+    new ItemTestD()
   ];
   public mouseItem: Item | null = null;
   public armorHead: Item | null = null;
   public armorChest: Item | null = null;
+
+  public armorLocList: string[] = ['armorHead', 'armorChest']; // index 0부터 시작
 
   constructor () {
 
@@ -20,22 +25,34 @@ class InventoryManager {
 
   // from에서 dest로 itemIndex 위치의 아이템 이동
   public moveItem(from: string, dest: string, itemIndex: number = 0) {
-    if (from === 'inventory' && dest === 'mouse') {
-      if (this.currentPlayerInventory.length > itemIndex) {
-        const tempItem = this.currentPlayerInventory[itemIndex];
-        this.currentPlayerInventory.splice(itemIndex, 1);
-        this.mouseItem = tempItem;
-        
-        this.setCurrentPlayerInventory?.(this.currentPlayerInventory);
-        this.setMouseItem?.(this.mouseItem);
-      }
-    } else if (from === 'mouse' && dest === 'inventory') {
-      if (this.mouseItem) {
-        this.currentPlayerInventory.push(this.mouseItem);
-        this.mouseItem = null;
+    if (from === 'mouse' && this.mouseItem) {
+      if (dest === 'inventory') {
+        if (this.mouseItem) {
+          this.currentPlayerInventory.push(this.mouseItem);
+          this.mouseItem = null;
 
-        this.setCurrentPlayerInventory?.(this.currentPlayerInventory);
-        this.setMouseItem?.(this.mouseItem);
+          this.setCurrentPlayerInventory?.(this.currentPlayerInventory);
+          this.setMouseItem?.(this.mouseItem);
+        }
+      } else if (dest in this.armorLocList) {
+        if (this.mouseItem) {
+          // TODO
+        }
+      }
+    } else if (dest === 'mouse') {
+      if (this.mouseItem) { } else { } // TODO: temp item 넣기
+
+      if (from === 'inventory') {
+        if (this.currentPlayerInventory.length > itemIndex) {
+          const tempItem = this.currentPlayerInventory[itemIndex];
+          this.currentPlayerInventory.splice(itemIndex, 1);
+          this.mouseItem = tempItem;
+          
+          this.setCurrentPlayerInventory?.(this.currentPlayerInventory);
+          this.setMouseItem?.(this.mouseItem);
+        }
+      } else if (from in this.armorLocList) {
+        // TODO
       }
     }
   }

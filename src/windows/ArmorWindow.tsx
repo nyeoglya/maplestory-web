@@ -64,6 +64,13 @@ const ArmorWindow: React.FC = () => {
         flexGrow: 1,
         backgroundColor: 'white',
       }}>
+        <div style={{
+          backgroundColor: 'blue',
+          width: 75,
+          height: 75,
+        }}>
+
+        </div>
       </div>
     </div>
   );

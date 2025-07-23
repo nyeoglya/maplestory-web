@@ -10,6 +10,8 @@ class ExampleScene extends Phaser.Scene {
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys | null = null;
 
+  private enemy: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody | null = null;
+
   constructor() {
     super('ExampleScene');
   }
@@ -19,10 +21,12 @@ class ExampleScene extends Phaser.Scene {
     this.load.image('sky', 'assets/testbackground.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 111 });
+
+    this.load.image('enemy', 'assets/boss.png');
   }
 
   create() {
-    this.physics.world.setBounds(0, 0, 1600, 900);
+    this.physics.world.setBounds(0, 0, 2400, 900);
 
     const sky = this.add.image(0, 0, 'sky').setOrigin(0, 0);
     sky.setScale(this.physics.world.bounds.width / sky.width, this.physics.world.bounds.height / sky.height);
@@ -33,12 +37,19 @@ class ExampleScene extends Phaser.Scene {
     (this.platforms.create(this.physics.world.bounds.width / 2, this.physics.world.bounds.height - 150, 'ground') as Phaser.Physics.Arcade.Sprite)
       .setScale(this.physics.world.bounds.width, 1)
       .refreshBody();
+    
+    // 적 생성
+    this.enemy = this.physics.add.sprite(50, 300, 'enemy');
+    this.enemy.setScale(0.3, 0.3);
+    this.enemy.setCollideWorldBounds(true);
+    this.enemy.setBounce(0.2);
+    // this.enemy.setImmovable(true); // If you want the enemy to not be pushed by collisions
 
+    // 플레이어 생성
     this.player = this.physics.add.sprite(100, this.physics.world.bounds.height - 400, 'player');
     this.player.setScale(0.8, 0.8);
 
     this.player.setBounce(0.2);
-    // 플레이어가 월드 경계를 벗어날 수 없도록 설정합니다.
     this.player.setCollideWorldBounds(true);
 
     // 플레이어 애니메이션
@@ -65,6 +76,11 @@ class ExampleScene extends Phaser.Scene {
       this.physics.add.collider(this.player, this.platforms);
     }
 
+    // 적 플랫폼 충돌 설정
+    if (this.enemy && this.platforms) {
+      this.physics.add.collider(this.enemy, this.platforms);
+    }
+
     this.cursors = this.input.keyboard?.createCursorKeys() || null;
 
     if (this.player) {
@@ -80,11 +96,19 @@ class ExampleScene extends Phaser.Scene {
   }
 
   update() {
+    if (!this.enemy) return;
+
+    if (this.enemy.x < 100) {
+      this.enemy.setVelocityX(100);
+    } else if (this.enemy.x > 700) {
+      this.enemy.setVelocityX(-100);
+    }
+    
     if (!this.player || !this.cursors) {
       return;
     }
 
-    // 플레이어 움직임 로직
+    // 플레이어 움직임
     const playerSpeed = 200;
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-playerSpeed);
@@ -97,9 +121,9 @@ class ExampleScene extends Phaser.Scene {
       this.player.anims.play('turn');
     }
 
-    // 점프 로직
+    // 플레이어 점프
     if (this.cursors.up.isDown && this.player.body instanceof Phaser.Physics.Arcade.Body && this.player.body.touching.down) {
-      this.player.setVelocityY(-200); // 점프력 증가
+      this.player.setVelocityY(-200);
     }
   }
 }
@@ -120,7 +144,7 @@ const PhaserGame = () => {
         default: 'arcade',
         arcade: {
           gravity: { x: 0, y: 500 },
-          debug: false // 디버그 모드는 필요할 때만 true로 변경하세요.
+          debug: false
         }
       },
       scale: {
@@ -150,7 +174,7 @@ const PhaserGame = () => {
         left: 0,
       }}
     >
-      {/* Phaser 게임이 여기에 렌더링됩니다. */}
+      {/* Phaser 게임이 렌더링되는 장소. */}
     </div>
   );
 };

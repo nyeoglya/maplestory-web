@@ -36,8 +36,10 @@ const GameScreenUi: React.FC = () => {
       zIndex: 999,
       pointerEvents: 'none',
     }}>
+      {/*
       <ArmorWindow />
       <InventoryWindow />
+      */}
       <DraggableItem />
       <div style={{
         position: 'absolute',

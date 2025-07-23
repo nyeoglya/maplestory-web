@@ -23,3 +23,33 @@ export class ItemTestA extends Item {
     );
   };
 }
+
+export class ItemTestB extends Item {
+  constructor() {
+    super(
+      '투구',
+      '',
+      '/assets/head.png',
+    );
+  };
+}
+
+export class ItemTestC extends Item {
+  constructor() {
+    super(
+      '갑옷',
+      '',
+      '/assets/chestplate.png',
+    );
+  };
+}
+
+export class ItemTestD extends Item {
+  constructor() {
+    super(
+      '레깅스',
+      '',
+      '/assets/leggings.png',
+    );
+  };
+}
