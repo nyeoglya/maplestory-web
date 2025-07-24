@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import * as Phaser from 'phaser';
 
 import gameManager from '@/utils/GameManager';
-import Entity from './PhaserEntity';
+import Entity, { TestEntityA } from './PhaserEntity';
 import { PhaserPlayer } from './PhaserPlayer';
 import EntityManager from '@/utils/EntityManager';
 import { Skill } from '@/utils/Skill';
@@ -14,7 +14,6 @@ class ExampleScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
 
-  // private entityTest1: Entity | undefined;
   private entityManager: EntityManager;
   private entitySpawnList: Vector[] = [
     {x: 200, y: 50},
@@ -25,8 +24,6 @@ class ExampleScene extends Phaser.Scene {
   constructor() {
     super('ExampleScene');
     this.entityManager = gameManager.entityManager;
-    // this.entityManager.setEntitySpawnList(this.entitySpawnList);
-    // this.entityManager.initializeEntityList(this);
   }
 
   private getOverlapEntity(
@@ -70,14 +67,13 @@ class ExampleScene extends Phaser.Scene {
       .setScale(this.physics.world.bounds.width, 1)
       .refreshBody();
 
-    // 플레이어 생성
-    this.player = new PhaserPlayer(this, 100, this.physics.world.bounds.height - 400, 'player');
-    gameManager.phaserPlayer = this.player;
-
-    // 플레이어 플랫폼 충돌 설정
-    if (this.player && this.platforms) {
-      this.physics.add.collider(this.player, this.platforms);
-    }
+    // 적 생성
+    this.entityManager.setEntitySpawnList(this.entitySpawnList);
+    this.entityManager.spawnLocationList.forEach((pos: Vector) => {
+      const testEntityA = new TestEntityA(this, pos);
+      this.entityManager.entityList.push(testEntityA);
+    });
+    this.entityManager.createEntityMap();
 
     // 적 플랫폼 충돌 설정
     if (this.platforms) {
@@ -89,15 +85,25 @@ class ExampleScene extends Phaser.Scene {
       });
     }
 
+    // 플레이어 생성
+    this.player = new PhaserPlayer(this, 100, this.physics.world.bounds.height - 400, 'player');
+    gameManager.phaserPlayer = this.player;
+
+    // 플레이어 플랫폼 충돌 설정
+    if (this.player && this.platforms) {
+      this.physics.add.collider(this.player, this.platforms);
+    }
+
     // 스킬 키 매핑
     gameManager.skillManager.skillKeyMap.forEach((skill: Skill, key: string) => {
       const keyButton = this.input.keyboard!.addKey(key);
       keyButton.on('down', () => {
         if (!this.player || !this.player.detectionZone) return;
-        if (gameManager.skillManager.skillCooltimeMap.get(skill) !== undefined) return;
+        if (!skill.isSkillAvailable(gameManager.player) ||
+          gameManager.skillManager.skillCooltimeMap.get(skill) !== undefined) return;
         const overlapEntityList = this.getOverlapEntity(this.player.detectionZone, this.entityManager.entityList);
         gameManager.skillManager.skillUse(skill, gameManager.player, overlapEntityList);
-        this.player.showSkillImg(skill.name);
+        this.player.showSkillImg(skill.skillImgPath);
       });
     });
 
@@ -155,7 +161,7 @@ const PhaserGame = () => {
   useEffect(() => {
     const initialWidth = window.innerWidth;
     const initialHeight = window.innerHeight;
-
+    
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       width: initialWidth,

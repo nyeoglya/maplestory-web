@@ -1,4 +1,3 @@
-import Entity from '@/components/PhaserEntity';
 import EntityManager from './EntityManager';
 import { PlayerStat } from './PlayerStat';
 import {Skill, SkillTestA, SkillTestB, SkillTestC} from './Skill';

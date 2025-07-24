@@ -1,31 +1,19 @@
 import { Vector } from "matter";
-import Entity, { TestEntityA } from "@/components/PhaserEntity";
+import Entity from "@/components/PhaserEntity";
 import { PlayerStat } from "./PlayerStat";
 
 class EntityManager {
   public entityList: Entity[] = [];
   public entityMap: Map<string, Entity> = new Map();
 
-  private createEntityMap(entityList: Entity[]): Map<string, Entity> {
-    const entityMap = new Map<string, Entity>();
-
-    for (const entity of entityList) {
-      entityMap.set(entity.uuid, entity);
+  public createEntityMap() {
+    for (const entity of this.entityList) {
+      this.entityMap.set(entity.uuid, entity);
     }
-
-    return entityMap;
   }
 
   public setEntitySpawnList(entitySpawnList: Vector[]) {
     this.spawnLocationList = entitySpawnList
-  }
-
-  public initializeEntityList(scene: Phaser.Scene) {
-    this.spawnLocationList.forEach((pos: Vector) => {
-      const testEntityA = new TestEntityA(scene, pos);
-      this.entityList.push();
-    });
-    this.createEntityMap(this.entityList);
   }
 
   constructor(

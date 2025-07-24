@@ -33,7 +33,7 @@ export class SkillTestA extends Skill {
       2,
       false,
       '/assets/skill.png',
-      '/assets/skillUse.png',
+      'skillTestA',
     );
   }
 
@@ -58,7 +58,7 @@ export class SkillTestB extends Skill {
       10,
       false,
       '/assets/skill.png',
-      '/assets/skillUse.png',
+      'skillTestA',
     );
   }
 }
@@ -71,7 +71,7 @@ export class SkillTestC extends Skill {
       10,
       false,
       '/assets/skill.png',
-      '/assets/skillUse.png',
+      'skillTestA',
     );
   }
 }

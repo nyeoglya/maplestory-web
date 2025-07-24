@@ -1,5 +1,3 @@
-"use client";
-
 import * as Phaser from 'phaser';
 
 export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {

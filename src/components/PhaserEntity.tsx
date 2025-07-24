@@ -1,5 +1,3 @@
-"use client";
-
 import { PlayerStat } from '@/utils/PlayerStat';
 import { v4 as uuidv4 } from 'uuid';
 import * as Phaser from 'phaser';
@@ -14,7 +12,7 @@ class Entity extends Phaser.GameObjects.Container {
 
   private initialPos: Vector;
   public death: boolean = false;
-  public isDirectingLeft: boolean = true;
+  public directingLeft: boolean = true;
 
   // data와 collider로 공격을 시도한다. 성공할 경우, data를 수정한다. collider는 겹칠 경우에 데미지를 주는 적절한 collider를 선택
   public tryAttack(data: PlayerStat, collider: Phaser.Physics.Arcade.Sprite) {
@@ -26,6 +24,7 @@ class Entity extends Phaser.GameObjects.Container {
   // entity에 데미지 입히기를 시도한다. collider는 겹칠 경우에 데미지를 입히는 적절한 collider를 선택
   public tryDamage(amount: number) {
     this.currentHealth -= amount;
+    this.updateHealthBar(this.currentHealth);
     if (this.currentHealth <= 0) {
       // this.destroy();
       this.setDeath();
@@ -68,14 +67,18 @@ class Entity extends Phaser.GameObjects.Container {
     const barYOffset = -this.sprite.displayHeight / 2 - 20;
 
     this.healthBarBackground = scene.add.graphics();
-    this.healthBarBackground.fillStyle(0x333333, 0.8);
-    this.healthBarBackground.fillRect(-30, barYOffset, 60, 10);
+    this.healthBarBackground.fillStyle(0x777777, 0.8);
+    this.healthBarBackground.fillRect(-30, barYOffset, 60, 5);
     this.add(this.healthBarBackground);
 
     this.healthBar = scene.add.graphics();
     this.healthBar.fillStyle(0x00ff00, 1);
-    this.healthBar.fillRect(-30, barYOffset, 60, 10);
+    this.healthBar.fillRect(-30, barYOffset, 60, 5);
     this.add(this.healthBar);
+
+    this.setVelocityX(100);
+    this.directingLeft = false;
+    this.sprite.setFlipX(!this.directingLeft);
 
     this.updateHealthBar(health);
   }
@@ -97,8 +100,12 @@ class Entity extends Phaser.GameObjects.Container {
   public update(time: number, delta: number): void {
     if (this.x < 100) {
       this.setVelocityX(100);
+      this.directingLeft = false;
+      this.sprite.setFlipX(!this.directingLeft);
     } else if (this.x > 700) {
       this.setVelocityX(-100);
+      this.directingLeft = true;
+      this.sprite.setFlipX(!this.directingLeft);
     }
   }
 
@@ -106,11 +113,6 @@ class Entity extends Phaser.GameObjects.Container {
   private updateHealthBar(currentHealth: number): void {
     this.currentHealth = currentHealth;
     this.healthBar.clear();
-
-    if (this.currentHealth <= 0) {
-      this.destroy();
-      return;
-    }
 
     const healthPercentage = this.currentHealth / this.maxHealth;
     const barWidth = 60 * healthPercentage;
@@ -125,7 +127,7 @@ class Entity extends Phaser.GameObjects.Container {
 
     const barYOffset = -this.sprite.displayHeight / 2 - 20;
     this.healthBar.fillStyle(barColor, 1);
-    this.healthBar.fillRect(-30, barYOffset, barWidth, 10);
+    this.healthBar.fillRect(-30, barYOffset, barWidth, 5);
   }
 
   public setDeath() {
