@@ -5,7 +5,15 @@ import gameManager from '@/utils/GameManager';
 import { PlayerStat } from '@/utils/interface';
 
 const PlayerbasicInfoUi: React.FC = () => {
-  const [currentPlayer, setCurrentPlayer] = useState<PlayerStat>(gameManager.player);
+  const [currentPlayer, setCurrentPlayer] = useState<PlayerStat>({
+    position: {x: 0, y: 200},
+    name: "TEST",
+    health: 500,
+    maxHealth: 500,
+    mainStat: 50,
+    mana: 500,
+    maxMana: 600,
+  }); // To prevent rehydration, explicitly input the entire playerstat data
 
   useEffect(() => {
     const handlePlayerUpdate = (newPlayer: PlayerStat) => {

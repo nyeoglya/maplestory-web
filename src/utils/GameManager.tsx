@@ -1,7 +1,8 @@
 "use client";
 
+import { PhaserPlayer } from "@/components/PhaserPlayer";
 import EffectManager from "./Effect";
-import EntityManager from "./Entity";
+import EntityManager from "./EntityManager";
 import { PlayerStat } from "./interface";
 import InventoryManager from "./InventoryManager";
 import SkillManager from "./SkillManager";
@@ -29,6 +30,7 @@ class GameManager {
     maxMana: 600,
   };
   public setCurrentPlayer: ((newPlayer: PlayerStat) => void) | undefined = undefined;
+  public phaserPlayer: PhaserPlayer | undefined = undefined;
 
   constructor() {
     this.entityAttackInterval = this.entityAttackInterval.bind(this);
@@ -36,7 +38,8 @@ class GameManager {
   }
 
   public entityAttackInterval() {
-    this.player = this.entityManager.entityAttack(gameManager.player);
+    if (!this.phaserPlayer) return;
+    this.entityManager.entityAttack(gameManager.player, this.phaserPlayer);
     if (!this.setCurrentPlayer) return;
     this.setCurrentPlayer(this.player);
   }

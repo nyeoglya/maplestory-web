@@ -1,7 +1,5 @@
-import EntityManager from './Entity';
-import gameManager from './GameManager';
+import EntityManager from './EntityManager';
 import { PlayerStat } from './interface';
-import keyboardManager from './KeyManager';
 import {Skill, SkillTestA, SkillTestB, SkillTestC} from './Skill';
 
 class SkillManager {
@@ -17,13 +15,6 @@ class SkillManager {
 
   constructor(entityManager: EntityManager) {
     this.entityManager = entityManager; // 클래스는 참조임
-    
-    this.skillKeyMap.forEach((skill: Skill, key: string) => {
-      keyboardManager.onKeyDown(key, (event: KeyboardEvent) => {
-        event.preventDefault();
-        this.skillUse(skill, gameManager.player);
-      });
-    });
 
     this.skillCooltimeInterval = this.skillCooltimeInterval.bind(this);
     this.skillCooltimeIntervalId = setInterval(this.skillCooltimeInterval, 1000);

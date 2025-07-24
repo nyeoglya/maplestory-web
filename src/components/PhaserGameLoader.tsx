@@ -5,7 +5,26 @@ import React from 'react';
 
 const DynamicPhaserGame = dynamic(() => import('./PhaserGame'), {
   ssr: false,
-  loading: () => <p>Loading game...</p>,
+  loading: () => {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <p>Maplestory Web v0.1</p>
+        <p>Loading game...</p>
+      </div>
+    );
+  },
 });
 
 const PhaserGameLoader = () => {

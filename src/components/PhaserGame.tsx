@@ -4,18 +4,40 @@ import React, { useEffect, useRef } from 'react';
 import * as Phaser from 'phaser';
 
 import gameManager from '@/utils/GameManager';
-import {Entity} from '@/utils/Entity';
+import Entity from './PhaserEntity';
+import { PhaserPlayer } from './PhaserPlayer';
+import EntityManager from '@/utils/EntityManager';
+import { Skill } from '@/utils/Skill';
 
 class ExampleScene extends Phaser.Scene {
-  private player: Phaser.Physics.Arcade.Sprite | null = null;
+  private player: PhaserPlayer | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
-  private cursors: Phaser.Types.Input.Keyboard.CursorKeys | null = null;
 
-  private enemy: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody | null = null;
-  private tempEntityData: Entity = gameManager.entityManager.entityList[0];
+  private entityTest1: Entity | undefined;
+  private entityManager: EntityManager;
 
   constructor() {
     super('ExampleScene');
+    this.entityManager = gameManager.entityManager;
+  }
+
+  private getOverlapEntity(
+    detectionZone: Phaser.Physics.Arcade.StaticBody,
+    targetGroup: Entity[],
+  ): string[] {
+    const overlapUuidList: string[] = [];
+    if (!detectionZone) return [];
+
+    targetGroup.forEach(entity => {
+      const entityBody: Phaser.Physics.Arcade.Body = entity.getBody();
+      if (!entityBody) return;
+      
+      this.physics.overlap(detectionZone, entityBody, () => {
+        overlapUuidList.push(entity.uuid);
+      }, undefined, this);
+    });
+
+    return overlapUuidList;
   }
 
   preload() {
@@ -24,7 +46,7 @@ class ExampleScene extends Phaser.Scene {
     this.load.image('ground', 'assets/platform.png');
     this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 111 });
 
-    this.load.image('enemy', 'assets/boss.png');
+    this.load.image('boss', 'assets/boss.png');
   }
 
   create() {
@@ -41,35 +63,12 @@ class ExampleScene extends Phaser.Scene {
       .refreshBody();
     
     // 적 생성
-    this.enemy = this.physics.add.sprite(this.tempEntityData.position.x, this.tempEntityData.position.y, 'enemy');
-    this.enemy.setScale(0.3, 0.3);
-    this.enemy.setCollideWorldBounds(true);
-    this.enemy.setBounce(0);
+    this.entityTest1 = new Entity(this, 50, 200, 'boss', 100, 0.3);
+    this.entityManager.entityList.push(this.entityTest1);
 
     // 플레이어 생성
-    this.player = this.physics.add.sprite(100, this.physics.world.bounds.height - 400, 'player');
-    this.player.setScale(0.8, 0.8);
-    this.player.setBounce(0);
-    this.player.setCollideWorldBounds(true);
-
-    // 플레이어 애니메이션
-    this.anims.create({
-      key: 'left',
-      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
-      frameRate: 10,
-      repeat: -1
-    });
-    this.anims.create({
-      key: 'turn',
-      frames: [{ key: 'player', frame: 2 }],
-      frameRate: 20
-    });
-    this.anims.create({
-      key: 'right',
-      frames: this.anims.generateFrameNumbers('player', { start: 3, end: 4 }),
-      frameRate: 10,
-      repeat: -1
-    });
+    this.player = new PhaserPlayer(this, 100, this.physics.world.bounds.height - 400, 'player');
+    gameManager.phaserPlayer = this.player;
 
     // 플레이어 플랫폼 충돌 설정
     if (this.player && this.platforms) {
@@ -77,11 +76,23 @@ class ExampleScene extends Phaser.Scene {
     }
 
     // 적 플랫폼 충돌 설정
-    if (this.enemy && this.platforms) {
-      this.physics.add.collider(this.enemy, this.platforms);
+    if (this.entityTest1 && this.platforms) {
+      this.physics.add.collider(this.entityTest1, this.platforms);
     }
 
-    this.cursors = this.input.keyboard?.createCursorKeys() || null;
+    // 스킬 키 매핑
+    gameManager.skillManager.skillKeyMap.forEach((skill: Skill, key: string) => {
+      const keyButton = this.input.keyboard!.addKey(key);
+      keyButton.on('down', () => {
+        if (!this.player || !this.player.detectionZone) return;
+        const overlapEntityList = this.getOverlapEntity(this.player.detectionZone, this.entityManager.entityList);
+        if (overlapEntityList.length > 0) {
+          console.log('Overlapping Entity IDs:', overlapEntityList);
+        } else {
+          console.log('No entities overlapping.');
+        }
+      });
+    });
 
     if (this.player) {
       this.cameras.main.startFollow(this.player);
@@ -95,41 +106,12 @@ class ExampleScene extends Phaser.Scene {
     });
   }
 
-  update() {
-    if (!this.enemy) return;
-
-    if (this.tempEntityData.position.x < 100) {
-      this.enemy.setVelocityX(100);
-    } else if (this.tempEntityData.position.x > 700) {
-      this.enemy.setVelocityX(-100);
-    }
-
-    this.tempEntityData.position = {
-      x: this.enemy.x,
-      y: this.enemy.y
-    }
+  update(time: number, delta: number): void {
+    if (!this.entityTest1) return;
+    this.entityTest1.update(time, delta);
     
-    if (!this.player || !this.cursors) {
-      return;
-    }
-
-    // 플레이어 움직임
-    const playerSpeed = 200;
-    if (this.cursors.left.isDown) {
-      this.player.setVelocityX(-playerSpeed);
-      this.player.anims.play('left', true);
-    } else if (this.cursors.right.isDown) {
-      this.player.setVelocityX(playerSpeed);
-      this.player.anims.play('right', true);
-    } else {
-      this.player.setVelocityX(0);
-      this.player.anims.play('turn');
-    }
-
-    // 플레이어 점프
-    if (this.cursors.up.isDown && this.player.body instanceof Phaser.Physics.Arcade.Body && this.player.body.touching.down) {
-      this.player.setVelocityY(-200);
-    }
+    if (!this.player) return;
+    this.player.update();
   }
 }
 
@@ -174,7 +156,7 @@ const PhaserGame = () => {
         default: 'arcade',
         arcade: {
           gravity: { x: 0, y: 500 },
-          debug: false
+          debug: true
         }
       },
       scale: {
