@@ -20,15 +20,12 @@ class EntityManager {
     this.spawnLocationList = entitySpawnList
   }
 
-  public initializeEntityList(Phaser: any, scene: any) {
-    this.entityList = []; // Clear existing entities
-    this.entityMap = new Map(); // Clear existing map
-
+  public initializeEntityList(scene: Phaser.Scene) {
     this.spawnLocationList.forEach((pos: Vector) => {
-      const testEntityA = new TestEntityA(Phaser, scene, pos);
-      this.entityList.push(testEntityA);
+      const testEntityA = new TestEntityA(scene, pos);
+      this.entityList.push();
     });
-    this.entityMap = this.createEntityMap(this.entityList);
+    this.createEntityMap(this.entityList);
   }
 
   constructor(
@@ -37,7 +34,7 @@ class EntityManager {
   ) {}
 
   // 엔티티가 주변 공격 시도
-  public entityAttack(playerData: PlayerStat, collider: any) {
+  public entityAttack(playerData: PlayerStat, collider: Phaser.Physics.Arcade.Sprite) {
     this.entityList.forEach((entity: Entity) => {
       entity.tryAttack(playerData, collider);
     });

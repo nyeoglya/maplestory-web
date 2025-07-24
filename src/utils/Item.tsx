@@ -5,7 +5,7 @@ export abstract class Item {
     public name: string,
     public description: string,
     public itemIconPath: string = '',
-    public uuid: string,
+    public uuid: string = '',
   ) {
     if (typeof window !== 'undefined') {
       this.uuid = crypto.randomUUID();

@@ -1,23 +1,23 @@
 "use client";
-import { PlayerStat } from '@/utils/PlayerStat';
 
+import { PlayerStat } from '@/utils/PlayerStat';
+import { v4 as uuidv4 } from 'uuid';
+import * as Phaser from 'phaser';
 import { Vector } from 'matter';
 
-class Entity {
-  private container: any;
-  private sprite: any;
+class Entity extends Phaser.GameObjects.Container {
+  private sprite: Phaser.GameObjects.Sprite;
   public currentHealth: number;
   private maxHealth: number;
-  private healthBarBackground: any;
-  private healthBar: any;
+  private healthBarBackground: Phaser.GameObjects.Graphics;
+  private healthBar: Phaser.GameObjects.Graphics;
 
   private initialPos: Vector;
   public death: boolean = false;
   public isDirectingLeft: boolean = true;
-  public uuid: string = '';
 
   // data와 collider로 공격을 시도한다. 성공할 경우, data를 수정한다. collider는 겹칠 경우에 데미지를 주는 적절한 collider를 선택
-  public tryAttack(data: PlayerStat, collider: any) {
+  public tryAttack(data: PlayerStat, collider: Phaser.Physics.Arcade.Sprite) {
     this.scene.physics.overlap(this.getBody(), collider, () => {
       data.health -= Math.min(20, data.health);
     }, undefined, this);
@@ -33,8 +33,7 @@ class Entity {
   }
 
   constructor(
-    Phaser: any,
-    public scene: any,
+    public scene: Phaser.Scene,
     public x: number,
     public y: number,
     public texture: string,
@@ -45,30 +44,22 @@ class Entity {
     public damage: number = 20,
     public speed: number = 20,
     public name: string = '',
+    public uuid: string = uuidv4(),
   ) {
-    this.container = new Phaser.GameObjects.Container(scene, x, y);
+    super(scene, x, y);
     this.initialPos = {x: x, y: y};
 
-    if (typeof window !== 'undefined') {
-      import('uuid').then(({ v4: uuidv4 }) => {
-        this.uuid = uuidv4();
-      });
-    } else {
-      this.uuid = 'server-side-uuid-' + Math.random().toString(36).substring(2, 15);
-    }
-
-    scene.add.existing(this.container);
-    scene.physics.add.existing(this.container);
-    
+    scene.add.existing(this);
+    scene.physics.add.existing(this);
 
     this.maxHealth = health;
     this.currentHealth = health;
 
-    this.sprite = new Phaser.GameObjects.Sprite(scene, 0, 0, texture);
+    this.sprite = scene.add.sprite(0, 0, texture);
     this.sprite.setScale(scale, scale);
-    this.container.add(this.sprite);
+    this.add(this.sprite);
 
-    const body = this.container.body as any;
+    const body = this.body as Phaser.Physics.Arcade.Body;
     body.setCollideWorldBounds(true);
     body.setSize(this.sprite.displayWidth, this.sprite.displayHeight);
     body.setOffset(-this.sprite.displayWidth / 2, -this.sprite.displayHeight / 2);
@@ -76,22 +67,22 @@ class Entity {
     // 체력 바
     const barYOffset = -this.sprite.displayHeight / 2 - 20;
 
-    this.healthBarBackground = new Phaser.GameObjects.Graphics(scene);
+    this.healthBarBackground = scene.add.graphics();
     this.healthBarBackground.fillStyle(0x333333, 0.8);
     this.healthBarBackground.fillRect(-30, barYOffset, 60, 10);
-    this.container.add(this.healthBarBackground);
+    this.add(this.healthBarBackground);
 
-    this.healthBar = new Phaser.GameObjects.Graphics(scene);
+    this.healthBar = scene.add.graphics();
     this.healthBar.fillStyle(0x00ff00, 1);
     this.healthBar.fillRect(-30, barYOffset, 60, 10);
-    this.container.add(this.healthBar);
+    this.add(this.healthBar);
 
     this.updateHealthBar(health);
   }
 
   // 물리 객체 반환
-  public getBody(): any {
-    return this.container.body as any;
+  public getBody(): Phaser.Physics.Arcade.Body {
+    return this.body as Phaser.Physics.Arcade.Body;
   }
 
   // 속도 설정
@@ -104,9 +95,9 @@ class Entity {
 
   // update
   public update(time: number, delta: number): void {
-    if (this.container.x < 100) {
+    if (this.x < 100) {
       this.setVelocityX(100);
-    } else if (this.container.x > 700) {
+    } else if (this.x > 700) {
       this.setVelocityX(-100);
     }
   }
@@ -152,18 +143,16 @@ class Entity {
     if (this.sprite) {
       this.sprite.destroy();
     }
-    this.container.destroy(fromScene);
+    super.destroy(fromScene);
   }
 }
 
 export class TestEntityA extends Entity {
   constructor(
-    Phaser: any,
-    scene: any,
+    scene: Phaser.Scene,
     pos: Vector,
   ) {
     super(
-      Phaser,
       scene,
       pos.x,
       pos.y,
