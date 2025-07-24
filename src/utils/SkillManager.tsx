@@ -1,5 +1,6 @@
+import Entity from '@/components/PhaserEntity';
 import EntityManager from './EntityManager';
-import { PlayerStat } from './interface';
+import { PlayerStat } from './PlayerStat';
 import {Skill, SkillTestA, SkillTestB, SkillTestC} from './Skill';
 
 class SkillManager {
@@ -45,11 +46,11 @@ class SkillManager {
   };
 
   // 특정 키가 입력되었을 때의 스킬 사용
-  public skillUse(skill: Skill, playerData: PlayerStat) {
+  public skillUse(skill: Skill, playerData: PlayerStat, entityUuidList: string[]) {
     if (!this.skillCooltimeMap.has(skill) &&
       skill.isSkillAvailable(playerData)) {
       skill.consume(playerData);
-      skill.performAction(playerData, this.entityManager);
+      skill.performAction(this.entityManager, playerData, entityUuidList);
       this.skillCooltimeMap.set(skill, skill.cooltime);
     }
   }

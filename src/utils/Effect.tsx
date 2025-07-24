@@ -1,4 +1,4 @@
-import {PlayerStat} from "./interface";
+import {PlayerStat} from "./PlayerStat";
 
 abstract class Effect {
   constructor(

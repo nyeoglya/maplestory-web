@@ -3,7 +3,7 @@
 import { PhaserPlayer } from "@/components/PhaserPlayer";
 import EffectManager from "./Effect";
 import EntityManager from "./EntityManager";
-import { PlayerStat } from "./interface";
+import { PlayerStat } from "./PlayerStat";
 import InventoryManager from "./InventoryManager";
 import SkillManager from "./SkillManager";
 
@@ -11,11 +11,7 @@ class GameManager {
   public bossRemainingTime: number = 0;
   public effectManager: EffectManager = new EffectManager();
   public inventoryManager: InventoryManager = new InventoryManager();
-  public entityManager: EntityManager = new EntityManager([
-    {x: 50, y: 200},
-    {x: 100, y: 200},
-    {x: 150, y: 200},
-  ]);
+  public entityManager: EntityManager = new EntityManager();
   public skillManager: SkillManager = new SkillManager(this.entityManager);
 
   public entityAttackIntervalId: NodeJS.Timeout;

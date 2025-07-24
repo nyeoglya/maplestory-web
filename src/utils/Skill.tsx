@@ -1,5 +1,5 @@
-import EntityManager from "./Entity";
-import {PlayerStat} from "./interface";
+import EntityManager from "./EntityManager";
+import {PlayerStat} from "./PlayerStat";
 
 export abstract class Skill {
   constructor(
@@ -22,7 +22,7 @@ export abstract class Skill {
   public consume(data: PlayerStat) {}
 
   // 사용되는 스킬
-  public performAction(data: PlayerStat, entityManager: EntityManager) {}
+  public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) {}
 }
 
 export class SkillTestA extends Skill {
@@ -45,8 +45,8 @@ export class SkillTestA extends Skill {
     data.mana -= 20;
   }
 
-  public performAction(data: PlayerStat, entityManager: EntityManager) {
-    entityManager.damageEntity();
+  public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) {
+    entityManager.damageEntities(30, entityUuidList);
   }
 }
 

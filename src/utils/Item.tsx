@@ -1,12 +1,17 @@
-import { PlayerStat } from "./interface";
+import { PlayerStat } from "./PlayerStat";
 
 export abstract class Item {
   constructor(
     public name: string,
     public description: string,
     public itemIconPath: string = '',
-    public uuid: string = crypto.randomUUID(),
-  ) {}
+    public uuid: string,
+  ) {
+    if (typeof window !== 'undefined') {
+      this.uuid = crypto.randomUUID();
+    } else {
+      this.uuid = 'server-side-item-uuid-' + Math.random().toString(36).substring(2, 15);
+    }}
 
   // 아이템의 성능
   public itemEffect(data: PlayerStat): PlayerStat {
