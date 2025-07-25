@@ -6,7 +6,6 @@ import { Skill } from '@/utils/Skill';
 const PlayerSkillUi: React.FC = () => {
   const [currentSkill, setCurrentSkill] = useState<Skill[]>([]);
 
-  // TODO: 스킬 실시간 연동(쿨타임 연동이 되어야 함)
   useEffect(() => {
     const handleSkillUpdate = (newSkillList: Skill[]) => {
       setCurrentSkill([...newSkillList]);
@@ -43,17 +42,12 @@ const PlayerSkillUi: React.FC = () => {
         overflowY: 'hidden',
       }}
     >
-            {currentSkill.map(skill => {
-        const iconSize = 50; // 아이콘의 고정 크기
-        // 쿨타임이 0이거나 스킬 자체가 쿨타임이 없는 경우를 처리
-        const cooltimeRatio = (skill.cooltime && skill.cooltime > 0)
-          ? skill.cooltimeLeft / skill.cooltime
-          : 0; // 쿨타임이 없거나 이미 끝났다면 0
+      {currentSkill.map(skill => {
+        const iconSize = 50;
+        const cooltimeRatio = (skill.cooltime && skill.cooltime > 0) ? skill.cooltimeLeft / skill.cooltime : 0;
 
         const currentOverlayHeight = iconSize * cooltimeRatio;
-        const overlayTop = iconSize - currentOverlayHeight; // 오버레이를 아래에서 위로 채우기 위한 top 값
-
-        // 쿨타임 텍스트 표시 조건 (쿨타임이 0보다 클 때만)
+        const overlayTop = iconSize - currentOverlayHeight;
         const showCooltimeText = skill.cooltimeLeft > 0;
 
         return (

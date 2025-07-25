@@ -1,26 +1,29 @@
 "use client";
 
+import EffectManager from './EffectManager';
 import EntityManager from './EntityManager';
 import { PlayerStat } from './PlayerStat';
 import {Skill, SkillTestA, SkillTestB, SkillTestC} from './Skill';
 
 class SkillManager {
   public skillCooltimeMap: Map<Skill, number> = new Map();
-  public skillKeyMap: Map<string, Skill> = new Map([
-    ['w', new SkillTestA()],
-    ['e', new SkillTestB()],
-    ['a', new SkillTestC()]
-  ]);
-  public skillList: Skill[] = Array.from(this.skillKeyMap.values());
+  public skillKeyMap: Map<string, Skill>;
+  public skillList: Skill[];
   public entityManager: EntityManager;
   public skillCooltimeIntervalId: NodeJS.Timeout;
   public setCurrentSkill: ((newSkillList: Skill[]) => void) | undefined = undefined;
 
-  constructor(entityManager: EntityManager) {
+  constructor(entityManager: EntityManager, effectManager: EffectManager) {
     this.entityManager = entityManager; // 클래스는 참조임
 
     this.skillCooltimeInterval = this.skillCooltimeInterval.bind(this);
     this.skillCooltimeIntervalId = setInterval(this.skillCooltimeInterval, 1000);
+    this.skillKeyMap = new Map([
+      ['w', new SkillTestA(effectManager)],
+      ['e', new SkillTestB(effectManager)],
+      ['a', new SkillTestC(effectManager)]
+    ]);
+    this.skillList = Array.from(this.skillKeyMap.values());
   }
 
   public updateSkillUi() {

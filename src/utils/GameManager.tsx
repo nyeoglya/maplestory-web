@@ -1,19 +1,18 @@
 "use client";
 
 import { PhaserPlayer } from "@/components/PhaserPlayer";
-import EffectManager from "./Effect";
+import EffectManager from "./EffectManager";
 import EntityManager from "./EntityManager";
 import { PlayerStat } from "./PlayerStat";
 import InventoryManager from "./InventoryManager";
 import SkillManager from "./SkillManager";
-import { Skill } from "./Skill";
 
 class GameManager {
   public bossRemainingTime: number = 0;
-  public effectManager: EffectManager = new EffectManager();
   public inventoryManager: InventoryManager = new InventoryManager();
   public entityManager: EntityManager = new EntityManager();
-  public skillManager: SkillManager = new SkillManager(this.entityManager);
+  public effectManager: EffectManager = new EffectManager();
+  public skillManager: SkillManager = new SkillManager(this.entityManager, this.effectManager);
 
   public entityAttackIntervalId: NodeJS.Timeout;
   public entityRespawnIntervalId: NodeJS.Timeout;
@@ -35,6 +34,7 @@ class GameManager {
     this.entityAttackIntervalId = setInterval(this.entityAttackInterval, 3000);
     this.entityRespawnInterval = this.entityRespawnInterval.bind(this);
     this.entityRespawnIntervalId = setInterval(this.entityRespawnInterval, this.entityManager.entitySpawnCooltime);
+    this.updatePlayerUi();
   }
 
   public updatePlayerUi() {

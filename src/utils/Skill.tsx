@@ -1,3 +1,5 @@
+import { EffectTestA } from "./Effect";
+import EffectManager from "./EffectManager";
 import EntityManager from "./EntityManager";
 import {PlayerStat} from "./PlayerStat";
 
@@ -8,6 +10,7 @@ export abstract class Skill {
     public description: string,
     public cooltime: number,
     public isPassive: boolean,
+    public effectManager: EffectManager,
     public iconImgPath: string = '',
     public skillImgPath: string = '',
   ) {
@@ -27,12 +30,13 @@ export abstract class Skill {
 }
 
 export class SkillTestA extends Skill {
-  constructor() {
+  constructor(effectManager: EffectManager) {
     super(
       '스킬 테스트 A',
       '테스트용 스킬입니다.',
       2,
       false,
+      effectManager,
       '/assets/skill.png',
       'skillTestA',
     );
@@ -47,31 +51,44 @@ export class SkillTestA extends Skill {
   }
 
   public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) {
-    entityManager.damageEntities(30, entityUuidList);
-    return 30;
+    entityManager.damageEntities(data.mainStat, entityUuidList, 2);
   }
 }
 
 export class SkillTestB extends Skill {
-  constructor() {
+  constructor(effectManager: EffectManager) {
     super(
       '스킬 테스트 B',
       '테스트용 스킬입니다.',
       10,
       false,
+      effectManager,
       '/assets/skill.png',
       'skillTestA',
     );
   }
+
+  public isSkillAvailable(data: PlayerStat): boolean {
+    return true;
+  }
+
+  public consume(data: PlayerStat) {
+    data.mana -= 50;
+  }
+
+  public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) {
+    this.effectManager.addEffect(EffectTestA);
+  }
 }
 
 export class SkillTestC extends Skill {
-  constructor() {
+  constructor(effectManager: EffectManager) {
     super(
       '스킬 테스트 C',
       '테스트용 스킬입니다.',
       10,
       false,
+      effectManager,
       '/assets/skill.png',
       'skillTestA',
     );

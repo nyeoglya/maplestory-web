@@ -23,10 +23,13 @@ class Entity extends Phaser.GameObjects.Container {
   }
 
   // entity에 데미지를 입힌다.
-  public tryDamage(amount: number) {
+  public tryDamage(amount: number, repeat: number = 1) {
     if (this.death) return;
-    this.spawnDamageText(this.x, this.y, amount.toString());
-    this.currentHealth -= amount;
+    const fontSize = 50;
+    for (let i = 0; i < repeat; i++) {
+      this.spawnDamageText(this.x + i * 5, this.y - i * fontSize, amount.toString(), fontSize);
+    }
+    this.currentHealth -= amount * repeat;
     this.updateHealthBar(this.currentHealth);
     if (this.currentHealth <= 0) {
       // this.destroy();
@@ -34,11 +37,11 @@ class Entity extends Phaser.GameObjects.Container {
     }
   }
 
-  public spawnDamageText(x: number, y: number, text: string, duration = 1000, riseHeight = 0) {
+  public spawnDamageText(x: number, y: number, text: string, fontSize: number = 50, duration = 1000, riseHeight = 0) {
     if (this.death) return;
     this.isMove = false;
     const damageText = this.scene.add.text(x, y, text, {
-      fontSize: '20px',
+      fontSize: `${fontSize}px`,
       stroke: '#000000',
       strokeThickness: 2,
       fontStyle: 'bold',

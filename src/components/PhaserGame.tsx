@@ -103,7 +103,8 @@ class ExampleScene extends Phaser.Scene {
           gameManager.skillManager.skillCooltimeMap.get(skill) !== undefined) return;
         const overlapEntityList = this.getOverlapEntity(this.player.detectionZone, this.entityManager.entityList);
         this.player.showSkillImg(skill.skillImgPath);
-        gameManager.skillManager.skillUse(skill, gameManager.player, overlapEntityList);
+        const effectedPlayer = gameManager.effectManager.effectChain(gameManager.player);
+        gameManager.skillManager.skillUse(skill, effectedPlayer, overlapEntityList);
       });
     });
 
