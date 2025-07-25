@@ -1,3 +1,5 @@
+"use client";
+
 import EntityManager from './EntityManager';
 import { PlayerStat } from './PlayerStat';
 import {Skill, SkillTestA, SkillTestB, SkillTestC} from './Skill';
@@ -12,12 +14,18 @@ class SkillManager {
   public skillList: Skill[] = Array.from(this.skillKeyMap.values());
   public entityManager: EntityManager;
   public skillCooltimeIntervalId: NodeJS.Timeout;
+  public setCurrentSkill: ((newSkillList: Skill[]) => void) | undefined = undefined;
 
   constructor(entityManager: EntityManager) {
     this.entityManager = entityManager; // 클래스는 참조임
 
     this.skillCooltimeInterval = this.skillCooltimeInterval.bind(this);
     this.skillCooltimeIntervalId = setInterval(this.skillCooltimeInterval, 1000);
+  }
+
+  public updateSkillUi() {
+    if (!this.setCurrentSkill) return;
+    this.setCurrentSkill(this.skillList);
   }
 
   // 스킬 쿨타임 감소 iteration
@@ -27,6 +35,7 @@ class SkillManager {
 
     this.skillCooltimeMap.forEach((cooltime, skill) => {
       const newCooltime = cooltime - 1;
+      skill.cooltimeLeft = newCooltime;
       if (newCooltime <= 0) {
         cooltimeEndSkills.push(skill);
       } else {
@@ -35,8 +44,11 @@ class SkillManager {
     });
 
     cooltimeEndSkills.forEach(skill => {
+      skill.cooltimeLeft = 0;
       this.skillCooltimeMap.delete(skill);
     });
+
+    this.updateSkillUi();
   }
 
   // 스킬 키 변경
@@ -49,8 +61,10 @@ class SkillManager {
     if (!this.skillCooltimeMap.has(skill) &&
       skill.isSkillAvailable(playerData)) {
       skill.consume(playerData);
-      skill.performAction(this.entityManager, playerData, entityUuidList);
       this.skillCooltimeMap.set(skill, skill.cooltime);
+      skill.cooltimeLeft = skill.cooltime;
+      skill.performAction(this.entityManager, playerData, entityUuidList);
+      this.updateSkillUi();
     }
   }
 }

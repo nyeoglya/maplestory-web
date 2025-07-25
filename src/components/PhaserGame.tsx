@@ -102,8 +102,8 @@ class ExampleScene extends Phaser.Scene {
         if (!skill.isSkillAvailable(gameManager.player) ||
           gameManager.skillManager.skillCooltimeMap.get(skill) !== undefined) return;
         const overlapEntityList = this.getOverlapEntity(this.player.detectionZone, this.entityManager.entityList);
-        gameManager.skillManager.skillUse(skill, gameManager.player, overlapEntityList);
         this.player.showSkillImg(skill.skillImgPath);
+        gameManager.skillManager.skillUse(skill, gameManager.player, overlapEntityList);
       });
     });
 
@@ -128,31 +128,6 @@ class ExampleScene extends Phaser.Scene {
     if (!this.player) return;
     this.player.update();
   }
-}
-
-const spawnDamageText = (scene: Phaser.Scene, x: number, y: number, text: string, duration = 1000, riseHeight = 50) => {
-  // 텍스트 객체 생성
-  const damageText = scene.add.text(x, y, text, {
-    fontSize: '20px',
-    stroke: '#000000',
-    strokeThickness: 2,
-    fontStyle: 'bold',
-  });
-
-  // 텍스트의 원점을 중앙 하단으로 설정하여 숫자가 위로 솟아오르게 함
-  damageText.setOrigin(0.5, 1);
-
-  // 애니메이션 (움직임 + 페이드)
-  scene.tweens.add({
-    targets: damageText,
-    y: y - riseHeight,
-    alpha: { from: 1, to: 0 },
-    duration: duration,
-    ease: 'Power1',
-    onComplete: () => {
-      damageText.destroy();
-    }
-  });
 }
 
 const PhaserGame = () => {

@@ -2,6 +2,7 @@ import EntityManager from "./EntityManager";
 import {PlayerStat} from "./PlayerStat";
 
 export abstract class Skill {
+  public cooltimeLeft: number = 0;
   constructor(
     public name: string,
     public description: string,
@@ -47,6 +48,7 @@ export class SkillTestA extends Skill {
 
   public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) {
     entityManager.damageEntities(30, entityUuidList);
+    return 30;
   }
 }
 

@@ -45,6 +45,11 @@ class EffectManager {
     new EffectTestB(),
   ];
 
+  // 지속시간 감소 및 삭제. ui 업데이트.
+  public decreaseDuration() {
+
+  }
+
   constructor () {
 
   }

@@ -16,19 +16,47 @@ class Entity extends Phaser.GameObjects.Container {
 
   // data와 collider로 공격을 시도한다. 성공할 경우, data를 수정한다. collider는 겹칠 경우에 데미지를 주는 적절한 collider를 선택
   public tryAttack(data: PlayerStat, collider: Phaser.Physics.Arcade.Sprite) {
+    if (this.death) return;
     this.scene.physics.overlap(this.getBody(), collider, () => {
       data.health -= Math.min(20, data.health);
     }, undefined, this);
   }
 
-  // entity에 데미지 입히기를 시도한다. collider는 겹칠 경우에 데미지를 입히는 적절한 collider를 선택
+  // entity에 데미지를 입힌다.
   public tryDamage(amount: number) {
+    if (this.death) return;
+    this.spawnDamageText(this.x, this.y, amount.toString());
     this.currentHealth -= amount;
     this.updateHealthBar(this.currentHealth);
     if (this.currentHealth <= 0) {
       // this.destroy();
       this.setDeath();
     }
+  }
+
+  public spawnDamageText(x: number, y: number, text: string, duration = 1000, riseHeight = 0) {
+    if (this.death) return;
+    this.isMove = false;
+    const damageText = this.scene.add.text(x, y, text, {
+      fontSize: '20px',
+      stroke: '#000000',
+      strokeThickness: 2,
+      fontStyle: 'bold',
+    });
+  
+    damageText.setOrigin(0.5, 1);
+  
+    this.scene.tweens.add({
+      targets: damageText,
+      y: y - riseHeight,
+      alpha: { from: 1, to: 0 },
+      duration: duration,
+      ease: 'Power1',
+      onComplete: () => {
+        damageText.destroy();
+        this.isMove = true;
+      }
+    });
   }
 
   constructor(
@@ -41,7 +69,7 @@ class Entity extends Phaser.GameObjects.Container {
     public affectGravity: boolean = true,
     public isMove: boolean = true,
     public damage: number = 20,
-    public speed: number = 20,
+    public speed: number = 50,
     public name: string = '',
     public uuid: string = uuidv4(),
   ) {
@@ -98,12 +126,16 @@ class Entity extends Phaser.GameObjects.Container {
 
   // update
   public update(time: number, delta: number): void {
+    if (!this.isMove) {
+      this.setVelocityX(0);
+      return;
+    }
     if (this.x < 100) {
-      this.setVelocityX(100);
+      this.setVelocityX(this.speed);
       this.directingLeft = false;
       this.sprite.setFlipX(!this.directingLeft);
     } else if (this.x > 700) {
-      this.setVelocityX(-100);
+      this.setVelocityX(-this.speed);
       this.directingLeft = true;
       this.sprite.setFlipX(!this.directingLeft);
     }
@@ -132,6 +164,16 @@ class Entity extends Phaser.GameObjects.Container {
 
   public setDeath() {
     this.death = true;
+    this.setVisible(false);
+  }
+
+  public respawn() {
+    this.death = false;
+    this.currentHealth = this.maxHealth;
+    this.x = this.initialPos.x;
+    this.y = this.initialPos.y;
+    this.setVisible(true);
+    this.updateHealthBar(this.currentHealth);
   }
 
   // 개체 삭제
@@ -164,7 +206,7 @@ export class TestEntityA extends Entity {
       true,
       true,
       20,
-      20,
+      80,
     );
   };
 }

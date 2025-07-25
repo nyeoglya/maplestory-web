@@ -6,6 +6,7 @@ import EntityManager from "./EntityManager";
 import { PlayerStat } from "./PlayerStat";
 import InventoryManager from "./InventoryManager";
 import SkillManager from "./SkillManager";
+import { Skill } from "./Skill";
 
 class GameManager {
   public bossRemainingTime: number = 0;
@@ -15,6 +16,7 @@ class GameManager {
   public skillManager: SkillManager = new SkillManager(this.entityManager);
 
   public entityAttackIntervalId: NodeJS.Timeout;
+  public entityRespawnIntervalId: NodeJS.Timeout;
 
   public player: PlayerStat = {
     position: {x: 0, y: 200},
@@ -31,13 +33,23 @@ class GameManager {
   constructor() {
     this.entityAttackInterval = this.entityAttackInterval.bind(this);
     this.entityAttackIntervalId = setInterval(this.entityAttackInterval, 3000);
+    this.entityRespawnInterval = this.entityRespawnInterval.bind(this);
+    this.entityRespawnIntervalId = setInterval(this.entityRespawnInterval, this.entityManager.entitySpawnCooltime);
+  }
+
+  public updatePlayerUi() {
+    if (!this.setCurrentPlayer) return;
+    this.setCurrentPlayer(this.player);
+  }
+
+  public entityRespawnInterval() {
+    this.entityManager.respawnEntities();
   }
 
   public entityAttackInterval() {
     if (!this.phaserPlayer) return;
     this.entityManager.entityAttack(gameManager.player, this.phaserPlayer);
-    if (!this.setCurrentPlayer) return;
-    this.setCurrentPlayer(this.player);
+    this.updatePlayerUi(); // TODO: 이걸로 인해 3초에 1번씩 변경됨.
   }
 
   public attackDamage() {

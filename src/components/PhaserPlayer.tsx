@@ -91,7 +91,7 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     }
 
     if (this.altKey && this.altKey.isDown && this.body instanceof Phaser.Physics.Arcade.Body && this.body.touching.down) {
-      this.setVelocityY(-200);
+      this.setVelocityY(-250);
     }
 
     if (this.detectionZone) {
