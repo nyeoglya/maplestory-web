@@ -13,6 +13,7 @@ import { Vector } from 'matter';
 class ExampleScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
+  private testPlatform: Phaser.Physics.Arcade.StaticGroup | null = null;
 
   private entityManager: EntityManager;
   private entitySpawnList: Vector[] = [
@@ -52,6 +53,7 @@ class ExampleScene extends Phaser.Scene {
     this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 111 });
     this.load.image('boss', 'assets/boss.png');
     this.load.image('skillTestA', 'assets/skillUse.png');
+    this.load.image('platform_tile', 'assets/platform_tile.png');
   }
 
   create() {
@@ -62,10 +64,13 @@ class ExampleScene extends Phaser.Scene {
 
     // 플랫폼 생성
     this.platforms = this.physics.add.staticGroup();
+    this.testPlatform = this.physics.add.staticGroup();
     
     (this.platforms.create(this.physics.world.bounds.width / 2, this.physics.world.bounds.height - 150, 'ground') as Phaser.Physics.Arcade.Sprite)
       .setScale(this.physics.world.bounds.width, 1)
       .refreshBody();
+    
+    this.testPlatform.create(500, 200, 'ground').refreshBody();
 
     // 적 생성
     this.entityManager.setEntitySpawnList(this.entitySpawnList);
@@ -102,7 +107,9 @@ class ExampleScene extends Phaser.Scene {
         if (!skill.isSkillAvailable(gameManager.player) ||
           gameManager.skillManager.skillCooltimeMap.get(skill) !== undefined) return;
         const overlapEntityList = this.getOverlapEntity(this.player.detectionZone, this.entityManager.entityList);
-        this.player.showSkillImg(skill.skillImgPath);
+        if (skill.skillImgPath) {
+          this.player.showSkillImg(skill.skillImgPath);
+        }
         const effectedPlayer = gameManager.effectManager.effectChain(gameManager.player);
         gameManager.skillManager.skillUse(skill, effectedPlayer, overlapEntityList);
       });

@@ -12,7 +12,7 @@ export abstract class Skill {
     public isPassive: boolean,
     public effectManager: EffectManager,
     public iconImgPath: string = '',
-    public skillImgPath: string = '',
+    public skillImgPath: string | undefined = '',
   ) {
     
   }
@@ -64,7 +64,7 @@ export class SkillTestB extends Skill {
       false,
       effectManager,
       '/assets/skill.png',
-      'skillTestA',
+      undefined
     );
   }
 

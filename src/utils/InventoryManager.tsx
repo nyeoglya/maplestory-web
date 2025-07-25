@@ -1,6 +1,7 @@
 "use client";
 
 import { Item, ItemTestA, ItemTestB, ItemTestC, ItemTestD } from "./Item";
+import { PlayerStat } from "./PlayerStat";
 
 class InventoryManager {
   public itemList: typeof Item[] = [ItemTestA];
@@ -11,10 +12,12 @@ class InventoryManager {
     new ItemTestD()
   ];
   public mouseItem: Item | null = null;
-  public armorHead: Item | null = null;
-  public armorChest: Item | null = null;
 
-  public armorLocList: string[] = ['armorHead', 'armorChest']; // index 0부터 시작
+  public currentArmorInventory: Map<string, Item | null> = new Map([
+    ['armorHead', null],
+    ['armorChest', null],
+  ]); // index 0부터 시작
+  public armorLocList: string[] = Array.from(this.currentArmorInventory.keys());
 
   constructor () {
 
@@ -55,6 +58,11 @@ class InventoryManager {
         // TODO
       }
     }
+  }
+
+  // 아이템 효과 적용
+  public itemChain(originalData: PlayerStat): PlayerStat {
+    return originalData;
   }
 }
 

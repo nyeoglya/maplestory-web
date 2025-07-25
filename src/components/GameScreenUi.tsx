@@ -6,6 +6,7 @@ import Image from 'next/image';
 import PlayerbasicInfoUi from './PlayerBasicInfoUi';
 import PlayerEffectUi from './PlayerEffectUi';
 import PlayerSkillUi from './PlayerSkillUi';
+import BossEntityUi from './BossEntityUi';
 import DraggableItem from '@/windows/DraggableItem';
 
 const GameScreenUi: React.FC = () => {
@@ -22,8 +23,8 @@ const GameScreenUi: React.FC = () => {
       {/*
       <ArmorWindow />
       <InventoryWindow />
-      */}
       <DraggableItem />
+      */}
       <div style={{
         position: 'absolute',
         width: '100%',
@@ -31,48 +32,7 @@ const GameScreenUi: React.FC = () => {
         top: 0,
         left: 0,
       }}>
-        <Image
-          id='bossFace'
-          key='bossFace'
-          src={'/assets/bossFace.jpg'}
-          alt={`bossFace`}
-          width={40}
-          height={40}
-          style={{
-            objectFit: 'cover',
-            position: 'absolute',
-            left: 'calc(25% - 40px)',
-            borderBottomLeftRadius: 5,
-            borderBottomRightRadius: 5,
-          }}
-        />
-        <div id='bossHealthBar' style={{
-          position: 'absolute',
-          left: '25%',
-          width: '50%',
-          height: 15,
-          backgroundColor: 'gray'
-        }}></div>
-        <div style={{
-          position: 'absolute',
-          left: '25%',
-          width: '10%',
-          height: 15,
-          backgroundColor: 'white'
-        }}></div>
-        <div style={{
-          position: 'absolute',
-          display: 'flex',
-          flexDirection: 'column',
-          width: 200,
-          top: 40,
-          left: 'calc(50% - 100px)',
-          backgroundColor: 'green',
-          alignItems: 'center',
-        }}>
-          <p>남은 시간</p>
-          <p id='bossRemainingTime'>30분 00초</p>
-        </div>
+        <BossEntityUi />
         <PlayerEffectUi />
       </div>
       <div style={{

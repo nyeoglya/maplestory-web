@@ -16,6 +16,7 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     this.setScale(0.8, 0.8);
     this.setBounce(0);
     this.setCollideWorldBounds(true);
+    this.setDragX(500);
 
     this.cursors = this.scene.input.keyboard?.createCursorKeys() || null;
     this.altKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.ALT) || null;
@@ -81,7 +82,7 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
       this.anims.play('right', true);
       this.directingLeft = false;
     } else {
-      this.setVelocityX(0);
+      // this.setVelocityX(0);
       if (this.directingLeft) {
         this.setFrame(0);
       } else {
@@ -92,6 +93,11 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
 
     if (this.altKey && this.altKey.isDown && this.body instanceof Phaser.Physics.Arcade.Body && this.body.touching.down) {
       this.setVelocityY(-250);
+    }
+
+    if (this.cursors.space.isDown && this.body instanceof Phaser.Physics.Arcade.Body) {
+      this.setVelocityX(800);
+      this.setVelocityY(-350);
     }
 
     if (this.detectionZone) {
