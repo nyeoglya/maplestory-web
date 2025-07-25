@@ -3,6 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import * as Phaser from 'phaser';
 import { Vector } from 'matter';
 
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 class Entity extends Phaser.GameObjects.Container {
   private sprite: Phaser.GameObjects.Sprite;
   public currentHealth: number;
@@ -23,17 +27,23 @@ class Entity extends Phaser.GameObjects.Container {
   }
 
   // entity에 데미지를 입힌다.
-  public tryDamage(amount: number, repeat: number = 1) {
+  public async tryDamage(amount: number, repeat: number = 1) {
     if (this.death) return;
-    const fontSize = 50;
-    for (let i = 0; i < repeat; i++) {
-      this.spawnDamageText(this.x + i * 5, this.y - i * fontSize, amount.toString(), fontSize);
-    }
+
+    const baseFontSize = 50;
+    const yOffsetPerRepeat = baseFontSize * 0.7;
+
     this.currentHealth -= amount * repeat;
     this.updateHealthBar(this.currentHealth);
-    if (this.currentHealth <= 0) {
-      // this.destroy();
-      this.setDeath();
+    
+    for (let i = 0; i < repeat; i++) {
+      const spawnY = this.y - (i * yOffsetPerRepeat);
+      this.spawnDamageText(this.x, spawnY, amount.toString(), baseFontSize);
+      if (this.currentHealth <= 0) {
+        // this.destroy();
+        this.setDeath();
+      }
+      await delay(100);
     }
   }
 
