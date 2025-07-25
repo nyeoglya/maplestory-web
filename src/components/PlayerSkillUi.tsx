@@ -29,16 +29,13 @@ const PlayerSkillUi: React.FC = () => {
         bottom: 0,
         width: '25%',
         height: 100,
-        background: '#999999ee',
+        background: '#46515188',
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
         alignContent: 'flex-start',
         padding: '5px',
         boxSizing: 'border-box',
-        borderWidth: 3,
-        borderStyle: 'solid',
-        borderRadius: 5,
-        borderColor: '#44444444',
+        borderTopLeftRadius: 10,
         overflowY: 'hidden',
       }}
     >
@@ -52,13 +49,13 @@ const PlayerSkillUi: React.FC = () => {
 
         return (
           <div
-            key={skill.name} // 스킬 이름이 고유하다고 가정
+            key={skill.name}
             style={{
               position: 'relative',
               width: iconSize,
               height: iconSize,
               overflow: 'hidden',
-              borderRadius: '5px',
+              borderRadius: 5,
             }}
           >
             <Image
@@ -68,23 +65,22 @@ const PlayerSkillUi: React.FC = () => {
               height={iconSize}
               style={{
                 objectFit: 'cover',
-                display: 'block', // 인라인 요소의 하단 공백 제거
+                display: 'block', // 인라인 요소 하단 공백 제거
               }}
             />
-            {/* 쿨타임 오버레이 */}
-            {cooltimeRatio > 0 && ( // 쿨타임이 남아있을 때만 오버레이 표시
+            {cooltimeRatio > 0 && (
               <div
                 style={{
                   position: 'absolute',
-                  backgroundColor: '#dddddd55', // 어두운 반투명 색상
-                  top: overlayTop, // 계산된 top 값 적용
+                  backgroundColor: '#46515188',
+                  top: overlayTop,
                   left: 0,
                   width: '100%',
-                  height: currentOverlayHeight, // 계산된 높이 적용
+                  height: currentOverlayHeight,
                   zIndex: 2,
                 }}
               >
-                {showCooltimeText && Math.ceil(skill.cooltimeLeft)} {/* 텍스트는 올림하여 표시 */}
+                {showCooltimeText && skill.cooltimeLeft}
               </div>
             )}
           </div>
