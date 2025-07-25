@@ -46,6 +46,16 @@ class ExampleScene extends Phaser.Scene {
     return overlapUuidList;
   }
 
+  createTransparentPixelTexture(key: string) {
+    if (!this.textures.exists(key)) {
+      const graphics = this.add.graphics();
+      graphics.fillStyle(0x990000, 150);
+      graphics.fillRect(0, 0, 1, 1);
+      graphics.generateTexture(key, 1, 1);
+      graphics.destroy();
+    }
+  }
+
   preload() {
     this.load.setBaseURL('/');
     this.load.image('sky', 'assets/testbackground.png');
@@ -53,7 +63,7 @@ class ExampleScene extends Phaser.Scene {
     this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 111 });
     this.load.image('boss', 'assets/boss.png');
     this.load.image('skillTestA', 'assets/skillUse.png');
-    this.load.image('platform_tile', 'assets/platform_tile.png');
+    this.createTransparentPixelTexture('default_pixel');
   }
 
   create() {
@@ -69,8 +79,6 @@ class ExampleScene extends Phaser.Scene {
     (this.platforms.create(this.physics.world.bounds.width / 2, this.physics.world.bounds.height - 150, 'ground') as Phaser.Physics.Arcade.Sprite)
       .setScale(this.physics.world.bounds.width, 1)
       .refreshBody();
-    
-    this.testPlatform.create(500, 200, 'ground').refreshBody();
 
     // 적 생성
     this.entityManager.setEntitySpawnList(this.entitySpawnList);
@@ -97,6 +105,38 @@ class ExampleScene extends Phaser.Scene {
     // 플레이어 플랫폼 충돌 설정
     if (this.player && this.platforms) {
       this.physics.add.collider(this.player, this.platforms);
+    }
+
+    // TODO: 개선된 발판
+    this.testPlatform.create(500, this.physics.world.bounds.height - 250, 'default_pixel')
+      .setScale(200, 10)
+      .refreshBody();
+
+    // Collider 설정: processCallback 사용
+    const playerPlatformCollider = this.physics.add.collider(
+      this.player,
+      this.testPlatform,
+      undefined,
+      (playerObj, platformObj) => {
+        if (!("body" in playerObj) || !("body" in platformObj)) return false;
+        const player = playerObj as Phaser.Physics.Arcade.Sprite;
+        const platform = platformObj as Phaser.Physics.Arcade.Sprite;
+        if (!player.body) return;
+        const falling = player.body.velocity.y > 0;
+        const above = (player.y - player.body.height * (1 - player.originY)) <= platform.y;
+        console.log(falling, above); // TODO: 이거 수정하기
+        return falling && above;
+      },
+      this
+    );
+
+    this.player.disablePlatform = () => {
+      if (this.testPlatform) {
+        playerPlatformCollider.active = false;
+        this.time.delayedCall(300, () => {
+          playerPlatformCollider.active = true;
+        });
+      }
     }
 
     // 스킬 키 매핑

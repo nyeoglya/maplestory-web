@@ -67,6 +67,8 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  public disablePlatform: (() => void) | null = null;
+
   update() {
     if (!this.cursors) {
       return;
@@ -92,7 +94,11 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     }
 
     if (this.altKey && this.altKey.isDown && this.body instanceof Phaser.Physics.Arcade.Body && this.body.touching.down) {
-      this.setVelocityY(-250);
+      if (this.cursors.down && this.cursors.down.isDown && this.disablePlatform) {
+        this.disablePlatform();
+      } else {
+        this.setVelocityY(-250);
+      }
     }
 
     if (this.cursors.space.isDown && this.body instanceof Phaser.Physics.Arcade.Body) {
