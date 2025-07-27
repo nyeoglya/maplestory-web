@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import gameManager from '@/utils/GameManager';
-import { PlayerStat } from '@/utils/PlayerStat';
+import { PlayerStat } from '@/utils/Utils';
 
 const PlayerbasicInfoUi: React.FC = () => {
   const [currentPlayer, setCurrentPlayer] = useState<PlayerStat>({} as PlayerStat);

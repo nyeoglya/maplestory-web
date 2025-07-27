@@ -1,6 +1,6 @@
 import { Vector } from "matter";
 import Entity from "@/components/PhaserEntity";
-import { PlayerStat } from "./PlayerStat";
+import { PlayerStat } from "./Utils";
 
 class EntityManager {
   public entityList: Entity[] = [];
@@ -20,6 +20,11 @@ class EntityManager {
     public spawnLocationList: Vector[] = [],
     public entitySpawnCooltime: number = 30000,
   ) {}
+
+  // 엔티티 완전 삭제
+  public removeEntities(filter: ((_: Entity) => boolean)) {
+    
+  }
 
   // 엔티티 중에서 사망한 친구들은 초기 위치로 다시 복구
   public respawnEntities() {

@@ -1,4 +1,4 @@
-import { PlayerStat } from '@/utils/PlayerStat';
+import { PlayerStat } from '@/utils/Utils';
 import { v4 as uuidv4 } from 'uuid';
 import * as Phaser from 'phaser';
 import { Vector } from 'matter';

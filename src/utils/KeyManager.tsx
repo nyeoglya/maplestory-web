@@ -4,11 +4,25 @@ class KeyboardManager {
   private keyCallbacks: Map<string, Set<KeyPressCallback>> = new Map();
   private globalCallbacks: Set<KeyPressCallback> = new Set();
 
+  private keys: {[key: string]: boolean} = {};
+
   constructor() {
     if (typeof window !== 'undefined') {
       window.addEventListener('keydown', this.handleKeyDown.bind(this));
       // window.addEventListener('keyup', this.handleKeyUp.bind(this));
     }
+
+    window.addEventListener('keydown', (event) => {
+      this.keys[event.code] = true;
+    });
+
+    window.addEventListener('keyup', (event) => {
+      this.keys[event.code] = false;
+    });
+  }
+
+  public keyPressed(keyName: string) {
+    return this.keys[keyName] || false;
   }
 
   private handleKeyDown(event: KeyboardEvent) {

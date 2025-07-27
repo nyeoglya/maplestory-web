@@ -1,7 +1,7 @@
 import { EffectTestA } from "./Effect";
 import EffectManager from "./EffectManager";
 import EntityManager from "./EntityManager";
-import {PlayerStat} from "./PlayerStat";
+import {PlayerStat} from "./Utils";
 
 export abstract class Skill {
   public cooltimeLeft: number = 0;

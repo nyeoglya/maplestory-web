@@ -1,4 +1,4 @@
-import { PlayerStat } from "./PlayerStat";
+import { PlayerStat } from "./Utils";
 
 export abstract class Item {
   constructor(

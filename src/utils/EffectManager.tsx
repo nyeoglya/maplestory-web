@@ -1,7 +1,7 @@
 "use client";
 
 import { Effect, EffectTestA, EffectTestB } from "./Effect";
-import { PlayerStat } from "./PlayerStat";
+import { PlayerStat } from "./Utils";
 
 class EffectManager {
   public currentPlayerEffect: Effect[] = [

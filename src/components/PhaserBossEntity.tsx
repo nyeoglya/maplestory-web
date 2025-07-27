@@ -5,6 +5,8 @@ import { Vector } from 'matter';
 
 class BossEntity extends Entity {
 
+  public bossTimeLeft: number = 30*60;
+
   constructor(
     public scene: Phaser.Scene,
     public pos: Vector,

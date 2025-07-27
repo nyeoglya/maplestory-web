@@ -1,7 +1,7 @@
 "use client";
 
 import { Item, ItemTestA, ItemTestB, ItemTestC, ItemTestD } from "./Item";
-import { PlayerStat } from "./PlayerStat";
+import { PlayerStat } from "./Utils";
 
 class InventoryManager {
   public itemList: typeof Item[] = [ItemTestA];

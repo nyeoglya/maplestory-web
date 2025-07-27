@@ -2,7 +2,7 @@
 
 import EffectManager from './EffectManager';
 import EntityManager from './EntityManager';
-import { PlayerStat } from './PlayerStat';
+import { PlayerStat } from './Utils';
 import {Skill, SkillTestA, SkillTestB, SkillTestC} from './Skill';
 
 class SkillManager {
@@ -13,8 +13,11 @@ class SkillManager {
   public skillCooltimeIntervalId: NodeJS.Timeout;
   public setCurrentSkill: ((newSkillList: Skill[]) => void) | undefined = undefined;
 
-  constructor(entityManager: EntityManager, effectManager: EffectManager) {
-    this.entityManager = entityManager; // 클래스는 참조임
+  constructor(
+    initialEntityManager: EntityManager,
+    effectManager: EffectManager
+  ) {
+    this.entityManager = initialEntityManager; // 클래스는 참조임
 
     this.skillCooltimeInterval = this.skillCooltimeInterval.bind(this);
     this.skillCooltimeIntervalId = setInterval(this.skillCooltimeInterval, 1000);
@@ -24,6 +27,10 @@ class SkillManager {
       ['a', new SkillTestC(effectManager)]
     ]);
     this.skillList = Array.from(this.skillKeyMap.values());
+  }
+
+  public setCurrentEntityManager(entityManager: EntityManager) {
+    this.entityManager = entityManager;
   }
 
   public updateSkillUi() {
