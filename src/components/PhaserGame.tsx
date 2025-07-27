@@ -9,6 +9,7 @@ import { PhaserPlayer } from './PhaserPlayer';
 import EntityManager from '@/utils/EntityManager';
 import { Skill } from '@/utils/Skill';
 import { Vector } from 'matter';
+import PhaserBossScene from './PhaserBossScene';
 
 class ExampleScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
@@ -200,7 +201,7 @@ const PhaserGame = () => {
       scale: {
         mode: Phaser.Scale.RESIZE,
       },
-      scene: ExampleScene
+      scene: [PhaserBossScene, ExampleScene]
     };
 
     const game = new Phaser.Game(config);

@@ -82,8 +82,9 @@ class Entity extends Phaser.GameObjects.Container {
     public affectGravity: boolean = true,
     public isMove: boolean = true,
     public damage: number = 20,
-    public speed: number = 50,
+    public xSpeed: number = 50,
     public name: string = '',
+    public healthBarVisible: boolean = true,
     public uuid: string = uuidv4(),
   ) {
     super(scene, x, y);
@@ -103,6 +104,7 @@ class Entity extends Phaser.GameObjects.Container {
     body.setCollideWorldBounds(true);
     body.setSize(this.sprite.displayWidth, this.sprite.displayHeight);
     body.setOffset(-this.sprite.displayWidth / 2, -this.sprite.displayHeight / 2);
+    body.setAllowGravity(affectGravity);
 
     // 체력 바
     const barYOffset = -this.sprite.displayHeight / 2 - 20;
@@ -117,11 +119,19 @@ class Entity extends Phaser.GameObjects.Container {
     this.healthBar.fillRect(-30, barYOffset, 60, 5);
     this.add(this.healthBar);
 
-    this.setVelocityX(100);
+    this.updateHealthBarVisibility(healthBarVisible);
+    this.updateHealthBar(health);
+    
+    // 이동 설정 및 초기 속도
+    this.setVelocityX(xSpeed);
     this.directingLeft = false;
     this.sprite.setFlipX(!this.directingLeft);
+  }
 
-    this.updateHealthBar(health);
+  public updateHealthBarVisibility(value: boolean) {
+    this.healthBarVisible = value;
+    this.healthBar.setVisible(this.healthBarVisible);
+    this.healthBarBackground.setVisible(this.healthBarVisible);
   }
 
   // 물리 객체 반환
@@ -137,6 +147,13 @@ class Entity extends Phaser.GameObjects.Container {
     }
   }
 
+  public setVelocityY(speed: number): void {
+    const body = this.getBody();
+    if (body) {
+      body.setVelocityY(speed);
+    }
+  }
+
   // update
   public update(time: number, delta: number): void {
     if (!this.isMove) {
@@ -144,11 +161,11 @@ class Entity extends Phaser.GameObjects.Container {
       return;
     }
     if (this.x < 100) {
-      this.setVelocityX(this.speed);
+      this.setVelocityX(this.xSpeed);
       this.directingLeft = false;
       this.sprite.setFlipX(!this.directingLeft);
     } else if (this.x > 700) {
-      this.setVelocityX(-this.speed);
+      this.setVelocityX(-this.xSpeed);
       this.directingLeft = true;
       this.sprite.setFlipX(!this.directingLeft);
     }
@@ -156,6 +173,7 @@ class Entity extends Phaser.GameObjects.Container {
 
   // 체력바 업데이트
   private updateHealthBar(currentHealth: number): void {
+    if (!this.healthBarVisible) return;
     this.currentHealth = currentHealth;
     this.healthBar.clear();
 
@@ -191,15 +209,9 @@ class Entity extends Phaser.GameObjects.Container {
 
   // 개체 삭제
   public destroy(fromScene?: boolean): void {
-    if (this.healthBarBackground) {
-      this.healthBarBackground.destroy();
-    }
-    if (this.healthBar) {
-      this.healthBar.destroy();
-    }
-    if (this.sprite) {
-      this.sprite.destroy();
-    }
+    if (this.healthBarBackground) this.healthBarBackground.destroy();
+    if (this.healthBar) this.healthBar.destroy();
+    if (this.sprite) this.sprite.destroy();
     super.destroy(fromScene);
   }
 }
