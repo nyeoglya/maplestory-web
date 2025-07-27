@@ -108,7 +108,7 @@ class ExampleScene extends Phaser.Scene {
     }
 
     // TODO: 개선된 발판
-    this.testPlatform.create(500, this.physics.world.bounds.height - 250, 'default_pixel')
+    this.testPlatform.create(500, this.physics.world.bounds.height - 200, 'default_pixel')
       .setScale(200, 10)
       .refreshBody();
 
@@ -121,11 +121,11 @@ class ExampleScene extends Phaser.Scene {
         if (!("body" in playerObj) || !("body" in platformObj)) return false;
         const player = playerObj as Phaser.Physics.Arcade.Sprite;
         const platform = platformObj as Phaser.Physics.Arcade.Sprite;
-        if (!player.body) return;
+        if (!player.body || !platform.body) return;
         const falling = player.body.velocity.y > 0;
         const above = (player.y - player.body.height * (1 - player.originY)) <= platform.y;
-        console.log(falling, above); // TODO: 이거 수정하기
-        return falling && above;
+        const isAbovePlatform = player.body.bottom <= platform.body.top + player.body.velocity.y * this.game.loop.delta / 1000 + 1; // offset
+        return falling && above && isAbovePlatform;
       },
       this
     );
