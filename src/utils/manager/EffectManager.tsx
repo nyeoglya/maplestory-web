@@ -1,13 +1,10 @@
 "use client";
 
-import { Effect, EffectTestA, EffectTestB } from "@/utils/Effect";
+import { Effect } from "@/utils/Effect";
 import { PlayerStat } from "@/utils/Utils";
 
 class EffectManager {
-  public currentPlayerEffect: Effect[] = [
-    new EffectTestA(),
-    new EffectTestB(),
-  ];
+  public currentPlayerEffect: Effect[] = [];
   public effectDurationIntervalId: NodeJS.Timeout;
 
   public setCurrentEffect: ((newEffectList: Effect[]) => void) | undefined = undefined;
@@ -24,7 +21,9 @@ class EffectManager {
     });
 
     if (!oldEffect) {
-      this.currentPlayerEffect.push(new effectType());
+      const effect = new effectType();
+      effect.startEffect();
+      this.currentPlayerEffect.push(effect);
     } else {
       oldEffect.duration = new effectType().duration;
     }
@@ -42,6 +41,10 @@ class EffectManager {
     this.currentPlayerEffect.forEach((effect: Effect) => {
       effect.duration -= 1;
     });
+
+    this.currentPlayerEffect
+      .filter((effect: Effect) => effect.duration <= 0)
+      .forEach((effect: Effect) => effect.endEffect())
 
     this.currentPlayerEffect = this.currentPlayerEffect.filter(
       (effect: Effect) => effect.duration > 0

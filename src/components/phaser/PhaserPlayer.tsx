@@ -125,13 +125,14 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
 
     const playerSpeed: number = gameManager.player.speed.x;
     const isBodyTouchingDown: boolean = this.body?.touching.down || false;
+    const flipDirection: number = gameManager.player.flipKey ? -1 : 1;
     if (!this.disableJump) {
       if (this.leftKey.isDown) {
-        this.setVelocityX(-playerSpeed * (isBodyTouchingDown ? 1 : 0.8));
+        this.setVelocityX(-playerSpeed * (isBodyTouchingDown ? 1 : 0.8) * flipDirection);
         this.anims.play('left', true);
         this.directingLeft = true;
       } else if (this.rightKey.isDown) {
-        this.setVelocityX(playerSpeed * (isBodyTouchingDown ? 1 : 0.8));
+        this.setVelocityX(playerSpeed * (isBodyTouchingDown ? 1 : 0.8) * flipDirection);
         this.anims.play('right', true);
         this.directingLeft = false;
       } else if (isBodyTouchingDown) {
@@ -160,7 +161,7 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
         if (now - this.doubleClickJumpTime < this.doubleClickCriteria) {
           this.disableJump = true;
           this.setVelocityY(-300);
-          this.setVelocityX(700 * (this.directingLeft ? -1 : 1));
+          this.setVelocityX(700 * (this.directingLeft ? -1 : 1) * flipDirection);
         } else {
           if (this.body.touching.down) {
             this.setVelocityY(-250);

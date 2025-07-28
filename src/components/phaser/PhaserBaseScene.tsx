@@ -22,7 +22,10 @@ class BaseScene extends Phaser.Scene {
     this.load.image('meso', 'assets/meso.png');
     this.load.image('galus', 'assets/galus.png');
     this.load.image('pizza', 'assets/pizza.png');
-    this.load.image('baskinrabins', 'assets/baskinrabins.png');
+    this.load.image('brmint', 'assets/brmint.png');
+    this.load.image('brgreentea', 'assets/brgreentea.png');
+    this.load.image('breum', 'assets/breum.png');
+    this.load.image('brmint', 'assets/brmint.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('targetpos', 'assets/targetpos.png');
     this.load.image('bossHand', 'assets/bossHand.png');

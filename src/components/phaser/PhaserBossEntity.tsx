@@ -2,10 +2,9 @@ import { v4 as uuidv4 } from 'uuid';
 import * as Phaser from 'phaser';
 import Entity from './PhaserEntity';
 import gameManager from '@/utils/manager/GameManager';
-import { getDirectionVector } from '@/utils/Utils';
+import { getDirectionVector, getRandomInt } from '@/utils/Utils';
 import EntityBossHandTarget from './PhaserBossHandTargetEntity';
 import EntityBossHand from './PhaserBossHandEntity';
-import { randomInt } from 'crypto';
 
 enum BossPhaseStatus {
   CHICKEN,
@@ -49,19 +48,6 @@ class BossEntity extends Entity {
     // TODO: Phase calculation
     this.phaseBR();
   }
-
-  /*
-  2. 페이즈 사이클
-  피자, 베라, 치킨의 사이클로 페이즈가 돌아가며, 시간 비중은 각각 1분, 1분, 30초.
-
-  3. 스타포스
-  획득한 메소를 사용하여 시도 가능, 맵에 별 모양의 오브젝트가 나타나면 NPC/채집 키를 이용하여 강화 시도 가능.
-  
-  성공 시 10초 간 최종 데미지 20% 증가, 공격력 +10 영구 증가. -> 버프 형태
-  실패 시 3초 간 Player 행동 불능  및 공격력 -5. -> 버프 형태
-
-  성공 확률은 누적된 성공 횟수에 따라 100 / 90 / 70 / 50 / 30 / 20 / 10 / 5 / 4 / 3 / 2 / 1 로 나뉨  -> 버프 형태
-  */
 
   constructor({
     scene,
@@ -112,17 +98,8 @@ class BossEntity extends Entity {
 
   }
 
-  /*
-  맵 상단부에서 베스X라X스 아이스크림이 떨어짐.
-  맛(flavor)에 따라서 Player 피격 시 디버프 효과를 받게 됨.
-
-  민트초코 - 1초 간 행동 불능 상태.
-  엄준식은 외계인 - 상하좌우 구분 변경.
-  녹차 - 받는 데미지 10% 증가.
-  */
   public phaseBR() {
-    // TODO: 초기 위치를 랜덤하게 재설정.
-    gameManager.floatingEntityManager.respawnEntities();
+    gameManager.fallingEntityManager.respawnEntities();
   }
 
   public phasePizza() {
@@ -136,7 +113,7 @@ class BossEntity extends Entity {
 
   public phaseDefault() {
     gameManager.normalEntityManager.respawnEntities();
-    const randomX = randomInt(1000);
+    const randomX = getRandomInt(0, 1000);
     this.bossHandTarget?.startTargeting(randomX);
   }
 

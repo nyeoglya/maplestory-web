@@ -2,6 +2,7 @@ import { PlayerStat } from '@/utils/Utils';
 import { v4 as uuidv4 } from 'uuid';
 import * as Phaser from 'phaser';
 import { Vector } from 'matter';
+import gameManager from '@/utils/manager/GameManager';
 
 function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -24,11 +25,12 @@ class Entity extends Phaser.GameObjects.Container {
   // data와 collider로 공격을 시도한다. 성공할 경우, data를 수정한다. collider는 겹칠 경우에 데미지를 주는 적절한 collider를 선택
   public tryAttack(data: PlayerStat, collider: Phaser.Physics.Arcade.Sprite | undefined = undefined) {
     if (this.death) return;
+    const finalDamage = Math.ceil(this.damage * gameManager.player.debuffDamageMultiplier);
     if (!collider) {
-      data.health -= Math.min(this.damage, data.health);
+      data.health -= Math.min(finalDamage, data.health);
     } else {
       this.scene.physics.overlap(this.getBody(), collider, () => {
-        data.health -= Math.min(this.damage, data.health);
+        data.health -= Math.min(finalDamage, data.health);
       }, undefined, this);
     }
   }

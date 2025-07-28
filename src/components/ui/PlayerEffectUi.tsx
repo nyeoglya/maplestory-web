@@ -7,6 +7,7 @@ import { Effect } from '@/utils/Effect';
 
 const PlayerEffectUi: React.FC = () => {
   const [currentEffect, setCurrentEffect] = useState<Effect[]>([]);
+  const [hoveredEffectName, setHoveredEffectName] = useState<string | null>(null);
 
   useEffect(() => {
     const handleEffectListUpdate = (newEffectList: Effect[]) => {
@@ -37,7 +38,7 @@ const PlayerEffectUi: React.FC = () => {
         overflowY: 'hidden',
       }}
     >
-      {currentEffect.map(effect => {
+      {currentEffect.map((effect) => {
         const iconSize = 50;
         return (
           <div
@@ -48,7 +49,13 @@ const PlayerEffectUi: React.FC = () => {
               height: iconSize,
               overflow: 'hidden',
               borderRadius: '5px',
+              margin: '4px',
             }}
+            onMouseEnter={() => {
+              console.log(effect.name);
+              setHoveredEffectName(effect.name);
+            }}
+            onMouseLeave={() => setHoveredEffectName(null)}
           >
             <Image
               src={effect.effectIconPath}
@@ -58,16 +65,45 @@ const PlayerEffectUi: React.FC = () => {
               style={{
                 objectFit: 'cover',
                 display: 'block',
+                pointerEvents: 'none',
               }}
             />
-            <p style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: iconSize,
-              height: iconSize,
-              zIndex: 2,
-            }}>{effect.duration}</p>
+            <p
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: iconSize,
+                height: iconSize,
+                zIndex: 1,
+                fontSize: '12px',
+                color: 'white',
+                backgroundColor: 'rgba(0,0,0,0.4)',
+                textAlign: 'center',
+                lineHeight: `${iconSize}px`,
+                pointerEvents: 'none',
+              }}
+            >
+              {effect.duration}
+            </p>
+            {hoveredEffectName === effect.name && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: iconSize + 5,
+                  left: 0,
+                  background: 'rgba(0, 0, 0, 0.8)',
+                  color: '#fff',
+                  padding: '5px 8px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  zIndex: 10,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {effect.description || effect.name}
+              </div>
+            )}
           </div>
         );
       })}

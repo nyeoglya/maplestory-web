@@ -13,6 +13,7 @@ import Entity from './PhaserEntity';
 import EntityCleaner from './PhaserCleanerEntity';
 import EntityPizza from './PhaserPizzaEntity';
 import EntityStar from './PhaserStarEntity';
+import { EntityFallingEum, EntityFallingGreenTea, EntityFallingMint } from './PhaserFallingEntity';
 
 class PhaserBossScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
@@ -68,7 +69,19 @@ class PhaserBossScene extends Phaser.Scene {
       gameManager.normalEntityManager.entityList.push(entity);
       if (this.platforms) this.physics.add.collider(entity, this.platforms);
     });
+    for (let i = 0; i < 3; i++) {
+      const entityMint = new EntityFallingMint(this, { x: 0, y: 0 });
+      const entityEum = new EntityFallingEum(this, { x: 0, y: 0 });
+      const entityGreenTea = new EntityFallingGreenTea(this, { x: 0, y: 0 });
+      entityMint.setDeath();
+      entityEum.setDeath();
+      entityGreenTea.setDeath();
+      gameManager.fallingEntityManager.entityList.push(entityMint);
+      gameManager.fallingEntityManager.entityList.push(entityEum);
+      gameManager.fallingEntityManager.entityList.push(entityGreenTea);
+    }
     gameManager.normalEntityManager.resetEntityMap();
+    gameManager.fallingEntityManager.resetEntityMap();
     gameManager.bossEntityManager.resetEntityMap();
 
     // 적 플랫폼 충돌 설정
@@ -89,8 +102,10 @@ class PhaserBossScene extends Phaser.Scene {
     }
 
     // 별 생성
+    /*
     this.star = new EntityStar(this, { x: 100, y: this.physics.world.bounds.height - 150 })
     gameManager.starEntity = this.star;
+    */
 
     // 스킬 키 매핑
     gameManager.skillManager.skillKeyMap.forEach((skill: Skill, key: string) => {
@@ -150,6 +165,7 @@ class PhaserBossScene extends Phaser.Scene {
     this.pizza.update();
 
     gameManager.normalEntityManager.entityList.forEach((entity: Entity) => entity.update(time, delta));
+    gameManager.fallingEntityManager.entityList.forEach((entity: Entity) => entity.update(time, delta));
   }
 }
 

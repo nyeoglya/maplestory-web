@@ -10,6 +10,8 @@ export interface PlayerStat {
   maxMana: number;
   speed: Vector;
   isMove: boolean;
+  flipKey: boolean;
+  debuffDamageMultiplier: number;
 }
 
 export function getDistance(v1: Vector, v2: Vector): number {
@@ -24,6 +26,10 @@ export function getDirectionVector(from: Vector, to: Vector): Vector {
   const length = Math.hypot(dx, dy);
   if (length === 0) return { x: 0, y: 0 };
   return { x: dx / length, y: dy / length };
+}
+
+export function getRandomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export function getOverlapEntity(

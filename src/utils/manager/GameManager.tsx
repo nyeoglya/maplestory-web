@@ -21,6 +21,8 @@ class GameManager {
     mana: 500,
     maxMana: 600,
     isMove: true,
+    flipKey: false,
+    debuffDamageMultiplier: 1.0,
   };
   public deathCount: number = 5;
 
@@ -28,7 +30,7 @@ class GameManager {
   public inventoryManager: InventoryManager = new InventoryManager();
 
   public normalEntityManager: EntityManager = new EntityManager();
-  public floatingEntityManager: EntityManager = new EntityManager();
+  public fallingEntityManager: EntityManager = new EntityManager();
   public bossEntityManager: EntityManager = new EntityManager();
 
   public effectManager: EffectManager = new EffectManager();
