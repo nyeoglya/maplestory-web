@@ -9,6 +9,7 @@ const ArmorWindow: React.FC = () => {
   const [position, setPosition] = useState<Vector>(positionRef.current);
   const isDragging = useRef<boolean>(false);
   const offset = useRef<Vector>({ x: 0, y: 0 });
+  const [showWindow, setShowWindow] = useState<boolean>(true);
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
 
   const initWinData = {
@@ -20,7 +21,7 @@ const ArmorWindow: React.FC = () => {
     offset: offset,
     width: 500,
     height: 500,
-    showWindow: false,
+    showWindow: showWindow,
     setZIndex: setZIndex,
   }
 
@@ -28,10 +29,15 @@ const ArmorWindow: React.FC = () => {
     windowManager.addWindow(initWinData);
   }, []);
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    windowManager.makeTop('armor');
+  };
+
   return (
     <div
       style={{
         position: 'absolute',
+        visibility: showWindow ? 'visible' : 'collapse',
         left: position.x,
         top: position.y,
         width: initWinData.width,
@@ -54,17 +60,22 @@ const ArmorWindow: React.FC = () => {
         }}
         onMouseDown={windowManager.handleMouseDown}
       >
-        <p style={{ marginLeft: 10 }}>장비창</p>
+        <p style={{ marginLeft: 10 }}>장비창(제작중)</p>
         <div style={{ flexGrow: 1 }} />
-        <button style={{
-          width: 25,
-          height: 25,
-        }}>X</button>
+        <button
+          onClick={() => setShowWindow(false)}
+          style={{
+            width: 25,
+            height: 25,
+          }}>X</button>
       </div>
-      <div style={{
-        flexGrow: 1,
-        backgroundColor: 'white',
-      }}>
+      <div
+        style={{
+          flexGrow: 1,
+          backgroundColor: 'white',
+        }}
+        onMouseDown={handleMouseDown}
+      >
         <div style={{
           backgroundColor: 'blue',
           width: 75,

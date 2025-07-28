@@ -14,6 +14,7 @@ const InventoryWindow: React.FC = () => {
   const isDragging = useRef<boolean>(false);
   const offset = useRef<Vector>({ x: 0, y: 0 });
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
+  const [showWindow, setShowWindow] = useState<boolean>(true);
   const [currentPlayerInventory, setCurrentPlayerInventory] = useState<Item[]>(gameManager.inventoryManager.currentPlayerInventory);
   const gridSize = 75;
 
@@ -26,7 +27,7 @@ const InventoryWindow: React.FC = () => {
     offset: offset,
     width: gridSize * 4,
     height: gridSize * 8,
-    showWindow: false,
+    showWindow: showWindow,
     setZIndex: setZIndex,
   }
 
@@ -63,6 +64,7 @@ const InventoryWindow: React.FC = () => {
     <div
       style={{
         position: 'absolute',
+        visibility: showWindow ? 'visible' : 'collapse',
         left: position.x,
         top: position.y,
         width: initWinData.width,
@@ -85,12 +87,14 @@ const InventoryWindow: React.FC = () => {
         }}
         onMouseDown={windowManager.handleMouseDown}
       >
-        <p style={{ marginLeft: 10 }}>인벤토리</p>
+        <p style={{ marginLeft: 10 }}>인벤토리(제작중)</p>
         <div style={{ flexGrow: 1 }} />
-        <button style={{
-          width: 25,
-          height: 25,
-        }}>X</button>
+        <button
+          onClick={() => setShowWindow(false)}
+          style={{
+            width: 25,
+            height: 25,
+          }}>X</button>
       </div>
       <div
         style={{

@@ -16,6 +16,7 @@ class EntityStar extends Entity {
   public pressStartTime: number | null = null;
   public holdingDuration: number = 0;
 
+  // TODO: 플레이어와 스타가 겹치지 않아도 게이지가 올라가는 버그가 있음.
   public increaseStarLevel() {
     if (!this.pressStartTime || !gameManager.phaserPlayer) return;
     if (gameManager.phaserPlayer.mesoCount < 15) return;
