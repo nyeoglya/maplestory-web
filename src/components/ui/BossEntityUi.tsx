@@ -6,6 +6,7 @@ import gameManager from '@/utils/manager/GameManager';
 
 const BossEntityUi: React.FC = () => {
   const [currentHealth, setCurrentHealth] = useState<number>(50);
+  const [currentGalos, setCurrentGalos] = useState<number>(0);
   const [bossTimer, setBossTimer] = useState<number>(30 * 60);
 
   useEffect(() => {
@@ -13,6 +14,7 @@ const BossEntityUi: React.FC = () => {
       const boss = gameManager.bossEntity;
       if (!boss) return;
       setCurrentHealth(50 * boss.currentHealth / boss.maxHealth);
+      setCurrentGalos(boss.chickenCount);
       setBossTimer(boss.bossTimeLeft);
     }, 1000);
 
@@ -53,6 +55,15 @@ const BossEntityUi: React.FC = () => {
         width: `${currentHealth}%`,
         height: 15,
         backgroundColor: '#eb2204',
+        borderTopRightRadius: 5,
+        borderBottomRightRadius: 5,
+      }} />
+      <div style={{
+        position: 'absolute',
+        left: '25%',
+        width: `${currentGalos * 10}%`,
+        height: 15,
+        backgroundColor: '#eebbee88',
         borderTopRightRadius: 5,
         borderBottomRightRadius: 5,
       }} />

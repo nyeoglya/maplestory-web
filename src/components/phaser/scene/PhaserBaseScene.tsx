@@ -29,6 +29,7 @@ class BaseScene extends Phaser.Scene {
     this.load.image('star', 'assets/star.png');
     this.load.image('targetpos', 'assets/targetpos.png');
     this.load.image('bossHand', 'assets/bossHand.png');
+    this.load.image('bossMap', 'assets/bossmap.png');
     this.load.image('skillTestA', 'assets/skillUse.png');
     this.load.audio('musicTestA', 'assets/closeserver.mp3');
     this.createTransparentPixelTexture('default_pixel');

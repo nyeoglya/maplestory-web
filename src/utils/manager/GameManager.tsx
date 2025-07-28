@@ -1,15 +1,15 @@
 "use client";
 
 import PhaserPlayer from "@/components/phaser/PhaserPlayer";
-import BossEntity from "@/components/phaser/PhaserBossEntity";
+import BossEntity from "@/components/phaser/entity/PhaserBossEntity";
 import EffectManager from "./EffectManager";
 import EntityManager from "./EntityManager";
 import InventoryManager from "./InventoryManager";
 import SkillManager from "./SkillManager";
 import { PlayerStat } from "@/utils/Utils";
-import Entity from "@/components/phaser/PhaserEntity";
-import EntityPizza from "@/components/phaser/PhaserPizzaEntity";
-import EntityStar from "@/components/phaser/PhaserStarEntity";
+import Entity from "@/components/phaser/entity/PhaserEntity";
+import EntityPizza from "@/components/phaser/entity/PhaserPizzaEntity";
+import EntityStar from "@/components/phaser/entity/PhaserStarEntity";
 
 class GameManager {
   public player: PlayerStat = {
@@ -22,7 +22,8 @@ class GameManager {
     maxMana: 600,
     isMove: true,
     flipKey: false,
-    debuffDamageMultiplier: 1.0,
+    damageMultiplier: 1.0,
+    attackMultiplier: 1.0,
   };
   public deathCount: number = 5;
 
@@ -41,7 +42,7 @@ class GameManager {
   public pizzaEntity: EntityPizza | undefined = undefined;
   public starEntity: EntityStar | undefined = undefined;
 
-  constructor() {}
+  constructor() { }
 }
 
 const gameManager: GameManager = new GameManager();

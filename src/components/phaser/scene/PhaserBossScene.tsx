@@ -5,14 +5,14 @@ import * as Phaser from 'phaser';
 import gameManager from '@/utils/manager/GameManager';
 import { Skill } from '@/utils/Skill';
 import { getOverlapEntity } from '@/utils/Utils';
-import PhaserPlayer from './PhaserPlayer';
-import BossEntity from './PhaserBossEntity';
+import PhaserPlayer from '../PhaserPlayer';
+import BossEntity from '../entity/PhaserBossEntity';
 import { Vector } from 'matter';
-import Entity from './PhaserEntity';
-import EntityCleaner from './PhaserCleanerEntity';
-import EntityPizza from './PhaserPizzaEntity';
-import EntityStar from './PhaserStarEntity';
-import { EntityFallingEum, EntityFallingGreenTea, EntityFallingMint } from './PhaserFallingEntity';
+import Entity from '../entity/PhaserEntity';
+import EntityCleaner from '../entity/PhaserCleanerEntity';
+import EntityPizza from '../entity/PhaserPizzaEntity';
+import EntityStar from '../entity/PhaserStarEntity';
+import { EntityFallingEum, EntityFallingGreenTea, EntityFallingMint } from '../entity/PhaserFallingEntity';
 
 class PhaserBossScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
@@ -29,7 +29,7 @@ class PhaserBossScene extends Phaser.Scene {
 
   create() {
     const gameHeight = this.sys.game.config.height as number;
-    const image = this.textures.get('testbackground').getSourceImage() as HTMLImageElement;
+    const image = this.textures.get('bossMap').getSourceImage() as HTMLImageElement;
     const scale = gameHeight / image.height;
     this.physics.world.setBounds(0, 0, image.width * scale, gameHeight);
 
@@ -41,12 +41,13 @@ class PhaserBossScene extends Phaser.Scene {
       { x: 400, y: platformYHeight },
     ];
 
-    const sky = this.add.image(0, 0, 'testbackground').setOrigin(0, 0);
+    const sky = this.add.image(0, 0, 'bossMap').setOrigin(0, 0);
     sky.setScale(this.physics.world.bounds.width / sky.width, this.physics.world.bounds.height / sky.height);
 
     this.cameras.main.setZoom(1.5); // 카메라 줌
 
     // 플랫폼 생성
+    const floorY = this.physics.world.bounds.height - 150;
     this.platforms = this.physics.add.staticGroup();
     (this.platforms.create(0, this.physics.world.bounds.height - 150, 'default_pixel') as Phaser.Physics.Arcade.Sprite)
       .setOrigin(0, 0)
@@ -54,7 +55,7 @@ class PhaserBossScene extends Phaser.Scene {
       .refreshBody();
 
     // 적 생성
-    this.boss = new BossEntity({ scene: this, pos: { x: 250, y: this.physics.world.bounds.height - 250 }, floorY: this.physics.world.bounds.height - 150 });
+    this.boss = new BossEntity({ scene: this, pos: { x: 250, y: this.physics.world.bounds.height - 250 }, floorY: floorY });
     this.boss.mainPlatform = this.platforms;
     this.pizza = new EntityPizza({ scene: this, pos: { x: 500, y: 150 } });
     gameManager.bossEntity = this.boss;
@@ -67,9 +68,9 @@ class PhaserBossScene extends Phaser.Scene {
       if (this.platforms) this.physics.add.collider(entity, this.platforms);
     });
     for (let i = 0; i < 3; i++) {
-      const entityMint = new EntityFallingMint(this, { x: 0, y: 0 });
-      const entityEum = new EntityFallingEum(this, { x: 0, y: 0 });
-      const entityGreenTea = new EntityFallingGreenTea(this, { x: 0, y: 0 });
+      const entityMint = new EntityFallingMint(this, { x: 0, y: 0 }, floorY);
+      const entityEum = new EntityFallingEum(this, { x: 0, y: 0 }, floorY);
+      const entityGreenTea = new EntityFallingGreenTea(this, { x: 0, y: 0 }, floorY);
       entityMint.setDeath();
       entityEum.setDeath();
       entityGreenTea.setDeath();
@@ -86,20 +87,18 @@ class PhaserBossScene extends Phaser.Scene {
       this.physics.add.collider(this.boss, this.platforms);
     }
 
+    // 별 생성
+    this.star = new EntityStar(this, { x: 100, y: floorY - 50 })
+    gameManager.starEntity = this.star;
+
     // 플레이어 생성
-    this.player = new PhaserPlayer(this, 100, this.physics.world.bounds.height - 400, 'player');
+    this.player = new PhaserPlayer(this, 100, floorY - 50, 'player');
     gameManager.phaserPlayer = this.player;
 
     // 플레이어 플랫폼 충돌 설정
     if (this.player && this.platforms) {
       this.physics.add.collider(this.player, this.platforms);
     }
-
-    // 별 생성
-    /*
-    this.star = new EntityStar(this, { x: 100, y: this.physics.world.bounds.height - 150 })
-    gameManager.starEntity = this.star;
-    */
 
     // 스킬 키 매핑
     gameManager.skillManager.skillKeyMap.forEach((skill: Skill, key: string) => {
@@ -153,6 +152,9 @@ class PhaserBossScene extends Phaser.Scene {
 
     if (!this.pizza) return;
     this.pizza.update();
+
+    if (!this.star) return;
+    this.star.update();
 
     gameManager.normalEntityManager.entityList.forEach((entity: Entity) => entity.update(time, delta));
     gameManager.fallingEntityManager.entityList.forEach((entity: Entity) => entity.update(time, delta));

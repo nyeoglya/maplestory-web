@@ -83,10 +83,68 @@ export class DebuffGreenTea extends Effect {
   }
 
   public startEffect(): void {
-    gameManager.player.debuffDamageMultiplier += 0.1;
+    gameManager.player.damageMultiplier += 0.1;
   }
 
   public endEffect() {
-    gameManager.player.debuffDamageMultiplier -= 0.1;
+    gameManager.player.damageMultiplier -= 0.1;
   }
 }
+
+export class DebuffStarForce extends Effect {
+  constructor() {
+    super(
+      '스타포스 실패',
+      '행동 불능에 걸립니다.',
+      3,
+      '/assets/star.png'
+    );
+  }
+
+  public startEffect(): void {
+    gameManager.player.isMove = false;
+  }
+
+  public endEffect() {
+    gameManager.player.isMove = true;
+  }
+}
+
+export class BuffStarForce extends Effect {
+  constructor() {
+    super(
+      '스타포스 성공',
+      '주는 데미지가 100% 증가합니다.',
+      30,
+      '/assets/star.png'
+    );
+  }
+
+  public startEffect(): void {
+    gameManager.player.damageMultiplier += 1.0;
+  }
+
+  public endEffect() {
+    gameManager.player.damageMultiplier -= 1.0;
+  }
+}
+
+export class DebuffCaptcha extends Effect {
+  constructor() {
+    super(
+      '거짓말 탐지기 실패',
+      '5초간 이동이 불가능합니다.',
+      5,
+      '/assets/star.png'
+    );
+  }
+
+  public startEffect(): void {
+    gameManager.player.isMove = false;
+  }
+
+  public endEffect() {
+    gameManager.player.isMove = true;
+  }
+}
+

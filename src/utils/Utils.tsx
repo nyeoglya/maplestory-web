@@ -1,4 +1,4 @@
-import Entity from "@/components/phaser/PhaserEntity";
+import Entity from "@/components/phaser/entity/PhaserEntity";
 import { Vector } from "matter";
 
 export interface PlayerStat {
@@ -11,7 +11,8 @@ export interface PlayerStat {
   speed: Vector;
   isMove: boolean;
   flipKey: boolean;
-  debuffDamageMultiplier: number;
+  damageMultiplier: number;
+  attackMultiplier: number;
 }
 
 export function getDistance(v1: Vector, v2: Vector): number {

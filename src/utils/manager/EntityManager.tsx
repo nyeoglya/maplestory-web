@@ -1,4 +1,4 @@
-import Entity from "@/components/phaser/PhaserEntity";
+import Entity from "@/components/phaser/entity/PhaserEntity";
 import { PlayerStat } from "@/utils/Utils";
 
 class EntityManager {
@@ -18,7 +18,13 @@ class EntityManager {
 
   // 엔티티 완전 삭제
   public removeEntities(filter: ((_: Entity) => boolean)) {
-    this.entityList = this.entityList.filter(entity => !filter(entity));
+    this.entityList.forEach(entity => {
+      if (filter(entity)) {
+        entity.setDeath();
+        entity.destroy(true);
+      }
+    });
+    this.entityList = this.entityList.filter(entity => entity !== undefined);
     this.resetEntityMap();
   }
 

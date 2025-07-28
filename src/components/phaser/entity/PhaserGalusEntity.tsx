@@ -35,11 +35,17 @@ class EntityGalus extends Entity {
     else if (direction > 0) this.setVelocityX(-this.speed);
     else this.setVelocityX(this.speed);
 
-    if (Math.abs(this.targetPos.x - this.getCurrentPos().x) < 10) {
+    if (Math.abs(this.targetPos.x - this.getCurrentPos().x) < 20) {
       if (!gameManager.bossEntity) return;
-      gameManager.bossEntity.chickenCount += 1;
+      gameManager.bossEntity.addChickenCount();
       this.setDeath();
     }
+  }
+
+  public setDeath() {
+    this.death = true;
+    this.setVisible(false);
+    this.destroy(true);
   }
 }
 

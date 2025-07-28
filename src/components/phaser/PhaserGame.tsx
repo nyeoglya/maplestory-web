@@ -3,9 +3,9 @@
 import React, { useEffect, useRef } from 'react';
 import * as Phaser from 'phaser';
 
-import BossScene from './PhaserBossScene';
-import WaitingScene from './PhaserWaitingScene';
-import BaseScene from './PhaserBaseScene';
+import BossScene from './scene/PhaserBossScene';
+import WaitingScene from './scene/PhaserWaitingScene';
+import BaseScene from './scene/PhaserBaseScene';
 
 const PhaserGame = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null);

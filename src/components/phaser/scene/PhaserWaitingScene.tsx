@@ -1,5 +1,5 @@
 import gameManager from "@/utils/manager/GameManager";
-import PhaserPlayer from "./PhaserPlayer";
+import PhaserPlayer from "../PhaserPlayer";
 import { Skill } from "@/utils/Skill";
 import { getOverlapEntity } from "@/utils/Utils";
 
@@ -50,6 +50,7 @@ class WaitingScene extends Phaser.Scene {
 
     // 플레이어 생성
     this.player = new PhaserPlayer(this, 100, this.physics.world.bounds.height - 400, 'player');
+    this.player.createAnimations();
     gameManager.phaserPlayer = this.player;
 
     // 플레이어 충돌 설정

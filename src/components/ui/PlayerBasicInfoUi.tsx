@@ -6,10 +6,16 @@ import { PlayerStat } from '@/utils/Utils';
 
 const PlayerbasicInfoUi: React.FC = () => {
   const [currentPlayer, setCurrentPlayer] = useState<PlayerStat>({} as PlayerStat);
+  const [level, setLevel] = useState<number>(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPlayer({ ...gameManager.player });
+      if (!gameManager.starEntity) return;
+      setLevel(gameManager.starEntity.effectStack);
+      if (gameManager.player.health <= 0) {
+        gameManager.phaserPlayer?.setDeath();
+      }
     }, 500);
 
     return () => {
@@ -46,7 +52,7 @@ const PlayerbasicInfoUi: React.FC = () => {
           gap: 5,
           alignItems: 'center',
         }}>
-          <p style={{ color: '#af9112', fontSize: 15 }}>Lv.???</p>
+          <p style={{ color: '#af9112', fontSize: 15, width: 40 }}>Lv.{level}</p>
           <p>{currentPlayer.name}</p>
         </div>
       </div>

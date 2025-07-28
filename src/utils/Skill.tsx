@@ -2,6 +2,7 @@ import { EffectTestA } from "./Effect";
 import EffectManager from "@/utils/manager/EffectManager";
 import EntityManager from "@/utils/manager/EntityManager";
 import { getRandomInt, PlayerStat } from "./Utils";
+import gameManager from "./manager/GameManager";
 
 export abstract class Skill {
   public cooltimeLeft: number = 0;
@@ -29,11 +30,11 @@ export abstract class Skill {
   public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) { }
 }
 
-export class SkillTestA extends Skill {
+export class SkillAttack extends Skill {
   constructor(effectManager: EffectManager) {
     super(
-      '스킬 테스트 A',
-      '테스트용 스킬입니다.',
+      '공격',
+      '공격 스킬입니다.',
       2,
       false,
       effectManager,
@@ -43,7 +44,7 @@ export class SkillTestA extends Skill {
   }
 
   public isSkillAvailable(data: PlayerStat): boolean {
-    return true;
+    return data.mana >= 10;
   }
 
   public consume(data: PlayerStat) {
@@ -55,11 +56,11 @@ export class SkillTestA extends Skill {
   }
 }
 
-export class SkillTestB extends Skill {
+export class SkillPowerUp extends Skill {
   constructor(effectManager: EffectManager) {
     super(
-      '스킬 테스트 B',
-      '테스트용 스킬입니다.',
+      '강화',
+      '강화 스킬입니다.',
       10,
       false,
       effectManager,
@@ -69,11 +70,11 @@ export class SkillTestB extends Skill {
   }
 
   public isSkillAvailable(data: PlayerStat): boolean {
-    return true;
+    return data.mana >= 20;
   }
 
   public consume(data: PlayerStat) {
-    data.mana -= 50;
+    data.mana -= 20;
   }
 
   public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) {
@@ -81,16 +82,26 @@ export class SkillTestB extends Skill {
   }
 }
 
-export class SkillTestC extends Skill {
+export class SkillRecoverMana extends Skill {
   constructor(effectManager: EffectManager) {
     super(
-      '스킬 테스트 C',
-      '테스트용 스킬입니다.',
-      10,
+      '마나 회복',
+      '마나를 풀로 회복하는 스킬입니다.',
+      25,
       false,
       effectManager,
       '/assets/skill.png',
       'skillTestA',
     );
+  }
+
+  public isSkillAvailable(data: PlayerStat): boolean {
+    return true;
+  }
+
+  public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) {
+    const player = gameManager.player;
+    player.mana += Math.floor(player.maxMana / 2);
+    player.mana = Math.min(player.mana, player.maxMana);
   }
 }

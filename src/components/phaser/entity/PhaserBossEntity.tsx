@@ -32,18 +32,25 @@ interface BossConfig {
 class BossEntity extends Entity {
   public bossTimeLeft: number = 30 * 60;
 
-  public currentStatus: BossPhaseStatus = BossPhaseStatus.CHICKEN;
   public chickenCount: number = 0;
   protected bossHandTarget: EntityBossHandTarget | null = null;
   public mainPlatform: Phaser.Physics.Arcade.StaticGroup | null = null;
+
+  public targetX: number = 0;
 
   public getPhase(): BossPhaseStatus {
     const nowTime = 150 - this.bossTimeLeft % 150;
     if (0 <= nowTime && nowTime < 60) {
       return BossPhaseStatus.CHICKEN;
     } else if (60 <= nowTime && nowTime < 120) {
+      if (this.chickenCount >= 0) {
+        gameManager.bossEntityManager
+          .removeEntities((entity: Entity) => entity instanceof EntityGalus);
+        this.chickenCount = -1;
+      }
       return BossPhaseStatus.BR;
     } else {
+      this.chickenCount = 0;
       return BossPhaseStatus.PIZZA;
     }
   }
@@ -70,8 +77,8 @@ class BossEntity extends Entity {
     this.chickenCount += 1;
     if (!gameManager.phaserPlayer) return;
     if (this.chickenCount >= 5) {
-      gameManager.deathCount -= gameManager.phaserPlayer.mesoCount - 1;
       gameManager.phaserPlayer.setDeath();
+      this.chickenCount = 0;
     }
   }
 
@@ -79,12 +86,12 @@ class BossEntity extends Entity {
     scene,
     pos,
     texture = 'boss',
-    health = 1000000000000,
+    health = 3000000000,
     scale = 0.3,
     affectGravity = true,
-    isMove = true,
+    isMove = false,
     damage = 200,
-    speed = 0,
+    speed = 50,
     floorY = 0,
     name = 'boss',
     healthBarVisible = false,
@@ -114,12 +121,7 @@ class BossEntity extends Entity {
     })
   }
 
-  /*
-  Phase 치킨
-  보스 몹은 phase가 끝날 때까지 위치 고정된 채로 존재.
-  맵에 닭이 뛰노는 곳 몹인 갈리나/갈루스가 소환됨.
-  소환된 몹은 보스 몹에게 점차 끌려가게 되며, 보스 몹과 닿으면 소멸됨, 이 방식으로 소멸된 닭이 10마리를 기록하는 경우, Phase가 끝나면서 획득한 메소 1억 당 데스카운트 1개를 회수해 감
-  */
+  // TODO: 지금까지 섭취한 치킨의 수 표시하기(보스바에 흰색으로 표시?)
   public phaseChicken() {
     if (!this.mainPlatform) return;
     const randomX = getRandomInt(0, 1000);
@@ -149,11 +151,26 @@ class BossEntity extends Entity {
     this.bossHandTarget?.startTargeting(randomX);
   }
 
+  public setNewTargetX() {
+    this.targetX = getRandomInt(0, 1000);
+    this.isMove = true;
+  }
+
   public update(): void {
     if (!this.bossHandTarget) return;
     this.bossHandTarget.update();
 
+    if (!this.isMove || this.getPhase() == BossPhaseStatus.CHICKEN) {
+      this.setVelocityX(0);
+      return;
+    }
 
+    const directionX = this.x - this.targetX <= 0 ? 1 : -1;
+    this.setVelocityX(directionX * this.xSpeed);
+    if (Math.abs(this.x - this.targetX) < 100) {
+      this.isMove = false;
+      this.setNewTargetX(); // TODO: 시간 지연 넣기
+    }
   }
 }
 

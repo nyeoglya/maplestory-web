@@ -5,6 +5,7 @@ import windowManager from './WindowManager';
 import { Vector } from 'matter';
 import gameManager from '@/utils/manager/GameManager';
 import emitter from '@/utils/EventBus';
+import { DebuffCaptcha } from '@/utils/Effect';
 
 const CaptchaWindow: React.FC = () => {
   const positionRef = useRef<Vector>({ x: 200, y: 50 });
@@ -17,9 +18,11 @@ const CaptchaWindow: React.FC = () => {
   const [inputText, setInputText] = useState<string>('');
 
   const onSubmitted = () => {
+    gameManager.player.isMove = true;
     if (text == inputText) {
       setShowWindow(false);
-      gameManager.player.isMove = true;
+    } else {
+      gameManager.effectManager.addEffect(DebuffCaptcha);
     }
   }
 

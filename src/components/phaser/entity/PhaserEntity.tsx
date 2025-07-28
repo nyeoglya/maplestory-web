@@ -10,8 +10,8 @@ function delay(ms: number): Promise<void> {
 
 class Entity extends Phaser.GameObjects.Container {
   protected sprite: Phaser.GameObjects.Sprite;
-  protected healthBarBackground: Phaser.GameObjects.Graphics;
-  protected healthBar: Phaser.GameObjects.Graphics;
+  protected healthBarBackground: Phaser.GameObjects.Graphics | null = null;
+  protected healthBar: Phaser.GameObjects.Graphics | null = null;
   protected initialPos: Vector;
 
   public currentHealth: number;
@@ -25,7 +25,7 @@ class Entity extends Phaser.GameObjects.Container {
   // data와 collider로 공격을 시도한다. 성공할 경우, data를 수정한다. collider는 겹칠 경우에 데미지를 주는 적절한 collider를 선택
   public tryAttack(data: PlayerStat, collider: Phaser.Physics.Arcade.Sprite | undefined = undefined) {
     if (this.death) return;
-    const finalDamage = Math.ceil(this.damage * gameManager.player.debuffDamageMultiplier);
+    const finalDamage = Math.ceil(this.damage * gameManager.player.damageMultiplier);
     if (!collider) {
       data.health -= Math.min(finalDamage, data.health);
     } else {
@@ -41,13 +41,14 @@ class Entity extends Phaser.GameObjects.Container {
 
     const baseFontSize = 50;
     const yOffsetPerRepeat = baseFontSize * 0.7;
+    const multipliedDamageAmount = gameManager.player.attackMultiplier * amount;
 
-    this.currentHealth -= amount * repeat;
+    this.currentHealth -= multipliedDamageAmount * repeat;
     this.updateHealthBar(this.currentHealth);
 
     for (let i = 0; i < repeat; i++) {
       const spawnY = this.y - (i * yOffsetPerRepeat);
-      this.spawnDamageText(this.x, spawnY, amount.toString(), baseFontSize);
+      this.spawnDamageText(this.x, spawnY, multipliedDamageAmount.toString(), baseFontSize);
       if (this.currentHealth <= 0) {
         this.setDeath();
         break;
@@ -119,21 +120,7 @@ class Entity extends Phaser.GameObjects.Container {
     body.setOffset(-this.sprite.displayWidth / 2, -this.sprite.displayHeight / 2);
     body.setAllowGravity(affectGravity);
 
-    // 체력 바
-    const barYOffset = -this.sprite.displayHeight / 2 - 20;
-
-    this.healthBarBackground = scene.add.graphics();
-    this.healthBarBackground.fillStyle(0x777777, 0.8);
-    this.healthBarBackground.fillRect(-30, barYOffset, 60, 5);
-    this.add(this.healthBarBackground);
-
-    this.healthBar = scene.add.graphics();
-    this.healthBar.fillStyle(0x00ff00, 1);
-    this.healthBar.fillRect(-30, barYOffset, 60, 5);
-    this.add(this.healthBar);
-
-    this.updateHealthBarVisibility(healthBarVisible);
-    this.updateHealthBar(health);
+    this.createHealthBar(); // 체력 바
 
     // 이동 설정 및 초기 속도
     this.setVelocityX(xSpeed);
@@ -141,7 +128,25 @@ class Entity extends Phaser.GameObjects.Container {
     this.sprite.setFlipX(!this.directingLeft);
   }
 
+  public createHealthBar() {
+    const barYOffset = -this.sprite.displayHeight / 2 - 20;
+
+    this.healthBarBackground = this.scene.add.graphics();
+    this.healthBarBackground.fillStyle(0x777777, 0.8);
+    this.healthBarBackground.fillRect(-30, barYOffset, 60, 5);
+    this.add(this.healthBarBackground);
+
+    this.healthBar = this.scene.add.graphics();
+    this.healthBar.fillStyle(0x00ff00, 1);
+    this.healthBar.fillRect(-30, barYOffset, 60, 5);
+    this.add(this.healthBar);
+
+    this.updateHealthBarVisibility(this.healthBarVisible);
+    this.updateHealthBar(this.currentHealth);
+  }
+
   public updateHealthBarVisibility(value: boolean) {
+    if (!this.healthBar || !this.healthBarBackground) return;
     this.healthBarVisible = value;
     this.healthBar.setVisible(this.healthBarVisible);
     this.healthBarBackground.setVisible(this.healthBarVisible);
@@ -177,7 +182,8 @@ class Entity extends Phaser.GameObjects.Container {
   }
 
   // 체력바 업데이트
-  private updateHealthBar(currentHealth: number): void {
+  protected updateHealthBar(currentHealth: number): void {
+    if (!this.healthBar) return;
     if (!this.healthBarVisible) return;
     this.currentHealth = currentHealth;
     this.healthBar.clear();

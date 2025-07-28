@@ -53,10 +53,11 @@ const BossPhaseClockWindow: React.FC = () => {
         width: initWinData.width,
         height: initWinData.height,
         borderRadius: '50%',
-        backgroundColor: 'gray',
         userSelect: 'none',
         cursor: 'grab',
         pointerEvents: 'auto',
+        border: '2px solid #1d4869',
+        boxSizing: 'border-box',
         zIndex,
         overflow: 'hidden',
       }}
@@ -76,13 +77,14 @@ const BossPhaseClockWindow: React.FC = () => {
           const x2 = cx + r * Math.cos(endAngle);
           const y2 = cy + r * Math.sin(endAngle);
 
-          const colors = ['#FF6666', '#FF6666', '#6666FF', '#6666FF', '#FF66FF'];
+          const colors = ['#ffffff', '#ffffff', '#eeeeee', '#eeeeee', '#aaaaaa'];
 
           return (
             <path
               key={i}
               d={`M${cx},${cy} L${x1},${y1} A${r},${r} 0 0,1 ${x2},${y2} Z`}
               fill={colors[i]}
+              fillOpacity={0.8}
             />
           );
         })}
@@ -95,7 +97,8 @@ const BossPhaseClockWindow: React.FC = () => {
           left: radius,
           width: 4,
           height: radius - 20,
-          backgroundColor: 'black',
+          borderRadius: radius / 2,
+          backgroundColor: '#1d4869',
           transform: `translate(-50%, -100%) rotate(${rotation}deg)`,
           transformOrigin: 'bottom center',
         }}

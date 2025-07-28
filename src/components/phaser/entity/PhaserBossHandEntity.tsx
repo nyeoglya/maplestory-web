@@ -13,7 +13,7 @@ class EntityBossHand extends Entity {
       pos.x,
       pos.y,
       'bossHand',
-      1000,
+      1000000000000,
       1,
       false,
       true,
@@ -50,7 +50,7 @@ class EntityBossHand extends Entity {
     this.x = pos.x;
     this.y = pos.y;
     this.setVisible(true);
-    this.setVelocityY(200);
+    this.setVelocityY(1000);
   }
 }
 

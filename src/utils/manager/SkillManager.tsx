@@ -3,7 +3,7 @@
 import EffectManager from './EffectManager';
 import EntityManager from './EntityManager';
 import { PlayerStat } from '@/utils/Utils';
-import { Skill, SkillTestA, SkillTestB, SkillTestC } from '@/utils/Skill';
+import { Skill, SkillAttack, SkillPowerUp, SkillRecoverMana } from '@/utils/Skill';
 
 class SkillManager {
   public skillCooltimeMap: Map<Skill, number> = new Map();
@@ -23,9 +23,9 @@ class SkillManager {
     this.skillCooltimeInterval = this.skillCooltimeInterval.bind(this);
     this.skillCooltimeIntervalId = setInterval(this.skillCooltimeInterval, 1000);
     this.skillKeyMap = new Map([
-      ['w', new SkillTestA(effectManager)],
-      ['e', new SkillTestB(effectManager)],
-      ['a', new SkillTestC(effectManager)]
+      ['w', new SkillAttack(effectManager)],
+      ['e', new SkillPowerUp(effectManager)],
+      ['r', new SkillRecoverMana(effectManager)]
     ]);
     this.skillList = Array.from(this.skillKeyMap.values());
   }

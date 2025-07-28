@@ -1,6 +1,6 @@
 import gameManager from '@/utils/manager/GameManager';
 import * as Phaser from 'phaser';
-import Entity from './PhaserEntity';
+import Entity from './entity/PhaserEntity';
 
 class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   public detectionZone: Phaser.Physics.Arcade.StaticBody | undefined; // 플레이어 주변 감지 영역
@@ -44,6 +44,22 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
       }
     });
 
+    this.interactKey?.on('down', () => {
+      if (!gameManager.starEntity) return;
+      gameManager.starEntity.pressStartTime = this.scene.time.now;
+    });
+
+    this.interactKey?.on('up', () => {
+      if (!gameManager.starEntity) return;
+      gameManager.starEntity.pressStartTime = null;
+      gameManager.starEntity.resetPressTime();
+    });
+
+    if (this.interactKey) {
+      if (!gameManager.starEntity) return;
+      gameManager.starEntity.increaseStarLevel();
+    }
+
     // 충돌 존
     this.detectionZone = scene.physics.add.staticBody(this.x, this.y, 300, 200);
 
@@ -82,7 +98,7 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     });
   }
 
-  protected createAnimations() {
+  public createAnimations() {
     this.scene.anims.create({
       key: 'left',
       frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
@@ -130,6 +146,12 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     if (!gameManager.player.isMove) {
       this.anims.stop();
       return;
+    }
+
+    if (this.interactKey.isDown && gameManager.starEntity && gameManager.starEntity.pressStartTime) {
+      const now = this.scene.time.now;
+      gameManager.starEntity.holdingDuration = (now - gameManager.starEntity.pressStartTime) / 1000;
+      gameManager.starEntity.increaseStarLevel();
     }
 
     const playerSpeed: number = gameManager.player.speed.x;

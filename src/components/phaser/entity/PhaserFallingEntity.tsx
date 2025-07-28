@@ -9,12 +9,13 @@ import { DebuffEum, DebuffGreenTea, DebuffMint, Effect } from '@/utils/Effect';
 class EntityFalling extends Entity {
 
   protected speed = 80;
-  public targetPosY: number = 700;
+  public targetPosY: number = 0;
   public debuffType: new () => Effect = DebuffMint;
 
   constructor(
     public scene: Phaser.Scene,
     public pos: Vector,
+    public floorY: number,
     public texture: string = 'baskinrabins',
     public health: number = 100,
     public scale: number = 1,
@@ -27,7 +28,7 @@ class EntityFalling extends Entity {
     public uuid: string = uuidv4(),
   ) {
     super(scene, pos.x, pos.y, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
-    this.sprite.setFlipX(true);
+    this.targetPosY = floorY;
   }
 
   public update(): void {
@@ -55,12 +56,10 @@ class EntityFalling extends Entity {
 
 export class EntityFallingMint extends EntityFalling {
 
-  protected speed = 80;
-  public targetPosY: number = 700;
-
   constructor(
     public scene: Phaser.Scene,
     public pos: Vector,
+    public floorY: number,
     public texture: string = 'brmint',
     public health: number = 100,
     public scale: number = 1,
@@ -72,19 +71,17 @@ export class EntityFallingMint extends EntityFalling {
     public healthBarVisible: boolean = false,
     public uuid: string = uuidv4(),
   ) {
-    super(scene, pos, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
+    super(scene, pos, floorY, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
     this.debuffType = DebuffMint;
   }
 }
 
 export class EntityFallingEum extends EntityFalling {
 
-  protected speed = 80;
-  public targetPosY: number = 700;
-
   constructor(
     public scene: Phaser.Scene,
     public pos: Vector,
+    public floorY: number,
     public texture: string = 'breum',
     public health: number = 100,
     public scale: number = 1,
@@ -96,19 +93,17 @@ export class EntityFallingEum extends EntityFalling {
     public healthBarVisible: boolean = false,
     public uuid: string = uuidv4(),
   ) {
-    super(scene, pos, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
+    super(scene, pos, floorY, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
     this.debuffType = DebuffEum;
   }
 }
 
 export class EntityFallingGreenTea extends EntityFalling {
 
-  protected speed = 80;
-  public targetPosY: number = 700;
-
   constructor(
     public scene: Phaser.Scene,
     public pos: Vector,
+    public floorY: number,
     public texture: string = 'brgreentea',
     public health: number = 100,
     public scale: number = 1,
@@ -120,7 +115,7 @@ export class EntityFallingGreenTea extends EntityFalling {
     public healthBarVisible: boolean = false,
     public uuid: string = uuidv4(),
   ) {
-    super(scene, pos, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
+    super(scene, pos, floorY, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
     this.debuffType = DebuffGreenTea;
   }
 }
