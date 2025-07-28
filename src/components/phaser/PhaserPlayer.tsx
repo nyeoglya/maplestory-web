@@ -1,19 +1,23 @@
-import gameManager from '@/utils/GameManager';
+import gameManager from '@/utils/manager/GameManager';
 import * as Phaser from 'phaser';
+import Entity from './PhaserEntity';
 
-export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
+class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   public detectionZone: Phaser.Physics.Arcade.StaticBody | undefined; // 플레이어 주변 감지 영역
   public directingLeft: boolean = true;
-  private jumpKey: Phaser.Input.Keyboard.Key | null = null;
-  private leftKey: Phaser.Input.Keyboard.Key | null = null;
-  private rightKey: Phaser.Input.Keyboard.Key | null = null;
-  private upKey: Phaser.Input.Keyboard.Key | null = null;
-  private downKey: Phaser.Input.Keyboard.Key | null = null;
-  private skillImg: Phaser.GameObjects.Image | undefined;
-  
-  private doubleClickCriteria = 300;
-  private doubleClickJumpTime: number = this.scene.time.now;
-  private disableJump: boolean = false;
+  protected jumpKey: Phaser.Input.Keyboard.Key | null = null;
+  protected leftKey: Phaser.Input.Keyboard.Key | null = null;
+  protected rightKey: Phaser.Input.Keyboard.Key | null = null;
+  protected upKey: Phaser.Input.Keyboard.Key | null = null;
+  protected downKey: Phaser.Input.Keyboard.Key | null = null;
+  protected retrieveKey: Phaser.Input.Keyboard.Key | null = null;
+  protected interactKey: Phaser.Input.Keyboard.Key | null = null;
+  protected skillImg: Phaser.GameObjects.Image | undefined;
+
+  protected doubleClickCriteria = 300;
+  protected doubleClickJumpTime: number = this.scene.time.now;
+  protected disableJump: boolean = false;
+  public mesoCount: number = 0;
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame);
@@ -31,6 +35,8 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     this.rightKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT) || null;
     this.downKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN) || null;
     this.upKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.UP) || null;
+    this.retrieveKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL) || null;
+    this.interactKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE) || null;
 
     this.scene.input.keyboard?.on('keydown', (event: KeyboardEvent) => {
       if (event.altKey && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.code)) {
@@ -44,7 +50,30 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     this.createAnimations();
   }
 
-  private createAnimations() {
+  public getCurrentPos() {
+    return { x: this.x, y: this.y };
+  }
+
+  public getMeso() {
+    const playerPos = gameManager.phaserPlayer?.getBottomCenter();
+    if (!playerPos) return;
+
+    gameManager.droppedItems = gameManager.droppedItems.filter((drop: Entity) => {
+      const dx = drop.x - playerPos.x;
+      const dy = drop.y - playerPos.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < 50) {
+        drop.destroy();
+        this.mesoCount += 1;
+        return false;
+      } else {
+        return true;
+      }
+    });
+  }
+
+  protected createAnimations() {
     this.scene.anims.create({
       key: 'left',
       frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
@@ -72,7 +101,7 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
         this.detectionZone.x,
         this.detectionZone.y,
         skillImgName
-      ).setOrigin(0, 0);      
+      ).setOrigin(0, 0);
       this.skillImg.setFlipX(this.directingLeft);
 
       this.scene.time.delayedCall(500, () => {
@@ -88,7 +117,7 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   public teleportLoc: string | null = null;
 
   update() {
-    if (!this.leftKey || !this.rightKey || !this.downKey || !this.upKey || !this.jumpKey) return;
+    if (!this.leftKey || !this.rightKey || !this.downKey || !this.upKey || !this.jumpKey || !this.retrieveKey || !this.interactKey) return;
     const playerSpeed: number = gameManager.player.speed.x;
     const isBodyTouchingDown: boolean = this.body?.touching.down || false;
     if (!this.disableJump) {
@@ -111,9 +140,9 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
       }
     }
 
-    if (isBodyTouchingDown) {
-      this.disableJump = false;
-    }
+    if (this.retrieveKey.isDown) this.getMeso();
+
+    if (isBodyTouchingDown) this.disableJump = false;
 
     if (Phaser.Input.Keyboard.JustDown(this.jumpKey) && this.body instanceof Phaser.Physics.Arcade.Body) {
       if (this.downKey?.isDown && this.disablePlatform && this.body.touching.down) {
@@ -152,3 +181,5 @@ export class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     }
   }
 }
+
+export default PhaserPlayer;

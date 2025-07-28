@@ -1,8 +1,7 @@
-import Entity from "@/components/PhaserEntity";
+import Entity from "@/components/phaser/PhaserEntity";
 import { Vector } from "matter";
 
 export interface PlayerStat {
-  position: Vector;
   name: string;
   health: number;
   maxHealth: number;
@@ -10,6 +9,24 @@ export interface PlayerStat {
   mana: number;
   maxMana: number;
   speed: Vector;
+}
+
+export function getDistance(v1: Vector, v2: Vector): number {
+  const dx = v2.x - v1.x;
+  const dy = v2.y - v1.y;
+  return Math.hypot(dx, dy);
+};
+
+export function getDirectionVector(from: Vector, to: Vector): Vector {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const length = Math.hypot(dx, dy);
+  if (length === 0) return { x: 0, y: 0 };
+  return { x: dx / length, y: dy / length };
+}
+
+export function getRandomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export function getOverlapEntity(
@@ -23,7 +40,7 @@ export function getOverlapEntity(
   targetGroup.forEach(entity => {
     const entityBody: Phaser.Physics.Arcade.Body = entity.getBody();
     if (!entityBody) return;
-    
+
     scene.physics.overlap(detectionZone, entityBody, () => {
       overlapUuidList.push(entity.uuid);
     }, undefined, scene);

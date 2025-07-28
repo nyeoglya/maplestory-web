@@ -1,29 +1,24 @@
-import { Vector } from "matter";
-import Entity from "@/components/PhaserEntity";
-import { PlayerStat } from "./Utils";
+import Entity from "@/components/phaser/PhaserEntity";
+import { PlayerStat } from "@/utils/Utils";
 
 class EntityManager {
   public entityList: Entity[] = [];
   public entityMap: Map<string, Entity> = new Map();
 
-  public createEntityMap() {
+  public resetEntityMap() {
+    this.entityMap = new Map();
     for (const entity of this.entityList) {
       this.entityMap.set(entity.uuid, entity);
     }
   }
 
-  public setEntitySpawnList(entitySpawnList: Vector[]) {
-    this.spawnLocationList = entitySpawnList
-  }
-
   constructor(
-    public spawnLocationList: Vector[] = [],
     public entitySpawnCooltime: number = 30000,
-  ) {}
+  ) { }
 
   // 엔티티 완전 삭제
   public removeEntities(filter: ((_: Entity) => boolean)) {
-    
+
   }
 
   // 엔티티 중에서 사망한 친구들은 초기 위치로 다시 복구

@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import gameManager from '@/utils/GameManager';
+import gameManager from '@/utils/manager/GameManager';
 import Image from 'next/image';
 import { Effect } from '@/utils/Effect';
 
 const PlayerEffectUi: React.FC = () => {
   const [currentEffect, setCurrentEffect] = useState<Effect[]>([]);
-  
+
   useEffect(() => {
     const handleEffectListUpdate = (newEffectList: Effect[]) => {
       setCurrentEffect([...newEffectList]);
     };
-  
+
     gameManager.effectManager.setCurrentEffect = handleEffectListUpdate;
-  
+
     return () => {
       gameManager.effectManager.setCurrentEffect = undefined;
     };
@@ -38,7 +38,7 @@ const PlayerEffectUi: React.FC = () => {
       }}
     >
       {currentEffect.map(effect => {
-        const iconSize = 50;      
+        const iconSize = 50;
         return (
           <div
             key={effect.name}

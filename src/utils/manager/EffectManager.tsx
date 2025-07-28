@@ -1,7 +1,7 @@
 "use client";
 
-import { Effect, EffectTestA, EffectTestB } from "./Effect";
-import { PlayerStat } from "./Utils";
+import { Effect, EffectTestA, EffectTestB } from "@/utils/Effect";
+import { PlayerStat } from "@/utils/Utils";
 
 class EffectManager {
   public currentPlayerEffect: Effect[] = [
@@ -11,12 +11,12 @@ class EffectManager {
   public effectDurationIntervalId: NodeJS.Timeout;
 
   public setCurrentEffect: ((newEffectList: Effect[]) => void) | undefined = undefined;
-  
+
   public updateEffectUi() {
     if (!this.setCurrentEffect) return;
     this.setCurrentEffect(this.currentPlayerEffect);
   }
-  
+
   // 효과 추가
   public addEffect(effectType: new () => Effect) {
     const oldEffect = this.currentPlayerEffect.find(effect => {
@@ -32,7 +32,7 @@ class EffectManager {
     this.updateEffectUi();
   }
 
-  constructor () {
+  constructor() {
     this.effectDurationInterval = this.effectDurationInterval.bind(this);
     this.effectDurationIntervalId = setInterval(this.effectDurationInterval, 1000);
   }

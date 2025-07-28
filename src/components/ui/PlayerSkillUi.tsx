@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import gameManager from '@/utils/GameManager';
+import gameManager from '@/utils/manager/GameManager';
 import Image from 'next/image';
 import { Skill } from '@/utils/Skill';
 

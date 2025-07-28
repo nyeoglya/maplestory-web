@@ -18,7 +18,16 @@ class BaseScene extends Phaser.Scene {
     this.load.image('testbackground', 'assets/testbackground.png');
     this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 111 });
     this.load.image('boss', 'assets/boss.png');
+    this.load.image('cleaner', 'assets/cleaner.png');
+    this.load.image('meso', 'assets/meso.png');
+    this.load.image('galus', 'assets/galus.png');
+    this.load.image('pizza', 'assets/pizza.png');
+    this.load.image('baskinrabins', 'assets/baskinrabins.png');
+    this.load.image('star', 'assets/star.png');
+    this.load.image('targetpos', 'assets/targetpos.png');
+    this.load.image('bossHand', 'assets/bossHand.png');
     this.load.image('skillTestA', 'assets/skillUse.png');
+    this.load.audio('musicTestA', 'assets/closeserver.mp3');
     this.createTransparentPixelTexture('default_pixel');
   }
 

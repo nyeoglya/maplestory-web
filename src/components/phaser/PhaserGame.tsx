@@ -13,7 +13,7 @@ const PhaserGame = () => {
   useEffect(() => {
     const initialWidth = window.innerWidth;
     const initialHeight = window.innerHeight;
-    
+
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       width: initialWidth,

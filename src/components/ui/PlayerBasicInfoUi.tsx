@@ -1,21 +1,19 @@
 "use client";
 
-import React, {useEffect, useState} from 'react';
-import gameManager from '@/utils/GameManager';
+import React, { useEffect, useState } from 'react';
+import gameManager from '@/utils/manager/GameManager';
 import { PlayerStat } from '@/utils/Utils';
 
 const PlayerbasicInfoUi: React.FC = () => {
   const [currentPlayer, setCurrentPlayer] = useState<PlayerStat>({} as PlayerStat);
 
   useEffect(() => {
-    const handlePlayerUpdate = (newPlayer: PlayerStat) => {
-      setCurrentPlayer({...newPlayer});
-    };
-
-    gameManager.setCurrentPlayer = handlePlayerUpdate;
+    const interval = setInterval(() => {
+      setCurrentPlayer({ ...gameManager.player });
+    }, 500);
 
     return () => {
-      gameManager.setCurrentPlayer = undefined;
+      clearInterval(interval);
     };
   }, []);
 
@@ -48,7 +46,7 @@ const PlayerbasicInfoUi: React.FC = () => {
           gap: 5,
           alignItems: 'center',
         }}>
-          <p style={{color: '#af9112', fontSize: 15}}>Lv.???</p>
+          <p style={{ color: '#af9112', fontSize: 15 }}>Lv.???</p>
           <p>{currentPlayer.name}</p>
         </div>
       </div>
@@ -68,7 +66,7 @@ const PlayerbasicInfoUi: React.FC = () => {
           flexDirection: 'row',
           gap: 5,
         }}>
-          <p style={{color: '#999999', width: 30}}>HP</p>
+          <p style={{ color: '#999999', width: 30 }}>HP</p>
           <div style={{
             backgroundColor: '#6b6368',
             position: 'relative',
@@ -83,7 +81,7 @@ const PlayerbasicInfoUi: React.FC = () => {
               height: '100%',
               borderRadius: 5,
               transition: 'width 0.3s ease-in-out'
-            }}/>
+            }} />
             <p style={{
               position: 'absolute',
               color: '#222',
@@ -96,7 +94,7 @@ const PlayerbasicInfoUi: React.FC = () => {
           flexDirection: 'row',
           gap: 5,
         }}>
-          <p style={{color: '#999999', width: 30}}>MP</p>
+          <p style={{ color: '#999999', width: 30 }}>MP</p>
           <div style={{
             backgroundColor: '#6b6368',
             position: 'relative',
@@ -111,7 +109,7 @@ const PlayerbasicInfoUi: React.FC = () => {
               height: '100%',
               borderRadius: 5,
               transition: 'width 0.3s ease-in-out'
-            }}/>
+            }} />
             <p style={{
               position: 'absolute',
               color: '#222',

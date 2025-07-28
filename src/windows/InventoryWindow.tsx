@@ -3,13 +3,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import windowManager from './WindowManager';
 import { Vector } from 'matter';
-import gameManager from '@/utils/GameManager';
+import gameManager from '@/utils/manager/GameManager';
 import Image from 'next/image';
 import { Item } from '@/utils/Item';
-import keyboardManager from '@/utils/KeyManager';
+import keyboardManager from '@/utils/manager/KeyManager';
 
 const InventoryWindow: React.FC = () => {
-  const positionRef = useRef<Vector>({x: 50, y: 50});
+  const positionRef = useRef<Vector>({ x: 50, y: 50 });
   const [position, setPosition] = useState<Vector>(positionRef.current);
   const isDragging = useRef<boolean>(false);
   const offset = useRef<Vector>({ x: 0, y: 0 });
@@ -84,8 +84,8 @@ const InventoryWindow: React.FC = () => {
         }}
         onMouseDown={windowManager.handleMouseDown}
       >
-        <p style={{marginLeft: 10}}>인벤토리</p>
-        <div style={{flexGrow: 1}}/>
+        <p style={{ marginLeft: 10 }}>인벤토리</p>
+        <div style={{ flexGrow: 1 }} />
         <button style={{
           width: 25,
           height: 25,

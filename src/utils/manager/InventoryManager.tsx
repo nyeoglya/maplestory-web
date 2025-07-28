@@ -1,7 +1,7 @@
 "use client";
 
-import { Item, ItemTestA, ItemTestB, ItemTestC, ItemTestD } from "./Item";
-import { PlayerStat } from "./Utils";
+import { Item, ItemTestA, ItemTestB, ItemTestC, ItemTestD } from "@/utils/Item";
+import { PlayerStat } from "@/utils/Utils";
 
 class InventoryManager {
   public itemList: typeof Item[] = [ItemTestA];
@@ -19,7 +19,7 @@ class InventoryManager {
   ]); // index 0부터 시작
   public armorLocList: string[] = Array.from(this.currentArmorInventory.keys());
 
-  constructor () {
+  constructor() {
 
   }
 
@@ -50,7 +50,7 @@ class InventoryManager {
           const tempItem = this.currentPlayerInventory[itemIndex];
           this.currentPlayerInventory.splice(itemIndex, 1);
           this.mouseItem = tempItem;
-          
+
           this.setCurrentPlayerInventory?.(this.currentPlayerInventory);
           this.setMouseItem?.(this.mouseItem);
         }

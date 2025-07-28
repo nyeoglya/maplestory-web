@@ -1,9 +1,27 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import gameManager from '@/utils/manager/GameManager';
 
 const BossEntityUi: React.FC = () => {
+  const [currentHealth, setCurrentHealth] = useState<number>(50);
+  const [bossTimer, setBossTimer] = useState<number>(30 * 60);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const boss = gameManager.bossEntity;
+      if (!boss) return;
+      boss.bossTimeLeft -= 1;
+      setCurrentHealth(50 * boss.currentHealth / boss.maxHealth);
+      setBossTimer(boss.bossTimeLeft);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <div>
       <Image
@@ -33,7 +51,7 @@ const BossEntityUi: React.FC = () => {
       <div style={{
         position: 'absolute',
         left: '25%',
-        width: '37%',
+        width: `${currentHealth}%`,
         height: 15,
         backgroundColor: '#eb2204',
         borderTopRightRadius: 5,
@@ -73,10 +91,10 @@ const BossEntityUi: React.FC = () => {
           justifyContent: 'center',
           gap: 2,
         }}>
-          <p style={{color: '#ddb562', fontSize: 25,}}>30</p>
-          <p style={{color: 'white', fontSize: 12, marginBottom: 5, marginRight: 10}}>분</p>
-          <p style={{color: '#ddb562', fontSize: 25,}}>00</p>
-          <p style={{color: 'white', fontSize: 12, marginBottom: 5}}>초</p>
+          <p style={{ color: '#ddb562', fontSize: 25, }}>{Math.floor(bossTimer / 60)}</p>
+          <p style={{ color: 'white', fontSize: 12, marginBottom: 5, marginRight: 10 }}>분</p>
+          <p style={{ color: '#ddb562', fontSize: 25, }}>{String(bossTimer % 60).padStart(2, '0')}</p>
+          <p style={{ color: 'white', fontSize: 12, marginBottom: 5 }}>초</p>
         </div>
       </div>
     </div>

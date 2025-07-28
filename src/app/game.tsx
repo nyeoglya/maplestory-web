@@ -1,4 +1,4 @@
-import PhaserGameLoader from "@/components/PhaserGameLoader";
+import PhaserGameLoader from "@/components/phaser/PhaserGameLoader";
 import styles from "./page.module.css";
 
 export default function Home() {

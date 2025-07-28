@@ -3,11 +3,11 @@
 import { Vector } from 'matter';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import gameManager from '@/utils/GameManager';
+import gameManager from '@/utils/manager/GameManager';
 import { Item } from '@/utils/Item';
 
 const DraggableItem: React.FC = () => {
-  const [position, setPosition] = useState<Vector>({x: 0, y: 0});
+  const [position, setPosition] = useState<Vector>({ x: 0, y: 0 });
   const [imgPath, setImgPath] = useState<string>('/assets/item.png');
   const [isMouseItem, setIsMouseItem] = useState<boolean>(false);
   const gridSize = 75;
@@ -18,7 +18,7 @@ const DraggableItem: React.FC = () => {
   }
 
   const handleMouseMove = (e: MouseEvent) => {
-    setPosition({x: e.clientX - 37.5, y: e.clientY - 37.5});
+    setPosition({ x: e.clientX - 37.5, y: e.clientY - 37.5 });
   };
 
   useEffect(() => {

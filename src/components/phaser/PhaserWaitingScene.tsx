@@ -1,32 +1,29 @@
-"use client";
+import gameManager from "@/utils/manager/GameManager";
+import PhaserPlayer from "./PhaserPlayer";
+import { Skill } from "@/utils/Skill";
+import { getOverlapEntity } from "@/utils/Utils";
 
-import * as Phaser from 'phaser';
-
-import gameManager from '@/utils/GameManager';
-import Entity, { TestEntityA } from './PhaserEntity';
-import { PhaserPlayer } from './PhaserPlayer';
-import EntityManager from '@/utils/EntityManager';
-import { Skill } from '@/utils/Skill';
-import { Vector } from 'matter';
-import BossEntity from './PhaserBossEntity';
-import FloatingEntity from './PhaserFloatingEntity';
-import { getOverlapEntity } from '@/utils/Utils';
-
-class PhaserBossScene extends Phaser.Scene {
+class WaitingScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
-  private boss: BossEntity | null = null;
-  private rock: FloatingEntity | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
-
-  private entityManager: EntityManager;
-  private entitySpawnList: Vector[] = [];
+  private teleportPads: Phaser.Physics.Arcade.StaticGroup | null = null;
+  private teleportLoc: string = 'BossScene';
+  private bgm!: Phaser.Sound.BaseSound;
 
   constructor() {
-    super('BossScene');
-    this.entityManager = gameManager.normalEntityManager;
+    super('WaitingScene');
   }
 
   create() {
+    /*
+    this.bgm = this.sound.add('musicTestA', {
+      loop: false,
+      volume: 0.5
+    });
+
+    this.bgm.play();
+    */
+
     const gameHeight = this.sys.game.config.height as number;
     const image = this.textures.get('testbackground').getSourceImage() as HTMLImageElement;
     const scale = gameHeight / image.height;
@@ -35,7 +32,7 @@ class PhaserBossScene extends Phaser.Scene {
     const sky = this.add.image(0, 0, 'testbackground').setOrigin(0, 0);
     sky.setScale(this.physics.world.bounds.width / sky.width, this.physics.world.bounds.height / sky.height);
 
-    this.cameras.main.setZoom(2); // 카메라 줌
+    this.cameras.main.setZoom(1.5); // 카메라 줌
 
     // 플랫폼 생성
     this.platforms = this.physics.add.staticGroup();
@@ -44,20 +41,18 @@ class PhaserBossScene extends Phaser.Scene {
       .setScale(this.physics.world.bounds.width, 10)
       .refreshBody();
 
-    // 적 생성
-    this.boss = new BossEntity(this, {x: 250, y: this.physics.world.bounds.height - 250});
-    this.rock = new FloatingEntity(this, {x: 250, y: 150});
-
-    // 적 플랫폼 충돌 설정
-    if (this.boss && this.platforms) {
-      this.physics.add.collider(this.boss, this.platforms);
-    }
+    // 발판 생성
+    this.teleportPads = this.physics.add.staticGroup();
+    (this.teleportPads.create(200, this.physics.world.bounds.height - 170, 'default_pixel') as Phaser.Physics.Arcade.Sprite)
+      .setOrigin(0, 0)
+      .setScale(100, 20)
+      .refreshBody();
 
     // 플레이어 생성
     this.player = new PhaserPlayer(this, 100, this.physics.world.bounds.height - 400, 'player');
     gameManager.phaserPlayer = this.player;
 
-    // 플레이어 플랫폼 충돌 설정
+    // 플레이어 충돌 설정
     if (this.player && this.platforms) {
       this.physics.add.collider(this.player, this.platforms);
     }
@@ -80,6 +75,7 @@ class PhaserBossScene extends Phaser.Scene {
 
     if (this.player) {
       this.cameras.main.startFollow(this.player);
+      this.cameras.main.followOffset.set(0, gameHeight * 0.15);
       this.cameras.main.setBounds(0, 0, this.physics.world.bounds.width, this.physics.world.bounds.height);
     }
 
@@ -90,16 +86,16 @@ class PhaserBossScene extends Phaser.Scene {
     });
   }
 
-  update(time: number, delta: number): void {
-    if (!this.boss) return;
-    this.boss.update();
-    
+  update(): void {
     if (!this.player) return;
     this.player.update();
 
-    if (!this.rock) return;
-    this.rock.update();
+    if (!this.player.body || !this.teleportPads) return;
+    // val isCollideTeleportPads = false; // TODO: 발판에 닿아있지 않을 때는 텔레포트가 되면 안됨.
+    this.physics.overlap(this.player.body, this.teleportPads, () => {
+      if (this.player) this.player.teleportLoc = this.teleportLoc;
+    }, undefined, this);
   }
 }
 
-export default PhaserBossScene;
+export default WaitingScene;

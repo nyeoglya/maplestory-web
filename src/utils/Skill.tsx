@@ -1,7 +1,7 @@
 import { EffectTestA } from "./Effect";
-import EffectManager from "./EffectManager";
-import EntityManager from "./EntityManager";
-import {PlayerStat} from "./Utils";
+import EffectManager from "@/utils/manager/EffectManager";
+import EntityManager from "@/utils/manager/EntityManager";
+import { PlayerStat } from "./Utils";
 
 export abstract class Skill {
   public cooltimeLeft: number = 0;
@@ -14,7 +14,7 @@ export abstract class Skill {
     public iconImgPath: string = '',
     public skillImgPath: string | undefined = '',
   ) {
-    
+
   }
 
   // 현재 스킬이 사용 가능한 상태인지 체크 (쿨타임이랑 다른거)
@@ -23,10 +23,10 @@ export abstract class Skill {
   }
 
   // 자원의 소모
-  public consume(data: PlayerStat) {}
+  public consume(data: PlayerStat) { }
 
   // 사용되는 스킬
-  public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) {}
+  public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) { }
 }
 
 export class SkillTestA extends Skill {

@@ -8,22 +8,29 @@ function delay(ms: number): Promise<void> {
 }
 
 class Entity extends Phaser.GameObjects.Container {
-  private sprite: Phaser.GameObjects.Sprite;
-  public currentHealth: number;
-  private maxHealth: number;
-  private healthBarBackground: Phaser.GameObjects.Graphics;
-  private healthBar: Phaser.GameObjects.Graphics;
+  protected sprite: Phaser.GameObjects.Sprite;
+  protected healthBarBackground: Phaser.GameObjects.Graphics;
+  protected healthBar: Phaser.GameObjects.Graphics;
+  protected initialPos: Vector;
 
-  private initialPos: Vector;
+  public currentHealth: number;
+  public maxHealth: number;
   public death: boolean = false;
   public directingLeft: boolean = true;
 
+  public turnLeftPos: number = 0;
+  public turnRightPos: number = 100;
+
   // data와 collider로 공격을 시도한다. 성공할 경우, data를 수정한다. collider는 겹칠 경우에 데미지를 주는 적절한 collider를 선택
-  public tryAttack(data: PlayerStat, collider: Phaser.Physics.Arcade.Sprite) {
+  public tryAttack(data: PlayerStat, collider: Phaser.Physics.Arcade.Sprite | undefined = undefined) {
     if (this.death) return;
-    this.scene.physics.overlap(this.getBody(), collider, () => {
-      data.health -= Math.min(20, data.health);
-    }, undefined, this);
+    if (!collider) {
+      data.health -= Math.min(this.damage, data.health);
+    } else {
+      this.scene.physics.overlap(this.getBody(), collider, () => {
+        data.health -= Math.min(this.damage, data.health);
+      }, undefined, this);
+    }
   }
 
   // entity에 데미지를 입힌다.
@@ -35,13 +42,13 @@ class Entity extends Phaser.GameObjects.Container {
 
     this.currentHealth -= amount * repeat;
     this.updateHealthBar(this.currentHealth);
-    
+
     for (let i = 0; i < repeat; i++) {
       const spawnY = this.y - (i * yOffsetPerRepeat);
       this.spawnDamageText(this.x, spawnY, amount.toString(), baseFontSize);
       if (this.currentHealth <= 0) {
-        // this.destroy();
         this.setDeath();
+        break;
       }
       await delay(100);
     }
@@ -56,9 +63,9 @@ class Entity extends Phaser.GameObjects.Container {
       strokeThickness: 2,
       fontStyle: 'bold',
     });
-  
+
     damageText.setOrigin(0.5, 1);
-  
+
     this.scene.tweens.add({
       targets: damageText,
       y: y - riseHeight,
@@ -70,6 +77,10 @@ class Entity extends Phaser.GameObjects.Container {
         this.isMove = true;
       }
     });
+  }
+
+  public getCurrentPos() {
+    return { x: this.x, y: this.y };
   }
 
   constructor(
@@ -88,7 +99,7 @@ class Entity extends Phaser.GameObjects.Container {
     public uuid: string = uuidv4(),
   ) {
     super(scene, x, y);
-    this.initialPos = {x: x, y: y};
+    this.initialPos = { x: x, y: y };
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -121,7 +132,7 @@ class Entity extends Phaser.GameObjects.Container {
 
     this.updateHealthBarVisibility(healthBarVisible);
     this.updateHealthBar(health);
-    
+
     // 이동 설정 및 초기 속도
     this.setVelocityX(xSpeed);
     this.directingLeft = false;
@@ -156,18 +167,10 @@ class Entity extends Phaser.GameObjects.Container {
 
   // update
   public update(time: number, delta: number): void {
+    if (this.death) return;
     if (!this.isMove) {
       this.setVelocityX(0);
       return;
-    }
-    if (this.x < 100) {
-      this.setVelocityX(this.xSpeed);
-      this.directingLeft = false;
-      this.sprite.setFlipX(!this.directingLeft);
-    } else if (this.x > 700) {
-      this.setVelocityX(-this.xSpeed);
-      this.directingLeft = true;
-      this.sprite.setFlipX(!this.directingLeft);
     }
   }
 
@@ -198,13 +201,16 @@ class Entity extends Phaser.GameObjects.Container {
     this.setVisible(false);
   }
 
-  public respawn() {
+  public respawn(pos: Vector = this.initialPos) {
     this.death = false;
     this.currentHealth = this.maxHealth;
-    this.x = this.initialPos.x;
-    this.y = this.initialPos.y;
+    this.x = pos.x;
+    this.y = pos.y;
     this.setVisible(true);
-    this.updateHealthBar(this.currentHealth);
+    if (this.healthBarVisible) {
+      this.updateHealthBar(this.currentHealth);
+    }
+    this.setVelocityX(this.xSpeed);
   }
 
   // 개체 삭제
@@ -214,26 +220,6 @@ class Entity extends Phaser.GameObjects.Container {
     if (this.sprite) this.sprite.destroy();
     super.destroy(fromScene);
   }
-}
-
-export class TestEntityA extends Entity {
-  constructor(
-    scene: Phaser.Scene,
-    pos: Vector,
-  ) {
-    super(
-      scene,
-      pos.x,
-      pos.y,
-      'boss',
-      200,
-      0.3,
-      true,
-      true,
-      20,
-      80,
-    );
-  };
 }
 
 export default Entity;
