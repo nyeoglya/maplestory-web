@@ -31,6 +31,7 @@ const MesoCountUi: React.FC = () => {
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 5,
+      color: 'white'
     }}>
       <p style={{ fontSize: 18, }}>메소</p>
       <div style={{

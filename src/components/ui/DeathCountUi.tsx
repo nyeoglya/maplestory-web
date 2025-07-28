@@ -34,6 +34,7 @@ const DeathCountUi: React.FC = () => {
         fontSize: 12,
         display: 'flex',
         flexDirection: 'column',
+        color: 'white',
       }}>
         <p>Death</p>
         <p>Count</p>

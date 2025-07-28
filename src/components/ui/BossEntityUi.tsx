@@ -78,6 +78,7 @@ const BossEntityUi: React.FC = () => {
         padding: 15,
         gap: 10,
         borderRadius: 5,
+        color: 'white'
       }}>
         <p style={{
           fontSize: 12
