@@ -28,7 +28,7 @@ class EntityCleaner extends Entity {
     this.turnLeftPos = leftEnd - 50;
   };
 
-  public update(time: number, delta: number): void {
+  public update(): void {
     if (this.death) return;
     if (!this.isMove) {
       this.setVelocityX(0);

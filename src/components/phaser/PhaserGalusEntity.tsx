@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as Phaser from 'phaser';
 import Entity from './PhaserEntity';
 import { Vector } from 'matter';
+import gameManager from '@/utils/manager/GameManager';
 
 class EntityGalus extends Entity {
 
@@ -35,7 +36,8 @@ class EntityGalus extends Entity {
     else this.setVelocityX(this.speed);
 
     if (Math.abs(this.targetPos.x - this.getCurrentPos().x) < 10) {
-      console.log('잡아먹혔다!!!');
+      if (!gameManager.bossEntity) return;
+      gameManager.bossEntity.chickenCount += 1;
       this.setDeath();
     }
   }

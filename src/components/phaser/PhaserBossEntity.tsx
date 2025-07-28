@@ -5,17 +5,12 @@ import gameManager from '@/utils/manager/GameManager';
 import { getDirectionVector, getRandomInt } from '@/utils/Utils';
 import EntityBossHandTarget from './PhaserBossHandTargetEntity';
 import EntityBossHand from './PhaserBossHandEntity';
+import EntityGalus from './PhaserGalusEntity';
 
 enum BossPhaseStatus {
   CHICKEN,
   BR,
   PIZZA
-};
-
-enum BossDefaultStatus {
-  FLY, // 날고 있음. 이때는 플레이어 위에 떠있음.
-  GROUND, // 위치를 정하고 잠시 기다렸다가 활강. 중력을 받게 하면 됨.
-  RETURN // 다시 되돌아감.
 };
 
 interface BossConfig {
@@ -38,22 +33,53 @@ class BossEntity extends Entity {
   public bossTimeLeft: number = 30 * 60;
 
   public currentStatus: BossPhaseStatus = BossPhaseStatus.CHICKEN;
-  public defaultStatus: BossDefaultStatus = BossDefaultStatus.FLY;
   public chickenCount: number = 0;
   protected bossHandTarget: EntityBossHandTarget | null = null;
+  public mainPlatform: Phaser.Physics.Arcade.StaticGroup | null = null;
+
+  public getPhase(): BossPhaseStatus {
+    const nowTime = 150 - this.bossTimeLeft % 150;
+    if (0 <= nowTime && nowTime < 60) {
+      return BossPhaseStatus.CHICKEN;
+    } else if (60 <= nowTime && nowTime < 120) {
+      return BossPhaseStatus.BR;
+    } else {
+      return BossPhaseStatus.PIZZA;
+    }
+  }
 
   public bossEvent() {
-    console.log('보스 이벤트 발생!!!');
     this.phaseDefault();
-    // TODO: Phase calculation
-    this.phaseBR();
+    switch (this.getPhase()) {
+      case BossPhaseStatus.CHICKEN: {
+        this.phaseChicken();
+        break;
+      }
+      case BossPhaseStatus.BR: {
+        this.phaseBR();
+        break;
+      }
+      case BossPhaseStatus.PIZZA: {
+        this.phasePizza();
+        break;
+      }
+    }
+  }
+
+  public addChickenCount() {
+    this.chickenCount += 1;
+    if (!gameManager.phaserPlayer) return;
+    if (this.chickenCount >= 5) {
+      gameManager.deathCount -= gameManager.phaserPlayer.mesoCount - 1;
+      gameManager.phaserPlayer.setDeath();
+    }
   }
 
   constructor({
     scene,
     pos,
     texture = 'boss',
-    health = 2000,
+    health = 1000000000000,
     scale = 0.3,
     affectGravity = true,
     isMove = true,
@@ -95,7 +121,13 @@ class BossEntity extends Entity {
   소환된 몹은 보스 몹에게 점차 끌려가게 되며, 보스 몹과 닿으면 소멸됨, 이 방식으로 소멸된 닭이 10마리를 기록하는 경우, Phase가 끝나면서 획득한 메소 1억 당 데스카운트 1개를 회수해 감
   */
   public phaseChicken() {
-
+    if (!this.mainPlatform) return;
+    const randomX = getRandomInt(0, 1000);
+    const galus = new EntityGalus(this.scene, { x: randomX, y: 500 });
+    galus.targetPos = this.getCurrentPos();
+    gameManager.bossEntityManager.entityList.push(galus);
+    gameManager.bossEntityManager.resetEntityMap();
+    this.scene.physics.add.collider(galus, this.mainPlatform);
   }
 
   public phaseBR() {

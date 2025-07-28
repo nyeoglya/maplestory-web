@@ -18,7 +18,8 @@ class EntityManager {
 
   // 엔티티 완전 삭제
   public removeEntities(filter: ((_: Entity) => boolean)) {
-
+    this.entityList = this.entityList.filter(entity => !filter(entity));
+    this.resetEntityMap();
   }
 
   // 엔티티 중에서 사망한 친구들은 초기 위치로 다시 복구
@@ -38,6 +39,7 @@ class EntityManager {
 
   // entity에게 데미지를 입히기
   public damageEntities(damage: number, entityUuidList: string[], repeat: number = 1) {
+    this.removeEntities((x: Entity) => { return x === undefined });
     entityUuidList.forEach((entityUuid: string) => {
       console.log(this.entityMap.get(entityUuid)?.name);
       this.entityMap.get(entityUuid)?.tryDamage(damage, repeat);

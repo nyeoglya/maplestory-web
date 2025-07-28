@@ -31,6 +31,13 @@ class EffectManager {
     this.updateEffectUi();
   }
 
+  // 효과 초기화
+  public clearEffect() {
+    this.currentPlayerEffect.forEach((effect: Effect) => effect.endEffect())
+    this.currentPlayerEffect = [];
+    this.updateEffectUi();
+  }
+
   constructor() {
     this.effectDurationInterval = this.effectDurationInterval.bind(this);
     this.effectDurationIntervalId = setInterval(this.effectDurationInterval, 1000);

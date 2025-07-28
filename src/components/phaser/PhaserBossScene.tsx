@@ -7,7 +7,6 @@ import { Skill } from '@/utils/Skill';
 import { getOverlapEntity } from '@/utils/Utils';
 import PhaserPlayer from './PhaserPlayer';
 import BossEntity from './PhaserBossEntity';
-import EntityGalus from './PhaserGalusEntity';
 import { Vector } from 'matter';
 import Entity from './PhaserEntity';
 import EntityCleaner from './PhaserCleanerEntity';
@@ -18,7 +17,6 @@ import { EntityFallingEum, EntityFallingGreenTea, EntityFallingMint } from './Ph
 class PhaserBossScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
   private boss: BossEntity | null = null;
-  private galus: EntityGalus | null = null;
   private pizza: EntityPizza | null = null;
   private star: EntityStar | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
@@ -57,12 +55,11 @@ class PhaserBossScene extends Phaser.Scene {
 
     // 적 생성
     this.boss = new BossEntity({ scene: this, pos: { x: 250, y: this.physics.world.bounds.height - 250 }, floorY: this.physics.world.bounds.height - 150 });
-    this.galus = new EntityGalus(this, { x: 500, y: 150 });
+    this.boss.mainPlatform = this.platforms;
     this.pizza = new EntityPizza({ scene: this, pos: { x: 500, y: 150 } });
     gameManager.bossEntity = this.boss;
     gameManager.pizzaEntity = this.pizza;
     gameManager.bossEntityManager.entityList.push(this.boss);
-    gameManager.bossEntityManager.entityList.push(this.galus);
     this.normalEntityLoc.forEach((pos: Vector) => {
       const entity = new EntityCleaner(this, pos, this.physics.world.bounds.width);
       entity.mainPlatform = this.platforms;
@@ -87,9 +84,6 @@ class PhaserBossScene extends Phaser.Scene {
     // 적 플랫폼 충돌 설정
     if (this.boss && this.platforms) {
       this.physics.add.collider(this.boss, this.platforms);
-    }
-    if (this.galus && this.platforms) {
-      this.physics.add.collider(this.galus, this.platforms);
     }
 
     // 플레이어 생성
@@ -157,15 +151,12 @@ class PhaserBossScene extends Phaser.Scene {
     if (!this.player) return;
     this.player.update();
 
-    if (!this.galus) return;
-    this.galus.targetPos = this.boss.getCurrentPos();
-    this.galus.update();
-
     if (!this.pizza) return;
     this.pizza.update();
 
     gameManager.normalEntityManager.entityList.forEach((entity: Entity) => entity.update(time, delta));
     gameManager.fallingEntityManager.entityList.forEach((entity: Entity) => entity.update(time, delta));
+    gameManager.bossEntityManager.entityList.forEach((entity: Entity) => entity.update(time, delta));
   }
 }
 

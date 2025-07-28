@@ -41,7 +41,7 @@ class GameManager {
   public pizzaEntity: EntityPizza | undefined = undefined;
   public starEntity: EntityStar | undefined = undefined;
 
-  constructor() { }
+  constructor() {}
 }
 
 const gameManager: GameManager = new GameManager();

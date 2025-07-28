@@ -1,7 +1,7 @@
 import { EffectTestA } from "./Effect";
 import EffectManager from "@/utils/manager/EffectManager";
 import EntityManager from "@/utils/manager/EntityManager";
-import { PlayerStat } from "./Utils";
+import { getRandomInt, PlayerStat } from "./Utils";
 
 export abstract class Skill {
   public cooltimeLeft: number = 0;
@@ -47,11 +47,11 @@ export class SkillTestA extends Skill {
   }
 
   public consume(data: PlayerStat) {
-    data.mana -= 20;
+    data.mana -= 10;
   }
 
   public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) {
-    entityManager.damageEntities(data.mainStat, entityUuidList, 2);
+    entityManager.damageEntities(data.mainStat * getRandomInt(100000, 20000) + getRandomInt(0, 10000), entityUuidList, 7);
   }
 }
 

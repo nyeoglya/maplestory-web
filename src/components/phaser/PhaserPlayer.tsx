@@ -50,6 +50,15 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     this.createAnimations();
   }
 
+  public setDeath() {
+    gameManager.deathCount -= 1;
+    this.x = 100;
+    this.y = 400;
+    gameManager.player.health = gameManager.player.maxHealth;
+    gameManager.player.mana = gameManager.player.maxMana;
+    gameManager.effectManager.clearEffect();
+  }
+
   public getCurrentPos() {
     return { x: this.x, y: this.y };
   }
