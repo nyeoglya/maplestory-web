@@ -5,13 +5,13 @@ import windowManager from './WindowManager';
 import { Vector } from 'matter';
 
 const ArmorWindow: React.FC = () => {
-  const positionRef = useRef<Vector>({x: 200, y: 50});
+  const positionRef = useRef<Vector>({ x: 200, y: 50 });
   const [position, setPosition] = useState<Vector>(positionRef.current);
   const isDragging = useRef<boolean>(false);
   const offset = useRef<Vector>({ x: 0, y: 0 });
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
 
-  const initialInventoryWindowData = {
+  const initWinData = {
     id: 'armor',
     pos: position,
     posRef: positionRef,
@@ -20,11 +20,12 @@ const ArmorWindow: React.FC = () => {
     offset: offset,
     width: 500,
     height: 500,
+    showWindow: false,
     setZIndex: setZIndex,
   }
 
   useEffect(() => {
-    windowManager.addWindow(initialInventoryWindowData);
+    windowManager.addWindow(initWinData);
   }, []);
 
   return (
@@ -33,8 +34,8 @@ const ArmorWindow: React.FC = () => {
         position: 'absolute',
         left: position.x,
         top: position.y,
-        width: initialInventoryWindowData.width,
-        height: initialInventoryWindowData.height,
+        width: initWinData.width,
+        height: initWinData.height,
         backgroundColor: 'gray',
         display: 'flex',
         flexDirection: 'column',
@@ -53,8 +54,8 @@ const ArmorWindow: React.FC = () => {
         }}
         onMouseDown={windowManager.handleMouseDown}
       >
-        <p style={{marginLeft: 10}}>장비창</p>
-        <div style={{flexGrow: 1}}/>
+        <p style={{ marginLeft: 10 }}>장비창</p>
+        <div style={{ flexGrow: 1 }} />
         <button style={{
           width: 25,
           height: 25,

@@ -19,7 +19,7 @@ class EntityBossHand extends Entity {
       true,
       50,
       0,
-      '',
+      'bossHand',
       false,
     );
   };

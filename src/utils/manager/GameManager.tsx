@@ -8,6 +8,7 @@ import InventoryManager from "./InventoryManager";
 import SkillManager from "./SkillManager";
 import { PlayerStat } from "@/utils/Utils";
 import Entity from "@/components/phaser/PhaserEntity";
+import EntityPizza from "@/components/phaser/PhaserPizzaEntity";
 
 class GameManager {
   public player: PlayerStat = {
@@ -18,19 +19,23 @@ class GameManager {
     mainStat: 50,
     mana: 500,
     maxMana: 600,
+    isMove: true,
   };
+  public deathCount: number = 5;
 
   public droppedItems: Entity[] = [];
   public inventoryManager: InventoryManager = new InventoryManager();
 
   public normalEntityManager: EntityManager = new EntityManager();
   public floatingEntityManager: EntityManager = new EntityManager();
+  public bossEntityManager: EntityManager = new EntityManager();
 
   public effectManager: EffectManager = new EffectManager();
   public skillManager: SkillManager = new SkillManager(this.player, this.normalEntityManager, this.effectManager);
 
   public phaserPlayer: PhaserPlayer | undefined = undefined;
   public bossEntity: BossEntity | undefined = undefined;
+  public pizzaEntity: EntityPizza | undefined = undefined;
 
   constructor() { }
 }

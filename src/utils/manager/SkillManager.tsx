@@ -69,14 +69,16 @@ class SkillManager {
 
   // 특정 키가 입력되었을 때의 스킬 사용
   public skillUse(skill: Skill, effectedPlayerData: PlayerStat, entityUuidList: string[]) {
-    if (!this.skillCooltimeMap.has(skill) &&
-      skill.isSkillAvailable(effectedPlayerData)) {
+    if (!this.skillCooltimeMap.has(skill) && skill.isSkillAvailable(effectedPlayerData)) {
       skill.consume(this.playerData);
-      this.skillCooltimeMap.set(skill, skill.cooltime);
-      skill.cooltimeLeft = skill.cooltime;
       skill.performAction(this.entityManager, effectedPlayerData, entityUuidList);
       this.updateSkillUi();
     }
+  }
+
+  public skillSetCooltime(skill: Skill) {
+    this.skillCooltimeMap.set(skill, skill.cooltime);
+    skill.cooltimeLeft = skill.cooltime;
   }
 }
 

@@ -3,7 +3,7 @@ import * as Phaser from 'phaser';
 import Entity from './PhaserEntity';
 import { Vector } from 'matter';
 import gameManager from '@/utils/manager/GameManager';
-import { getRandomInt } from '@/utils/Utils';
+import { getDirectionVector, getRandomInt } from '@/utils/Utils';
 import EntityBossHandTarget from './PhaserBossHandTargetEntity';
 import EntityBossHand from './PhaserBossHandEntity';
 
@@ -47,7 +47,7 @@ class BossEntity extends Entity {
     console.log('보스 이벤트 발생!!!');
     this.phaseDefault();
     // TODO: Phase calculation
-    this.phaseChicken();
+    this.phaseBR();
   }
 
   /*
@@ -55,7 +55,7 @@ class BossEntity extends Entity {
   피자, 베라, 치킨의 사이클로 페이즈가 돌아가며, 시간 비중은 각각 1분, 1분, 30초.
 
   3. 스타포스
-  획득한 메소를 사용하여 시도 가능, 맵에 별 모양의 오브젝트가 나타나면 NPC/채집 키를 이용하여 강화 시도 가능. -> 새로 구현해야 함.
+  획득한 메소를 사용하여 시도 가능, 맵에 별 모양의 오브젝트가 나타나면 NPC/채집 키를 이용하여 강화 시도 가능.
   
   성공 시 10초 간 최종 데미지 20% 증가, 공격력 +10 영구 증가. -> 버프 형태
   실패 시 3초 간 Player 행동 불능  및 공격력 -5. -> 버프 형태
@@ -74,7 +74,7 @@ class BossEntity extends Entity {
     damage = 200,
     speed = 0,
     floorY = 0,
-    name = '',
+    name = 'boss',
     healthBarVisible = false,
     uuid = uuidv4(),
   }: BossConfig) {
@@ -91,6 +91,15 @@ class BossEntity extends Entity {
       callbackScope: this,
       loop: true
     });
+
+    this.scene.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        this.bossTimeLeft -= 1;
+      },
+      callbackScope: this,
+      loop: true
+    })
   }
 
   /*
@@ -116,19 +125,15 @@ class BossEntity extends Entity {
     gameManager.floatingEntityManager.respawnEntities();
   }
 
-  /*
-  "제가 좋아하는 불벅 피자입니다" 보이스 출력
-  피자 모양 검기를 발사, 피격 시 거짓말 탐지기가 발동됨. (불법이라서)
-  제시어는 “원기어미원숭이”, “니어미원숭이” 
-  */
   public phasePizza() {
-
+    if (!gameManager.pizzaEntity || !gameManager.phaserPlayer) return;
+    gameManager.pizzaEntity.targetDirection = getDirectionVector(
+      this.getCurrentPos(),
+      gameManager.phaserPlayer.getCurrentPos(),
+    );
+    gameManager.pizzaEntity.respawn(this.getCurrentPos());
   }
 
-  /*
-  잡몹 소환술 -> 15초에 한 번씩 ‘약화된 클리너’를 n마리 소환함
-  원기의 기본 공격 -> 위에서 낙하하면서 떨어짐
-  */
   public phaseDefault() {
     gameManager.normalEntityManager.respawnEntities();
     const randomX = getRandomInt(0, 1000);

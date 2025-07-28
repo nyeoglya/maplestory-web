@@ -17,7 +17,7 @@ const InventoryWindow: React.FC = () => {
   const [currentPlayerInventory, setCurrentPlayerInventory] = useState<Item[]>(gameManager.inventoryManager.currentPlayerInventory);
   const gridSize = 75;
 
-  const initialInventoryWindowData = {
+  const initWinData = {
     id: 'inventory',
     pos: position,
     posRef: positionRef,
@@ -26,11 +26,12 @@ const InventoryWindow: React.FC = () => {
     offset: offset,
     width: gridSize * 4,
     height: gridSize * 8,
+    showWindow: false,
     setZIndex: setZIndex,
   }
 
   useEffect(() => {
-    windowManager.addWindow(initialInventoryWindowData);
+    windowManager.addWindow(initWinData);
 
     const handleInventoryUpdate = (newInventory: Item[]) => {
       setCurrentPlayerInventory([...newInventory]);
@@ -64,8 +65,8 @@ const InventoryWindow: React.FC = () => {
         position: 'absolute',
         left: position.x,
         top: position.y,
-        width: initialInventoryWindowData.width,
-        height: initialInventoryWindowData.height,
+        width: initWinData.width,
+        height: initWinData.height,
         backgroundColor: 'gray',
         display: 'flex',
         flexDirection: 'column',

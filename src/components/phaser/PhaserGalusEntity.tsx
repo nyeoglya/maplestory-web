@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import * as Phaser from 'phaser';
 import Entity from './PhaserEntity';
 import { Vector } from 'matter';
-import { getDirectionVector, getDistance } from '@/utils/Utils';
 
 class EntityGalus extends Entity {
 
@@ -19,7 +18,7 @@ class EntityGalus extends Entity {
     public isMove: boolean = true,
     public damage: number = 100,
     public xSpeed: number = 0,
-    public name: string = '',
+    public name: string = 'galus',
     public healthBarVisible: boolean = true,
     public uuid: string = uuidv4(),
   ) {
@@ -29,12 +28,13 @@ class EntityGalus extends Entity {
   public update(): void {
     if (!this.targetPos || this.death) return;
 
-    const direction = getDirectionVector(this.getCurrentPos(), this.targetPos);
-    if (direction.x === 0 && direction.y === 0) return;
-    this.setVelocityX(direction.x * this.speed);
-    this.setVelocityY(direction.y * this.speed);
+    const direction = this.getCurrentPos().x - this.targetPos.x;
 
-    if (getDistance(this.targetPos, this.getCurrentPos()) < 10) {
+    if (direction === 0) return;
+    else if (direction > 0) this.setVelocityX(-this.speed);
+    else this.setVelocityX(this.speed);
+
+    if (Math.abs(this.targetPos.x - this.getCurrentPos().x) < 10) {
       console.log('잡아먹혔다!!!');
       this.setDeath();
     }

@@ -70,6 +70,7 @@ class WaitingScene extends Phaser.Scene {
         }
         const effectedPlayer = gameManager.effectManager.effectChain(gameManager.player);
         gameManager.skillManager.skillUse(skill, effectedPlayer, overlapEntityList);
+        gameManager.skillManager.skillSetCooltime(skill);
       });
     });
 

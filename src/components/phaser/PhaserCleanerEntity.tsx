@@ -22,6 +22,7 @@ class EntityCleaner extends Entity {
       true,
       20,
       80,
+      'cleaner',
     );
     this.turnRightPos = 50;
     this.turnLeftPos = leftEnd - 50;

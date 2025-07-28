@@ -39,6 +39,7 @@ class EntityManager {
   // entity에게 데미지를 입히기
   public damageEntities(damage: number, entityUuidList: string[], repeat: number = 1) {
     entityUuidList.forEach((entityUuid: string) => {
+      console.log(this.entityMap.get(entityUuid)?.name);
       this.entityMap.get(entityUuid)?.tryDamage(damage, repeat);
     })
   }

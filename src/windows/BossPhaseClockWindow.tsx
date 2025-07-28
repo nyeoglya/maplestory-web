@@ -11,6 +11,7 @@ const BossPhaseClockWindow: React.FC = () => {
   const isDragging = useRef<boolean>(false);
   const offset = useRef<Vector>({ x: 0, y: 0 });
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
+  const [showWindow, setShowWindow] = useState<boolean>(true);
   const [rotation, setRotation] = useState<number>(0);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const BossPhaseClockWindow: React.FC = () => {
     };
   }, []);
 
-  const initialInventoryWindowData = {
+  const initWinData = {
     id: 'bossPhaseClock',
     pos: position,
     posRef: positionRef,
@@ -34,12 +35,13 @@ const BossPhaseClockWindow: React.FC = () => {
     offset: offset,
     width: 200,
     height: 200,
+    showWindow: showWindow,
     setZIndex: setZIndex,
   }
-  const radius = initialInventoryWindowData.width / 2;
+  const radius = initWinData.width / 2;
 
   useEffect(() => {
-    windowManager.addWindow(initialInventoryWindowData);
+    windowManager.addWindow(initWinData);
   }, []);
 
   return (
@@ -48,8 +50,8 @@ const BossPhaseClockWindow: React.FC = () => {
         position: 'absolute',
         left: position.x,
         top: position.y,
-        width: initialInventoryWindowData.width,
-        height: initialInventoryWindowData.height,
+        width: initWinData.width,
+        height: initWinData.height,
         borderRadius: '50%',
         backgroundColor: 'gray',
         userSelect: 'none',

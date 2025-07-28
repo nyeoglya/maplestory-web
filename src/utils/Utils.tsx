@@ -9,6 +9,7 @@ export interface PlayerStat {
   mana: number;
   maxMana: number;
   speed: Vector;
+  isMove: boolean;
 }
 
 export function getDistance(v1: Vector, v2: Vector): number {

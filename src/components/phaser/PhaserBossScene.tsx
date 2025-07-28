@@ -11,11 +11,13 @@ import EntityGalus from './PhaserGalusEntity';
 import { Vector } from 'matter';
 import Entity from './PhaserEntity';
 import EntityCleaner from './PhaserCleanerEntity';
+import EntityPizza from './PhaserPizzaEntity';
 
 class PhaserBossScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
   private boss: BossEntity | null = null;
   private galus: EntityGalus | null = null;
+  private pizza: EntityPizza | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
 
   private normalEntityLoc: Vector[] = [];
@@ -52,7 +54,12 @@ class PhaserBossScene extends Phaser.Scene {
 
     // 적 생성
     this.boss = new BossEntity({ scene: this, pos: { x: 250, y: this.physics.world.bounds.height - 250 }, floorY: this.physics.world.bounds.height - 150 });
+    this.galus = new EntityGalus(this, { x: 500, y: 150 });
+    this.pizza = new EntityPizza({ scene: this, pos: { x: 500, y: 150 } });
     gameManager.bossEntity = this.boss;
+    gameManager.pizzaEntity = this.pizza;
+    gameManager.bossEntityManager.entityList.push(this.boss);
+    gameManager.bossEntityManager.entityList.push(this.galus);
     this.normalEntityLoc.forEach((pos: Vector) => {
       const entity = new EntityCleaner(this, pos, this.physics.world.bounds.width);
       entity.mainPlatform = this.platforms;
@@ -60,11 +67,14 @@ class PhaserBossScene extends Phaser.Scene {
       if (this.platforms) this.physics.add.collider(entity, this.platforms);
     });
     gameManager.normalEntityManager.resetEntityMap();
-    this.galus = new EntityGalus(this, { x: 500, y: 150 });
+    gameManager.bossEntityManager.resetEntityMap();
 
     // 적 플랫폼 충돌 설정
     if (this.boss && this.platforms) {
       this.physics.add.collider(this.boss, this.platforms);
+    }
+    if (this.galus && this.platforms) {
+      this.physics.add.collider(this.galus, this.platforms);
     }
 
     // 플레이어 생성
@@ -80,15 +90,20 @@ class PhaserBossScene extends Phaser.Scene {
     gameManager.skillManager.skillKeyMap.forEach((skill: Skill, key: string) => {
       const keyButton = this.input.keyboard!.addKey(key);
       keyButton.on('down', () => {
-        if (!this.player || !this.player.detectionZone) return;
+        if (!this.player || !this.player.detectionZone || !this.boss) return;
         if (!skill.isSkillAvailable(gameManager.player) ||
           gameManager.skillManager.skillCooltimeMap.get(skill) !== undefined) return;
-        const overlapEntityList = getOverlapEntity(this, this.player.detectionZone, gameManager.normalEntityManager.entityList);
+        const overlapNormalEntityList = getOverlapEntity(this, this.player.detectionZone, gameManager.normalEntityManager.entityList);
+        const overlapBossEntityList = getOverlapEntity(this, this.player.detectionZone, gameManager.bossEntityManager.entityList);
         if (skill.skillImgPath) {
           this.player.showSkillImg(skill.skillImgPath);
         }
         const effectedPlayer = gameManager.effectManager.effectChain(gameManager.player);
-        gameManager.skillManager.skillUse(skill, effectedPlayer, overlapEntityList);
+        gameManager.skillManager.setCurrentEntityManager(gameManager.normalEntityManager);
+        gameManager.skillManager.skillUse(skill, effectedPlayer, overlapNormalEntityList);
+        gameManager.skillManager.setCurrentEntityManager(gameManager.bossEntityManager);
+        gameManager.skillManager.skillUse(skill, effectedPlayer, overlapBossEntityList);
+        gameManager.skillManager.skillSetCooltime(skill);
       });
     });
 
@@ -124,6 +139,9 @@ class PhaserBossScene extends Phaser.Scene {
     if (!this.galus) return;
     this.galus.targetPos = this.boss.getCurrentPos();
     this.galus.update();
+
+    if (!this.pizza) return;
+    this.pizza.update();
 
     gameManager.normalEntityManager.entityList.forEach((entity: Entity) => entity.update(time, delta));
   }

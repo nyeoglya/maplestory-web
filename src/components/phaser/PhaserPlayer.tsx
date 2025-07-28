@@ -118,6 +118,11 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
 
   update() {
     if (!this.leftKey || !this.rightKey || !this.downKey || !this.upKey || !this.jumpKey || !this.retrieveKey || !this.interactKey) return;
+    if (!gameManager.player.isMove) {
+      this.anims.stop();
+      return;
+    }
+
     const playerSpeed: number = gameManager.player.speed.x;
     const isBodyTouchingDown: boolean = this.body?.touching.down || false;
     if (!this.disableJump) {

@@ -6,7 +6,7 @@ import PlayerbasicInfoUi from './PlayerBasicInfoUi';
 import PlayerEffectUi from './PlayerEffectUi';
 import PlayerSkillUi from './PlayerSkillUi';
 import BossEntityUi from './BossEntityUi';
-import SettingBtnUi from './SettingBtnUi';
+import MesoCountUi from './MesoCountUi';
 import DraggableItem from '@/windows/DraggableItem';
 import DeathCountUi from './DeathCountUi';
 import CaptchaWindow from '@/windows/CaptchaWindow';
@@ -24,8 +24,8 @@ const GameScreenUi: React.FC = () => {
       pointerEvents: 'none',
     }}>
       <BossPhaseClockWindow />
-      {/*
       <CaptchaWindow />
+      {/*
       <ArmorWindow />
       <InventoryWindow />
       <DraggableItem />
@@ -39,6 +39,7 @@ const GameScreenUi: React.FC = () => {
       }}>
         <BossEntityUi />
         <DeathCountUi />
+        <MesoCountUi />
         <PlayerEffectUi />
       </div>
       <div style={{
@@ -49,7 +50,6 @@ const GameScreenUi: React.FC = () => {
         height: 10,
       }}>
         <PlayerbasicInfoUi />
-        <SettingBtnUi />
         <PlayerSkillUi />
       </div>
     </div>

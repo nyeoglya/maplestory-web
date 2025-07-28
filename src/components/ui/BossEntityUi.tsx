@@ -12,7 +12,6 @@ const BossEntityUi: React.FC = () => {
     const interval = setInterval(() => {
       const boss = gameManager.bossEntity;
       if (!boss) return;
-      boss.bossTimeLeft -= 1;
       setCurrentHealth(50 * boss.currentHealth / boss.maxHealth);
       setBossTimer(boss.bossTimeLeft);
     }, 1000);

@@ -10,6 +10,7 @@ interface WindowData {
   offset: React.RefObject<Vector>;
   width: number;
   height: number;
+  showWindow: boolean;
   setZIndex: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
@@ -58,11 +59,11 @@ class WindowManager {
   }
 
   public handleMouseDown = (e: React.MouseEvent) => {
-    this.currentWindowId = this.findWindow({x: e.clientX, y: e.clientY});
+    this.currentWindowId = this.findWindow({ x: e.clientX, y: e.clientY });
     if (this.currentWindowId == undefined) return;
 
     this.makeTop(this.currentWindowId);
-    
+
     this.currentWindow = this.getWindow(this.currentWindowId);
     if (this.currentWindow == undefined) return;
 
@@ -76,6 +77,15 @@ class WindowManager {
     document.addEventListener('mouseup', this.handleMouseUp);
   };
 
+  // 윈도우의 위치를 재지정
+  public setWindowPosition(winId: string, newPos: Vector) {
+    const window = this.getWindow(winId);
+    if (!window) return
+    window.posRef.current = newPos;
+    window.setPos(window.posRef.current);
+  }
+
+  // 마우스 이동을 윈도우 위치에 적용
   public handleMouseMove = (e: MouseEvent) => {
     if (this.currentWindowId == undefined || this.currentWindow == undefined) return;
     if (!this.currentWindow.isDragging.current) return;
