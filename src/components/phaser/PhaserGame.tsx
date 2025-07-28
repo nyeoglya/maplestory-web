@@ -33,7 +33,7 @@ const PhaserGame = () => {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) e.preventDefault();
+      if (e.ctrlKey || e.shiftKey || e.metaKey) e.preventDefault();
     };
 
     window.addEventListener('keydown', handleKeyDown);

@@ -153,7 +153,7 @@ class BossEntity extends Entity {
     if (!this.bossHandTarget) return;
     this.bossHandTarget.update();
 
-    
+
   }
 }
 
