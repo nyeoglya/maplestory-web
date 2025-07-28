@@ -35,7 +35,7 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     this.rightKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT) || null;
     this.downKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN) || null;
     this.upKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.UP) || null;
-    this.retrieveKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL) || null;
+    this.retrieveKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.Z) || null;
     this.interactKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE) || null;
 
     this.scene.input.keyboard?.on('keydown', (event: KeyboardEvent) => {

@@ -149,17 +149,11 @@ class BossEntity extends Entity {
     this.bossHandTarget?.startTargeting(randomX);
   }
 
-  public introScene() {
-
-  }
-
-  public deathScene() {
-
-  }
-
   public update(): void {
     if (!this.bossHandTarget) return;
     this.bossHandTarget.update();
+
+    
   }
 }
 

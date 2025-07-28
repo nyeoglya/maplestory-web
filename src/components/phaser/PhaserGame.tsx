@@ -32,9 +32,16 @@ const PhaserGame = () => {
       scene: [BaseScene, WaitingScene, BossScene]
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) e.preventDefault();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
     const game = new Phaser.Game(config);
 
     return () => {
+      window.removeEventListener('keydown', handleKeyDown);
       game.destroy(true);
     };
   }, []);
