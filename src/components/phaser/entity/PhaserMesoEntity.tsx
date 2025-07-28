@@ -10,7 +10,7 @@ class MesoEntity extends Entity {
     public pos: Vector,
     public texture: string = 'meso',
     public health: number = 1,
-    public scale: number = 0.5,
+    public scale: number = 1.0,
     public affectGravity: boolean = true,
     public isMove: boolean = false,
     public damage: number = 0,

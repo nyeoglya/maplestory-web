@@ -87,7 +87,7 @@ class BossEntity extends Entity {
     pos,
     texture = 'boss',
     health = 3000000000,
-    scale = 0.3,
+    scale = 1.0,
     affectGravity = true,
     isMove = false,
     damage = 200,
