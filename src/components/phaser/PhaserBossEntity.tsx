@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import * as Phaser from 'phaser';
 import Entity from './PhaserEntity';
-import { Vector } from 'matter';
 import gameManager from '@/utils/manager/GameManager';
-import { getDirectionVector, getRandomInt } from '@/utils/Utils';
+import { getDirectionVector } from '@/utils/Utils';
 import EntityBossHandTarget from './PhaserBossHandTargetEntity';
 import EntityBossHand from './PhaserBossHandEntity';
+import { randomInt } from 'crypto';
 
 enum BossPhaseStatus {
   CHICKEN,
@@ -136,7 +136,7 @@ class BossEntity extends Entity {
 
   public phaseDefault() {
     gameManager.normalEntityManager.respawnEntities();
-    const randomX = getRandomInt(0, 1000);
+    const randomX = randomInt(1000);
     this.bossHandTarget?.startTargeting(randomX);
   }
 

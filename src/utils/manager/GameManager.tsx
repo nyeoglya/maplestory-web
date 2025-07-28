@@ -9,6 +9,7 @@ import SkillManager from "./SkillManager";
 import { PlayerStat } from "@/utils/Utils";
 import Entity from "@/components/phaser/PhaserEntity";
 import EntityPizza from "@/components/phaser/PhaserPizzaEntity";
+import EntityStar from "@/components/phaser/PhaserStarEntity";
 
 class GameManager {
   public player: PlayerStat = {
@@ -36,6 +37,7 @@ class GameManager {
   public phaserPlayer: PhaserPlayer | undefined = undefined;
   public bossEntity: BossEntity | undefined = undefined;
   public pizzaEntity: EntityPizza | undefined = undefined;
+  public starEntity: EntityStar | undefined = undefined;
 
   constructor() { }
 }

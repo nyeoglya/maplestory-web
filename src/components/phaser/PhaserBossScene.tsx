@@ -12,12 +12,14 @@ import { Vector } from 'matter';
 import Entity from './PhaserEntity';
 import EntityCleaner from './PhaserCleanerEntity';
 import EntityPizza from './PhaserPizzaEntity';
+import EntityStar from './PhaserStarEntity';
 
 class PhaserBossScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
   private boss: BossEntity | null = null;
   private galus: EntityGalus | null = null;
   private pizza: EntityPizza | null = null;
+  private star: EntityStar | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
 
   private normalEntityLoc: Vector[] = [];
@@ -85,6 +87,10 @@ class PhaserBossScene extends Phaser.Scene {
     if (this.player && this.platforms) {
       this.physics.add.collider(this.player, this.platforms);
     }
+
+    // 별 생성
+    this.star = new EntityStar(this, { x: 100, y: this.physics.world.bounds.height - 150 })
+    gameManager.starEntity = this.star;
 
     // 스킬 키 매핑
     gameManager.skillManager.skillKeyMap.forEach((skill: Skill, key: string) => {

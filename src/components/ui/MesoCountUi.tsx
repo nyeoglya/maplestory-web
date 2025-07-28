@@ -32,7 +32,7 @@ const MesoCountUi: React.FC = () => {
       justifyContent: 'center',
       borderRadius: 5,
     }}>
-      <p style={{ fontSize: 18, }}>Meso</p>
+      <p style={{ fontSize: 18, }}>메소</p>
       <div style={{
         flexGrow: 1,
         display: 'flex',

@@ -26,10 +26,6 @@ export function getDirectionVector(from: Vector, to: Vector): Vector {
   return { x: dx / length, y: dy / length };
 }
 
-export function getRandomInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 export function getOverlapEntity(
   scene: Phaser.Scene,
   detectionZone: Phaser.Physics.Arcade.StaticBody,
