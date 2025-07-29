@@ -27,7 +27,9 @@ const GameScreenUi: React.FC = () => {
     }}>
       <BossPhaseClockWindow />
       <CaptchaWindow />
+      {/*
       <ArmorWindow />
+      */}
       <InventoryWindow />
       <DraggableItem />
       {/*

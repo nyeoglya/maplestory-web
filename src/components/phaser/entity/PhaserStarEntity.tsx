@@ -52,13 +52,13 @@ class EntityStar extends Entity {
   constructor(
     public scene: Phaser.Scene,
     public pos: Vector,
-    public texture: string = 'star',
+    public texture: string = 'starforce',
     public health: number = 0,
     public affectGravity: boolean = false,
     public isMove: boolean = false,
     public damage: number = 0,
     public speed: number = 0,
-    public name: string = 'star',
+    public name: string = 'starforce',
     public healthBarVisible: boolean = true,
     public uuid: string = uuidv4(),
   ) {
