@@ -92,7 +92,6 @@ class Entity extends Phaser.GameObjects.Container {
     public y: number,
     public texture: string,
     public health: number,
-    public scale: number,
     public affectGravity: boolean = true,
     public isMove: boolean = true,
     public damage: number = 20,
@@ -111,7 +110,6 @@ class Entity extends Phaser.GameObjects.Container {
     this.currentHealth = health;
 
     this.sprite = scene.add.sprite(0, 0, texture);
-    this.sprite.setScale(scale, scale);
     this.add(this.sprite);
 
     const body = this.body as Phaser.Physics.Arcade.Body;

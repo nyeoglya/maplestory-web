@@ -18,7 +18,6 @@ interface BossConfig {
   pos: { x: number; y: number };
   texture?: string;
   health?: number;
-  scale?: number;
   affectGravity?: boolean;
   isMove?: boolean;
   damage?: number;
@@ -87,7 +86,6 @@ class BossEntity extends Entity {
     pos,
     texture = 'boss',
     health = 3000000000,
-    scale = 1.0,
     affectGravity = true,
     isMove = false,
     damage = 200,
@@ -97,7 +95,7 @@ class BossEntity extends Entity {
     healthBarVisible = false,
     uuid = uuidv4(),
   }: BossConfig) {
-    super(scene, pos.x, pos.y, texture, health, scale, affectGravity, isMove, damage, speed, name, healthBarVisible, uuid);
+    super(scene, pos.x, pos.y, texture, health, affectGravity, isMove, damage, speed, name, healthBarVisible, uuid);
 
     const newBossHand = new EntityBossHand(scene, { x: pos.x, y: 0 });
     this.bossHandTarget = new EntityBossHandTarget(newBossHand, scene, { x: pos.x, y: floorY });

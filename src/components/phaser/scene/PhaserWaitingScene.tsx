@@ -50,7 +50,6 @@ class WaitingScene extends Phaser.Scene {
 
     // 플레이어 생성
     this.player = new PhaserPlayer(this, 100, this.physics.world.bounds.height - 400, 'player');
-    this.player.createAnimations();
     gameManager.phaserPlayer = this.player;
 
     // 플레이어 충돌 설정
@@ -60,8 +59,10 @@ class WaitingScene extends Phaser.Scene {
 
     // 스킬 키 매핑
     gameManager.skillManager.skillKeyMap.forEach((skill: Skill, key: string) => {
-      const keyButton = this.input.keyboard!.addKey(key);
+      if (!this.input.keyboard) return;
+      const keyButton = this.input.keyboard.addKey(key);
       keyButton.on('down', () => {
+        console.log(this.player, this.player?.detectionZone);
         if (!this.player || !this.player.detectionZone) return;
         if (!skill.isSkillAvailable(gameManager.player) ||
           gameManager.skillManager.skillCooltimeMap.get(skill) !== undefined) return;

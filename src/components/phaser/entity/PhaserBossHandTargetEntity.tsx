@@ -17,7 +17,6 @@ class EntityBossHandTarget extends Entity {
       pos.y,
       'targetpos',
       100,
-      1,
       false,
       true,
       0,

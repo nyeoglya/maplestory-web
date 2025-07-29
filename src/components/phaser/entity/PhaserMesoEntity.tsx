@@ -10,7 +10,6 @@ class MesoEntity extends Entity {
     public pos: Vector,
     public texture: string = 'meso',
     public health: number = 1,
-    public scale: number = 1.0,
     public affectGravity: boolean = true,
     public isMove: boolean = false,
     public damage: number = 0,
@@ -19,7 +18,7 @@ class MesoEntity extends Entity {
     public healthBarVisible: boolean = false,
     public uuid: string = uuidv4(),
   ) {
-    super(scene, pos.x, pos.y, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
+    super(scene, pos.x, pos.y, texture, health, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
     this.setVelocityX(0);
     this.setVelocityY(-100);
   }

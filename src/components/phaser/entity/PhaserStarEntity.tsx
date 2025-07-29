@@ -54,7 +54,6 @@ class EntityStar extends Entity {
     public pos: Vector,
     public texture: string = 'star',
     public health: number = 0,
-    public scale: number = 1,
     public affectGravity: boolean = false,
     public isMove: boolean = false,
     public damage: number = 0,
@@ -63,7 +62,7 @@ class EntityStar extends Entity {
     public healthBarVisible: boolean = true,
     public uuid: string = uuidv4(),
   ) {
-    super(scene, pos.x, pos.y, texture, health, scale, affectGravity, isMove, damage, speed, name, healthBarVisible, uuid);
+    super(scene, pos.x, pos.y, texture, health, affectGravity, isMove, damage, speed, name, healthBarVisible, uuid);
     this.maxHealth = 100;
   }
 

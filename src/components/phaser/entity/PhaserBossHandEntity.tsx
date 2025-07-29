@@ -14,7 +14,6 @@ class EntityBossHand extends Entity {
       pos.y,
       'bossHand',
       1000000000000,
-      1,
       false,
       true,
       50,

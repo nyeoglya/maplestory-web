@@ -14,7 +14,6 @@ class EntityGalus extends Entity {
     public pos: Vector,
     public texture: string = 'galus',
     public health: number = 100,
-    public scale: number = 1.0,
     public affectGravity: boolean = true,
     public isMove: boolean = true,
     public damage: number = 100,
@@ -23,7 +22,7 @@ class EntityGalus extends Entity {
     public healthBarVisible: boolean = true,
     public uuid: string = uuidv4(),
   ) {
-    super(scene, pos.x, pos.y, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
+    super(scene, pos.x, pos.y, texture, health, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
   }
 
   public update(): void {

@@ -11,7 +11,6 @@ interface EntityPizzaConfig {
   pos: Vector;
   texture?: string;
   health?: number;
-  scale?: number;
   affectGravity?: boolean;
   isMove?: boolean;
   damage?: number;
@@ -30,7 +29,6 @@ class EntityPizza extends Entity {
     pos,
     texture = 'pizza',
     health = 2,
-    scale = 0.3,
     affectGravity = false,
     isMove = true,
     damage = 100,
@@ -39,7 +37,7 @@ class EntityPizza extends Entity {
     healthBarVisible = false,
     uuid = uuidv4(),
   }: EntityPizzaConfig) {
-    super(scene, pos.x, pos.y, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
+    super(scene, pos.x, pos.y, texture, health, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
   }
 
   public update(): void {

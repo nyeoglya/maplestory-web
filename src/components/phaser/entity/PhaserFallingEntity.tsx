@@ -18,7 +18,6 @@ class EntityFalling extends Entity {
     public floorY: number,
     public texture: string = 'baskinrabins',
     public health: number = 100,
-    public scale: number = 1,
     public affectGravity: boolean = false,
     public isMove: boolean = true,
     public damage: number = 100,
@@ -27,7 +26,7 @@ class EntityFalling extends Entity {
     public healthBarVisible: boolean = false,
     public uuid: string = uuidv4(),
   ) {
-    super(scene, pos.x, pos.y, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
+    super(scene, pos.x, pos.y, texture, health, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
     this.targetPosY = floorY;
   }
 
@@ -62,7 +61,6 @@ export class EntityFallingMint extends EntityFalling {
     public floorY: number,
     public texture: string = 'brmint',
     public health: number = 100,
-    public scale: number = 1,
     public affectGravity: boolean = false,
     public isMove: boolean = true,
     public damage: number = 100,
@@ -71,7 +69,7 @@ export class EntityFallingMint extends EntityFalling {
     public healthBarVisible: boolean = false,
     public uuid: string = uuidv4(),
   ) {
-    super(scene, pos, floorY, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
+    super(scene, pos, floorY, texture, health, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
     this.debuffType = DebuffMint;
   }
 }
@@ -84,7 +82,6 @@ export class EntityFallingEum extends EntityFalling {
     public floorY: number,
     public texture: string = 'breum',
     public health: number = 100,
-    public scale: number = 1,
     public affectGravity: boolean = false,
     public isMove: boolean = true,
     public damage: number = 100,
@@ -93,7 +90,7 @@ export class EntityFallingEum extends EntityFalling {
     public healthBarVisible: boolean = false,
     public uuid: string = uuidv4(),
   ) {
-    super(scene, pos, floorY, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
+    super(scene, pos, floorY, texture, health, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
     this.debuffType = DebuffEum;
   }
 }
@@ -106,7 +103,6 @@ export class EntityFallingGreenTea extends EntityFalling {
     public floorY: number,
     public texture: string = 'brgreentea',
     public health: number = 100,
-    public scale: number = 1,
     public affectGravity: boolean = false,
     public isMove: boolean = true,
     public damage: number = 100,
@@ -115,7 +111,7 @@ export class EntityFallingGreenTea extends EntityFalling {
     public healthBarVisible: boolean = false,
     public uuid: string = uuidv4(),
   ) {
-    super(scene, pos, floorY, texture, health, scale, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
+    super(scene, pos, floorY, texture, health, affectGravity, isMove, damage, xSpeed, name, healthBarVisible, uuid);
     this.debuffType = DebuffGreenTea;
   }
 }

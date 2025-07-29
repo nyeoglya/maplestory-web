@@ -44,20 +44,17 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
       }
     });
 
-    this.interactKey?.on('down', () => {
-      if (!gameManager.starEntity) return;
-      gameManager.starEntity.pressStartTime = this.scene.time.now;
-    });
+    if (gameManager.starEntity) {
+      this.interactKey?.on('down', () => {
+        if (!gameManager.starEntity) return;
+        gameManager.starEntity.pressStartTime = this.scene.time.now;
+      });
 
-    this.interactKey?.on('up', () => {
-      if (!gameManager.starEntity) return;
-      gameManager.starEntity.pressStartTime = null;
-      gameManager.starEntity.resetPressTime();
-    });
-
-    if (this.interactKey) {
-      if (!gameManager.starEntity) return;
-      gameManager.starEntity.increaseStarLevel();
+      this.interactKey?.on('up', () => {
+        if (!gameManager.starEntity) return;
+        gameManager.starEntity.pressStartTime = null;
+        gameManager.starEntity.resetPressTime();
+      });
     }
 
     // 충돌 존
