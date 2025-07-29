@@ -38,8 +38,8 @@ export class SkillAttack extends Skill {
       2,
       false,
       effectManager,
-      '/assets/skill.png',
-      'skillTestA',
+      '/assets/skillAttack.png',
+      'skillUse',
     );
   }
 
@@ -64,7 +64,7 @@ export class SkillPowerUp extends Skill {
       10,
       false,
       effectManager,
-      '/assets/skill.png',
+      '/assets/skillBuff.png',
       undefined
     );
   }
@@ -90,8 +90,8 @@ export class SkillRecoverMana extends Skill {
       25,
       false,
       effectManager,
-      '/assets/skill.png',
-      'skillTestA',
+      '/assets/skillRecoverMana.png',
+      undefined,
     );
   }
 

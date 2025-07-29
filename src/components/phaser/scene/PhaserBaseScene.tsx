@@ -16,22 +16,28 @@ class BaseScene extends Phaser.Scene {
   preload() {
     this.load.setBaseURL('/');
     this.load.image('waitingMap', 'assets/waitingmap.png');
-    this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 111 });
-    this.load.image('boss', 'assets/boss.png');
-    this.load.image('cleaner', 'assets/cleaner.png');
-    this.load.image('meso', 'assets/meso.png');
-    this.load.image('galus', 'assets/galus.png');
+    this.load.image('bossMap', 'assets/bossmap.png');
+
     this.load.image('pizza', 'assets/pizza.png');
     this.load.image('brmint', 'assets/brmint.png');
     this.load.image('brgreentea', 'assets/brgreentea.png');
     this.load.image('breum', 'assets/breum.png');
     this.load.image('brmint', 'assets/brmint.png');
-    this.load.image('star', 'assets/star.png');
+
+    this.load.image('boss', 'assets/boss.png');
+    this.load.image('cleaner', 'assets/cleaner.png');
+    this.load.image('galus', 'assets/galus.png');
     this.load.image('targetpos', 'assets/targetpos.png');
     this.load.image('bossHand', 'assets/bossHand.png');
-    this.load.image('bossMap', 'assets/bossmap.png');
-    this.load.image('skillTestA', 'assets/skillUse.png');
+    this.load.image('meso', 'assets/meso.png');
+
+    this.load.image('starforce', 'assets/starforce.png');
+
+    this.load.image('skillUse', 'assets/skillUse.png');
     this.load.audio('musicTestA', 'assets/closeserver.mp3');
+
+    this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 111 });
+
     this.createTransparentPixelTexture('default_pixel');
   }
 

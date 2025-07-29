@@ -25,28 +25,28 @@ class WaitingScene extends Phaser.Scene {
     */
 
     gameManager.gameHeight = 800; // this.sys.game.config.height as number
-    const image = this.textures.get('testbackground').getSourceImage() as HTMLImageElement;
+    const image = this.textures.get('waitingMap').getSourceImage() as HTMLImageElement;
     const scale = gameManager.gameHeight / image.height;
     gameManager.gameWidth = image.width * scale;
     this.physics.world.setBounds(0, 0, gameManager.gameWidth, gameManager.gameHeight);
 
-    const sky = this.add.image(0, 0, 'testbackground').setOrigin(0, 0);
+    const sky = this.add.image(0, 0, 'waitingMap').setOrigin(0, 0);
     sky.setScale(this.physics.world.bounds.width / sky.width, this.physics.world.bounds.height / sky.height);
 
     this.cameras.main.setZoom(1.5); // 카메라 줌
 
     // 플랫폼 생성
     this.platforms = this.physics.add.staticGroup();
-    (this.platforms.create(0, this.physics.world.bounds.height - 150, 'default_pixel') as Phaser.Physics.Arcade.Sprite)
+    (this.platforms.create(0, this.physics.world.bounds.height - 130, 'default_pixel') as Phaser.Physics.Arcade.Sprite)
       .setOrigin(0, 0)
       .setScale(this.physics.world.bounds.width, 10)
       .refreshBody();
 
     // 발판 생성
     this.teleportPads = this.physics.add.staticGroup();
-    (this.teleportPads.create(200, this.physics.world.bounds.height - 170, 'default_pixel') as Phaser.Physics.Arcade.Sprite)
+    (this.teleportPads.create(1150, this.physics.world.bounds.height - 150, 'default_pixel') as Phaser.Physics.Arcade.Sprite)
       .setOrigin(0, 0)
-      .setScale(100, 20)
+      .setScale(120, 20)
       .refreshBody();
 
     // 플레이어 생성
