@@ -119,10 +119,9 @@ class BossEntity extends Entity {
     })
   }
 
-  // TODO: 지금까지 섭취한 치킨의 수 표시하기(보스바에 흰색으로 표시?)
   public phaseChicken() {
     if (!this.mainPlatform) return;
-    const randomX = getRandomInt(0, 1000);
+    const randomX = getRandomInt(0, gameManager.gameWidth);
     const galus = new EntityGalus(this.scene, { x: randomX, y: 500 });
     galus.targetPos = this.getCurrentPos();
     gameManager.bossEntityManager.entityList.push(galus);
@@ -145,12 +144,12 @@ class BossEntity extends Entity {
 
   public phaseDefault() {
     gameManager.normalEntityManager.respawnEntities();
-    const randomX = getRandomInt(0, 1000);
+    const randomX = getRandomInt(0, gameManager.gameWidth);
     this.bossHandTarget?.startTargeting(randomX);
   }
 
   public setNewTargetX() {
-    this.targetX = getRandomInt(0, 1000);
+    this.targetX = getRandomInt(0, gameManager.gameWidth);
     this.isMove = true;
   }
 

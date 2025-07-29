@@ -25,6 +25,8 @@ class GameManager {
     damageMultiplier: 1.0,
     attackMultiplier: 1.0,
   };
+  public gameWidth: number = 0;
+  public gameHeight: number = 0;
   public deathCount: number = 5;
 
   public droppedItems: Entity[] = [];

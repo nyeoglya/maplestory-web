@@ -105,7 +105,7 @@ class EntityStar extends Entity {
       this.setVisible(false);
     } else {
       if (!this.visible) {
-        const newXPos = getRandomInt(0, 1000);
+        const newXPos = getRandomInt(0, gameManager.gameWidth);
         this.x = newXPos;
         this.setVisible(true);
       }

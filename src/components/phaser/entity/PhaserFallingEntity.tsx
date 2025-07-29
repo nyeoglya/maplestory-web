@@ -46,7 +46,7 @@ class EntityFalling extends Entity {
 
   public respawn(pos?: Vector): void {
     this.death = false;
-    this.x = getRandomInt(0, 1000);
+    this.x = getRandomInt(0, gameManager.gameWidth);
     this.y = 0;
     this.speed = getRandomInt(50, 200);
     this.setVisible(true);

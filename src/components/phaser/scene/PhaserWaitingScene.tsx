@@ -24,10 +24,11 @@ class WaitingScene extends Phaser.Scene {
     this.bgm.play();
     */
 
-    const gameHeight = this.sys.game.config.height as number;
+    gameManager.gameHeight = 800; // this.sys.game.config.height as number
     const image = this.textures.get('testbackground').getSourceImage() as HTMLImageElement;
-    const scale = gameHeight / image.height;
-    this.physics.world.setBounds(0, 0, image.width * scale, gameHeight);
+    const scale = gameManager.gameHeight / image.height;
+    gameManager.gameWidth = image.width * scale;
+    this.physics.world.setBounds(0, 0, gameManager.gameWidth, gameManager.gameHeight);
 
     const sky = this.add.image(0, 0, 'testbackground').setOrigin(0, 0);
     sky.setScale(this.physics.world.bounds.width / sky.width, this.physics.world.bounds.height / sky.height);
@@ -78,7 +79,7 @@ class WaitingScene extends Phaser.Scene {
 
     if (this.player) {
       this.cameras.main.startFollow(this.player);
-      this.cameras.main.followOffset.set(0, gameHeight * 0.15);
+      this.cameras.main.followOffset.set(0, gameManager.gameHeight * 0.15);
       this.cameras.main.setBounds(0, 0, this.physics.world.bounds.width, this.physics.world.bounds.height);
     }
 

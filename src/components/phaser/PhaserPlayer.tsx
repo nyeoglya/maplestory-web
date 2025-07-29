@@ -1,6 +1,7 @@
 import gameManager from '@/utils/manager/GameManager';
 import * as Phaser from 'phaser';
 import Entity from './entity/PhaserEntity';
+import { getRandomInt } from '@/utils/Utils';
 
 class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   public detectionZone: Phaser.Physics.Arcade.StaticBody | undefined; // 플레이어 주변 감지 영역
@@ -65,8 +66,8 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
 
   public setDeath() {
     gameManager.deathCount -= 1;
-    this.x = 100;
-    this.y = 400;
+    this.x = getRandomInt(50, gameManager.gameWidth - 50);
+    this.y = gameManager.gameHeight - 200;
     gameManager.player.health = gameManager.player.maxHealth;
     gameManager.player.mana = gameManager.player.maxMana;
     gameManager.effectManager.clearEffect();
