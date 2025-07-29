@@ -15,7 +15,7 @@ class BaseScene extends Phaser.Scene {
 
   preload() {
     this.load.setBaseURL('/');
-    this.load.image('testbackground', 'assets/testbackground.png');
+    this.load.image('waitingMap', 'assets/waitingmap.png');
     this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 111 });
     this.load.image('boss', 'assets/boss.png');
     this.load.image('cleaner', 'assets/cleaner.png');
