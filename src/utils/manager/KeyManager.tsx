@@ -4,7 +4,7 @@ class KeyboardManager {
   private keyCallbacks: Map<string, Set<KeyPressCallback>> = new Map();
   private globalCallbacks: Set<KeyPressCallback> = new Set();
 
-  private keys: {[key: string]: boolean} = {};
+  private keys: { [key: string]: boolean } = {};
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -60,5 +60,5 @@ class KeyboardManager {
   }
 }
 
-const keyboardManager = new KeyboardManager();
-export default keyboardManager;
+// const keyboardManager = new KeyboardManager();
+// export default keyboardManager;

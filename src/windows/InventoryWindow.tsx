@@ -6,7 +6,7 @@ import { Vector } from 'matter';
 import gameManager from '@/utils/manager/GameManager';
 import Image from 'next/image';
 import { Item } from '@/utils/Item';
-import keyboardManager from '@/utils/manager/KeyManager';
+// import keyboardManager from '@/utils/manager/KeyManager';
 
 const InventoryWindow: React.FC = () => {
   const positionRef = useRef<Vector>({ x: 50, y: 50 });
@@ -40,15 +40,16 @@ const InventoryWindow: React.FC = () => {
 
     gameManager.inventoryManager.setCurrentPlayerInventory = handleInventoryUpdate;
 
+    /*
     const handleIKeyPress = (event: KeyboardEvent) => {
       console.log("i 키가 감지되었습니다! (YourComponent)");
       // event.preventDefault();
     };
     keyboardManager.onKeyDown('i', handleIKeyPress);
-
+    */
     return () => {
       gameManager.inventoryManager.setCurrentPlayerInventory = undefined;
-      keyboardManager.offKeyDown('i', handleIKeyPress);
+      // keyboardManager.offKeyDown('i', handleIKeyPress);
     };
   }, []);
 
