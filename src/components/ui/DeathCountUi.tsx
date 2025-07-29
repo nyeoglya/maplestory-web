@@ -1,15 +1,17 @@
 "use client";
 
+import { useNavigate } from 'react-router-dom';
 import gameManager from '@/utils/manager/GameManager';
 import React, { useEffect, useState } from 'react';
 
 const DeathCountUi: React.FC = () => {
-
+  const navigate = useNavigate();
   const [deathCount, setDeathCount] = useState<number>(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setDeathCount(gameManager.deathCount);
+      if (gameManager.deathCount <= 0 || gameManager.bossEntity?.death) navigate('/end');
     }, 200);
 
     return () => {

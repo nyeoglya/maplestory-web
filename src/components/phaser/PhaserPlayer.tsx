@@ -99,18 +99,13 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   public createAnimations() {
     this.scene.anims.create({
       key: 'left',
-      frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
+      frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 0 }),
       frameRate: 10,
       repeat: -1
     });
     this.scene.anims.create({
-      key: 'turn',
-      frames: [{ key: 'player', frame: 2 }],
-      frameRate: 20
-    });
-    this.scene.anims.create({
       key: 'right',
-      frames: this.scene.anims.generateFrameNumbers('player', { start: 3, end: 4 }),
+      frames: this.scene.anims.generateFrameNumbers('player', { start: 1, end: 1 }),
       frameRate: 10,
       repeat: -1
     });
