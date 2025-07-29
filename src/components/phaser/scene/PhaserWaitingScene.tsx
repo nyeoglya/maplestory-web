@@ -8,22 +8,12 @@ class WaitingScene extends Phaser.Scene {
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
   private teleportPads: Phaser.Physics.Arcade.StaticGroup | null = null;
   private teleportLoc: string = 'BossScene';
-  private bgm!: Phaser.Sound.BaseSound;
 
   constructor() {
     super('WaitingScene');
   }
 
   create() {
-    /*
-    this.bgm = this.sound.add('musicTestA', {
-      loop: false,
-      volume: 0.5
-    });
-
-    this.bgm.play();
-    */
-
     gameManager.gameHeight = 800; // this.sys.game.config.height as number
     const image = this.textures.get('waitingMap').getSourceImage() as HTMLImageElement;
     const scale = gameManager.gameHeight / image.height;

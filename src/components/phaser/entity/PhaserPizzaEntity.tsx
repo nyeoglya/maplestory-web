@@ -46,10 +46,11 @@ class EntityPizza extends Entity {
     this.setVelocityX(this.targetDirection.x * this.speed);
     this.setVelocityY(this.targetDirection.y * this.speed);
 
-    // TODO: 맵 끝 가면 없애기
-    if (getDistance(gameManager.phaserPlayer?.getCurrentPos(), this.getCurrentPos()) < 30) {
+    if (getDistance(gameManager.phaserPlayer?.getCurrentPos(), this.getCurrentPos()) < 50) {
       this.tryAttack(gameManager.player);
       emitter.emit('captcha');
+      this.setDeath();
+    } else if (gameManager.phaserPlayer?.getCurrentPos().x < 100 || gameManager.phaserPlayer?.getCurrentPos().x > gameManager.gameWidth - 100) {
       this.setDeath();
     }
   }

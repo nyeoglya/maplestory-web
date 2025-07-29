@@ -1,4 +1,4 @@
-import { EffectTestA } from "./Effect";
+import { EffectTestA as EffectPowerUp } from "./Effect";
 import EffectManager from "@/utils/manager/EffectManager";
 import EntityManager from "@/utils/manager/EntityManager";
 import { getRandomInt, PlayerStat } from "./Utils";
@@ -78,7 +78,7 @@ export class SkillPowerUp extends Skill {
   }
 
   public performAction(entityManager: EntityManager, data: PlayerStat, entityUuidList: string[]) {
-    this.effectManager.addEffect(EffectTestA);
+    this.effectManager.addEffect(EffectPowerUp);
   }
 }
 

@@ -20,6 +20,7 @@ class PhaserBossScene extends Phaser.Scene {
   private pizza: EntityPizza | null = null;
   private star: EntityStar | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
+  private bgm!: Phaser.Sound.BaseSound;
 
   private normalEntityLoc: Vector[] = [];
 
@@ -28,6 +29,13 @@ class PhaserBossScene extends Phaser.Scene {
   }
 
   create() {
+    this.bgm = this.sound.add('bossfight', {
+      loop: true,
+      volume: 0.05
+    });
+
+    this.bgm.play();
+
     gameManager.gameHeight = 800; // this.sys.game.config.height as number
     const image = this.textures.get('bossMap').getSourceImage() as HTMLImageElement;
     const scale = gameManager.gameHeight / image.height;
@@ -62,6 +70,7 @@ class PhaserBossScene extends Phaser.Scene {
     this.boss = new BossEntity({ scene: this, pos: { x: gameManager.gameWidth / 2, y: floorY - 120 }, floorY: floorY });
     this.boss.mainPlatform = this.platforms;
     this.pizza = new EntityPizza({ scene: this, pos: { x: 0, y: 0 } });
+    this.pizza.setDeath();
     gameManager.bossEntity = this.boss;
     gameManager.pizzaEntity = this.pizza;
     gameManager.bossEntityManager.entityList.push(this.boss);

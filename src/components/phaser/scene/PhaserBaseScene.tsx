@@ -34,7 +34,7 @@ class BaseScene extends Phaser.Scene {
     this.load.image('starforce', 'assets/starforce.png');
 
     this.load.image('skillUse', 'assets/skillUse.png');
-    this.load.audio('musicTestA', 'assets/closeserver.mp3');
+    this.load.audio('bossfight', 'assets/bossfight.mp3');
 
     this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 111 });
 

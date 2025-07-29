@@ -21,8 +21,8 @@ export abstract class Effect {
 export class EffectTestA extends Effect {
   constructor() {
     super(
-      '효과 테스트 A',
-      '테스트용 효과A 입니다.',
+      '버프',
+      '공격력이 강화됩니다.',
       5,
       '/assets/effect.png'
     );
@@ -97,7 +97,7 @@ export class DebuffStarForce extends Effect {
       '스타포스 실패',
       '행동 불능에 걸립니다.',
       3,
-      '/assets/star.png'
+      '/assets/starforce.png'
     );
   }
 
@@ -116,7 +116,7 @@ export class BuffStarForce extends Effect {
       '스타포스 성공',
       '주는 데미지가 100% 증가합니다.',
       30,
-      '/assets/star.png'
+      '/assets/starforce.png'
     );
   }
 
@@ -135,7 +135,7 @@ export class DebuffCaptcha extends Effect {
       '거짓말 탐지기 실패',
       '5초간 이동이 불가능합니다.',
       5,
-      '/assets/star.png'
+      '/assets/liedetector.png'
     );
   }
 
