@@ -18,7 +18,7 @@ export abstract class Effect {
 }
 
 // 버프
-export class EffectTestA extends Effect {
+export class BuffEffect extends Effect {
   constructor() {
     super(
       '버프',

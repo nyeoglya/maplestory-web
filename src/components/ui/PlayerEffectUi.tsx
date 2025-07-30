@@ -7,7 +7,7 @@ import { Effect } from '@/utils/Effect';
 
 const PlayerEffectUi: React.FC = () => {
   const [currentEffect, setCurrentEffect] = useState<Effect[]>([]);
-  const [hoveredEffectName, setHoveredEffectName] = useState<string | null>(null);
+  const [hoveredEffect, setHoveredEffect] = useState<Effect | null>(null); // TODO: 이거 더 깔끔하게 바꾸기
 
   useEffect(() => {
     const handleEffectListUpdate = (newEffectList: Effect[]) => {
@@ -20,6 +20,10 @@ const PlayerEffectUi: React.FC = () => {
       gameManager.effectManager.setCurrentEffect = undefined;
     };
   }, []);
+
+  useEffect(() => { // TODO: 이건 임시방편임
+    setHoveredEffect(null);
+  }, [currentEffect]);
 
   return (
     <div
@@ -36,8 +40,27 @@ const PlayerEffectUi: React.FC = () => {
         padding: '5px',
         boxSizing: 'border-box',
         overflowY: 'hidden',
+        pointerEvents: 'auto',
       }}
     >
+      {(hoveredEffect && <div
+        style={{
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: 60,
+          right: 5,
+          background: '#00000044',
+          width: 250,
+          height: 100,
+          padding: '5px 8px',
+          borderRadius: '4px',
+        }}
+      >
+        <p style={{ color: 'white', fontSize: 20, }}>{hoveredEffect.name}</p>
+        <p style={{ color: 'white', fontSize: 15, }}>{hoveredEffect.description}</p>
+      </div>
+      )}
       {currentEffect.map((effect) => {
         const iconSize = 50;
         return (
@@ -51,11 +74,8 @@ const PlayerEffectUi: React.FC = () => {
               borderRadius: '5px',
               margin: '4px',
             }}
-            onMouseEnter={() => {
-              console.log(effect.name);
-              setHoveredEffectName(effect.name);
-            }}
-            onMouseLeave={() => setHoveredEffectName(null)}
+            onMouseEnter={() => setHoveredEffect(effect)}
+            onMouseLeave={() => setHoveredEffect(null)}
           >
             <Image
               src={effect.effectIconPath}
@@ -65,7 +85,6 @@ const PlayerEffectUi: React.FC = () => {
               style={{
                 objectFit: 'cover',
                 display: 'block',
-                pointerEvents: 'none',
               }}
             />
             <p
@@ -86,24 +105,6 @@ const PlayerEffectUi: React.FC = () => {
             >
               {effect.duration}
             </p>
-            {hoveredEffectName === effect.name && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: iconSize + 5,
-                  left: 0,
-                  background: 'rgba(0, 0, 0, 0.8)',
-                  color: '#fff',
-                  padding: '5px 8px',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  zIndex: 10,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {effect.description || effect.name}
-              </div>
-            )}
           </div>
         );
       })}

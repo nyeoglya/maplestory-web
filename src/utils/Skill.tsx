@@ -1,4 +1,4 @@
-import { EffectTestA as EffectPowerUp } from "./Effect";
+import { BuffEffect as EffectPowerUp } from "./Effect";
 import EffectManager from "@/utils/manager/EffectManager";
 import EntityManager from "@/utils/manager/EntityManager";
 import { getRandomInt, PlayerStat } from "./Utils";

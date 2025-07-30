@@ -11,7 +11,6 @@ import DraggableItem from '@/windows/DraggableItem';
 import DeathCountUi from './DeathCountUi';
 import CaptchaWindow from '@/windows/CaptchaWindow';
 import BossPhaseClockWindow from '@/windows/BossPhaseClockWindow';
-import ArmorWindow from '@/windows/ArmorWindow';
 import InventoryWindow from '@/windows/InventoryWindow';
 
 const GameScreenUi: React.FC = () => {
