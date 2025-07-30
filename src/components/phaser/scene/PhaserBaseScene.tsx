@@ -29,7 +29,7 @@ class BaseScene extends Phaser.Scene {
     this.load.image('galus', 'assets/galus.png');
     this.load.image('targetpos', 'assets/targetpos.png');
     this.load.image('bossHand', 'assets/bossHand.png');
-    this.load.image('meso', 'assets/meso.png');
+    this.load.spritesheet('meso', 'assets/meso.png', { frameWidth: 25, frameHeight: 25 });
 
     this.load.image('starforce', 'assets/starforce.png');
 
