@@ -1,17 +1,17 @@
 "use client";
 
 import gameManager from '@/utils/manager/GameManager';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const GameEndUi: React.FC = () => {
 
   const [win, setWin] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const resetGame = () => {
     gameManager.deathCount = 5;
-    navigate('/');
+    router.back();
   }
 
   useEffect(() => {

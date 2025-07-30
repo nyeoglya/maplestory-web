@@ -99,20 +99,20 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   public createAnimations() {
     this.scene.anims.create({
       key: 'left',
-      frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 0 }),
+      frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 2 }),
       frameRate: 10,
       repeat: -1
     });
     this.scene.anims.create({
       key: 'right',
-      frames: this.scene.anims.generateFrameNumbers('player', { start: 1, end: 1 }),
+      frames: this.scene.anims.generateFrameNumbers('player', { start: 3, end: 5 }),
       frameRate: 10,
       repeat: -1
     });
   }
 
-  public showSkillImg(skillImgName: string = 'skillTestA') {
-    if (this.skillImg && this.skillImg.active) return;
+  public showSkillImg(skillImgName: string | undefined) {
+    if (this.skillImg && this.skillImg.active || !skillImgName) return;
 
     if (this.detectionZone) {
       this.skillImg = this.scene.add.image(
@@ -162,9 +162,9 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
       } else if (isBodyTouchingDown) {
         this.setVelocityX(0);
         if (this.directingLeft) {
-          this.setFrame(0);
+          this.setFrame(2);
         } else {
-          this.setFrame(4);
+          this.setFrame(3);
         }
         // this.anims.play('turn');
       }

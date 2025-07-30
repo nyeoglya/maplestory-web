@@ -58,9 +58,7 @@ class WaitingScene extends Phaser.Scene {
         if (!skill.isSkillAvailable(gameManager.player) ||
           gameManager.skillManager.skillCooltimeMap.get(skill) !== undefined) return;
         const overlapEntityList = getOverlapEntity(this, this.player.detectionZone, gameManager.normalEntityManager.entityList);
-        if (skill.skillImgPath) {
-          this.player.showSkillImg(skill.skillImgPath);
-        }
+        this.player.showSkillImg(skill.skillImgPath);
         const effectedPlayer = gameManager.effectManager.effectChain(gameManager.player);
         gameManager.skillManager.skillUse(skill, effectedPlayer, overlapEntityList);
         gameManager.skillManager.skillSetCooltime(skill);

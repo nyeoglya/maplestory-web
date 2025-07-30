@@ -118,9 +118,7 @@ class PhaserBossScene extends Phaser.Scene {
           gameManager.skillManager.skillCooltimeMap.get(skill) !== undefined) return;
         const overlapNormalEntityList = getOverlapEntity(this, this.player.detectionZone, gameManager.normalEntityManager.entityList);
         const overlapBossEntityList = getOverlapEntity(this, this.player.detectionZone, gameManager.bossEntityManager.entityList);
-        if (skill.skillImgPath) {
-          this.player.showSkillImg(skill.skillImgPath);
-        }
+        this.player.showSkillImg(skill.skillImgPath);
         const effectedPlayer = gameManager.effectManager.effectChain(gameManager.player);
         gameManager.skillManager.setCurrentEntityManager(gameManager.normalEntityManager);
         gameManager.skillManager.skillUse(skill, effectedPlayer, overlapNormalEntityList);
