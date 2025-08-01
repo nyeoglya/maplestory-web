@@ -15,12 +15,17 @@ const InventoryWindow: React.FC = () => {
   const offset = useRef<Vector>({ x: 0, y: 0 });
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
   const [showWindow, setShowWindow] = useState<boolean>(true);
-  const [currentPlayerInventory, setCurrentPlayerInventory] = useState<Item[]>(gameManager.inventoryManager.currentPlayerInventory);
+  const [currentPlayerInventory, setCurrentPlayerInventory] = useState<Map<number, Item | null>>(gameManager.inventoryManager.currentPlayerInventoryMap);
   const gridSize = 75;
+
+  const getClickedLoc = (pos: Vector) => {
+    const relativeX = pos.x - positionRef.current.x;
+    const relativeY = pos.y - positionRef.current.y - 25;
+    return Math.floor(relativeX / gridSize) + 4 * Math.floor(relativeY / gridSize);
+  };
 
   const initWinData = {
     id: 'inventory',
-    pos: position,
     posRef: positionRef,
     setPos: setPosition,
     isDragging: isDragging,
@@ -29,13 +34,14 @@ const InventoryWindow: React.FC = () => {
     height: gridSize * 8,
     showWindow: showWindow,
     setZIndex: setZIndex,
+    getClickedLoc: getClickedLoc,
   }
 
   useEffect(() => {
     windowManager.addWindow(initWinData);
 
-    const handleInventoryUpdate = (newInventory: Item[]) => {
-      setCurrentPlayerInventory([...newInventory]);
+    const handleInventoryUpdate = (newInventory: Map<number, Item | null>) => {
+      setCurrentPlayerInventory(new Map(newInventory));
     };
 
     gameManager.inventoryManager.setCurrentPlayerInventory = handleInventoryUpdate;
@@ -55,10 +61,7 @@ const InventoryWindow: React.FC = () => {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     windowManager.makeTop('inventory');
-    const relativeX = e.clientX - positionRef.current.x;
-    const relativeY = e.clientY - positionRef.current.y;
-    const itemIndex = Math.floor(relativeX / gridSize) + 4 * Math.floor(relativeY / gridSize);
-    gameManager.inventoryManager.moveItem('inventory', 'mouse', itemIndex);
+    gameManager.inventoryManager.moveItem('inventory', 'mouse', getClickedLoc({ x: e.clientX, y: e.clientY }), null);
   };
 
   return (
@@ -106,22 +109,32 @@ const InventoryWindow: React.FC = () => {
         }}
         onMouseDown={handleMouseDown}
       >
-        {currentPlayerInventory.map((item, index) => (
-          <Image
-            key={item.uuid}
-            src={item.itemIconPath}
-            alt={`Item ${item.name}`}
-            width={gridSize}
-            height={gridSize}
-            style={{
-              objectFit: 'cover',
-              position: 'absolute',
-              left: `${(index % 4) * gridSize}px`,
-              top: `${Math.floor(index / 4) * gridSize}px`,
-              zIndex: 0,
-              pointerEvents: 'none',
-            }}
-          />
+        {Array.from(currentPlayerInventory.entries()).map(([key, item]: [number, Item | null]) => (
+          <div key={key} style={{
+            width: gridSize,
+            height: gridSize,
+            pointerEvents: 'auto',
+            zIndex: 0,
+            position: 'absolute',
+            border: '2px solid black',
+            background: 'white',
+            left: `${(key % 4) * gridSize}px`,
+            top: `${Math.floor(key / 4) * gridSize}px`,
+          }}>
+            {item &&
+              <Image
+                src={item.itemIconPath}
+                alt={`Item ${item.name}`}
+                width={gridSize - 4}
+                height={gridSize - 4}
+                style={{
+                  objectFit: 'cover',
+                  position: 'absolute',
+                  pointerEvents: 'none',
+                }}
+              />
+            }
+          </div>
         ))}
       </div>
     </div>

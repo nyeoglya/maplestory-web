@@ -42,6 +42,7 @@ const CaptchaWindow: React.FC = () => {
     height: 250,
     showWindow: showWindow,
     setZIndex: setZIndex,
+    getClickedLoc: (pos: Vector) => undefined,
   }
 
   useEffect(() => {

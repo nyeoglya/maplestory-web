@@ -28,7 +28,6 @@ const BossPhaseClockWindow: React.FC = () => {
 
   const initWinData = {
     id: 'bossPhaseClock',
-    pos: position,
     posRef: positionRef,
     setPos: setPosition,
     isDragging: isDragging,
@@ -37,6 +36,7 @@ const BossPhaseClockWindow: React.FC = () => {
     height: 200,
     showWindow: showWindow,
     setZIndex: setZIndex,
+    getClickedLoc: (pos: Vector) => undefined,
   }
   const radius = initWinData.width / 2;
 

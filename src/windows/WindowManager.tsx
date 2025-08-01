@@ -3,8 +3,7 @@ import { Vector } from 'matter';
 
 interface WindowData {
   id: string;
-  pos: Vector; // lefttop position
-  posRef: React.RefObject<Vector>;
+  posRef: React.RefObject<Vector>; // lefttop position
   setPos: React.Dispatch<React.SetStateAction<Vector>>;
   isDragging: React.RefObject<boolean>;
   offset: React.RefObject<Vector>;
@@ -12,6 +11,7 @@ interface WindowData {
   height: number;
   showWindow: boolean;
   setZIndex: React.Dispatch<React.SetStateAction<number | undefined>>;
+  getClickedLoc: (pos: Vector) => string | number | undefined,
 }
 
 class WindowManager {

@@ -12,6 +12,7 @@ import DeathCountUi from './DeathCountUi';
 import CaptchaWindow from '@/windows/CaptchaWindow';
 import BossPhaseClockWindow from '@/windows/BossPhaseClockWindow';
 import InventoryWindow from '@/windows/InventoryWindow';
+import ArmorWindow from '@/windows/ArmorWindow';
 
 const GameScreenUi: React.FC = () => {
   return (
@@ -26,13 +27,9 @@ const GameScreenUi: React.FC = () => {
     }}>
       <BossPhaseClockWindow />
       <CaptchaWindow />
-      {/*
       <ArmorWindow />
-      */}
       <InventoryWindow />
       <DraggableItem />
-      {/*
-      */}
       <div style={{
         position: 'absolute',
         width: '100%',

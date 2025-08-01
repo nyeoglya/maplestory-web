@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import gameManager from '@/utils/manager/GameManager';
 import { Item } from '@/utils/Item';
+import windowManager from './WindowManager';
 
 const DraggableItem: React.FC = () => {
   const [position, setPosition] = useState<Vector>({ x: 0, y: 0 });
@@ -13,8 +14,15 @@ const DraggableItem: React.FC = () => {
   const gridSize = 75;
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    setIsMouseItem(false);
-    gameManager.inventoryManager.moveItem('mouse', 'inventory'); // TODO: 옮기기
+    const clickedPos = { x: e.clientX, y: e.clientY };
+    const clickedWindowId = windowManager.findWindow(clickedPos);
+    if (!clickedWindowId) return;
+    windowManager.makeTop(clickedWindowId);
+    const clickedLoc = windowManager.getWindow(clickedWindowId)?.getClickedLoc(clickedPos);
+    if (clickedLoc === undefined) return;
+
+    const moveResult = gameManager.inventoryManager.moveItem('mouse', clickedWindowId, null, clickedLoc);
+    setIsMouseItem(!moveResult);
   }
 
   const handleMouseMove = (e: MouseEvent) => {

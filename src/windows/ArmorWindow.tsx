@@ -3,6 +3,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import windowManager from './WindowManager';
 import { Vector } from 'matter';
+import { Item } from '@/utils/Item';
+import gameManager from '@/utils/manager/GameManager';
+import Image from 'next/image';
 
 const ArmorWindow: React.FC = () => {
   const positionRef = useRef<Vector>({ x: 200, y: 50 });
@@ -11,10 +14,18 @@ const ArmorWindow: React.FC = () => {
   const offset = useRef<Vector>({ x: 0, y: 0 });
   const [showWindow, setShowWindow] = useState<boolean>(true);
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
+  const [currentArmorInventory, setCurrentArmorInventory] = useState<Map<string, { pos: Vector, item: Item | null }>>(gameManager.inventoryManager.currentArmorInventoryMap);
+
+  const getClickedLoc = (pos: Vector) => {
+    const allElements = document.elementsFromPoint(pos.x, pos.y);
+    const armorWindow = document.getElementById('armorWindowInner');
+    if (!allElements || !armorWindow) return undefined;
+    const clickedInsideArmor = allElements.find(el => armorWindow.contains(el));
+    return clickedInsideArmor?.id;
+  };
 
   const initWinData = {
     id: 'armor',
-    pos: position,
     posRef: positionRef,
     setPos: setPosition,
     isDragging: isDragging,
@@ -23,15 +34,28 @@ const ArmorWindow: React.FC = () => {
     height: 500,
     showWindow: showWindow,
     setZIndex: setZIndex,
+    getClickedLoc: getClickedLoc,
   }
 
   useEffect(() => {
     windowManager.addWindow(initWinData);
+
+    const handleInventoryUpdate = (newInventory: Map<string, { pos: Vector, item: Item | null }>) => {
+      setCurrentArmorInventory(new Map(newInventory));
+    };
+
+    gameManager.inventoryManager.setCurrentArmorInventory = handleInventoryUpdate;
+
   }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     windowManager.makeTop('armor');
+    const loc = getClickedLoc({ x: e.clientX, y: e.clientY });
+    if (!loc) return;
+    gameManager.inventoryManager.moveItem('armor', 'mouse', loc, null);
   };
+
+  const gridSize = 75;
 
   return (
     <div
@@ -69,20 +93,38 @@ const ArmorWindow: React.FC = () => {
             height: 25,
           }}>X</button>
       </div>
-      <div
+      <div id='armorWindowInner'
         style={{
           flexGrow: 1,
           backgroundColor: 'white',
         }}
         onMouseDown={handleMouseDown}
       >
-        <div style={{
-          backgroundColor: 'blue',
-          width: 75,
-          height: 75,
-        }}>
-
-        </div>
+        {Array.from(currentArmorInventory.entries()).map(([key, value]: [string, { pos: Vector, item: Item | null }]) =>
+          <div key={key} id={key} style={{
+            position: 'absolute',
+            left: value.pos.x,
+            top: value.pos.y,
+            backgroundColor: 'lightblue',
+            pointerEvents: 'auto',
+            width: 75,
+            height: 75,
+          }}>
+            {value.item &&
+              <Image
+                src={value.item.itemIconPath}
+                alt={`Item ${value.item.name}`}
+                width={gridSize - 4}
+                height={gridSize - 4}
+                style={{
+                  objectFit: 'cover',
+                  position: 'absolute',
+                  pointerEvents: 'none',
+                }}
+              />
+            }
+          </div>
+        )}
       </div>
     </div>
   );
