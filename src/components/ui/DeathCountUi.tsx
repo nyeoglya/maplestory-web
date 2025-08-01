@@ -2,22 +2,28 @@
 
 import gameManager from '@/utils/manager/GameManager';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const DeathCountUi: React.FC = () => {
   const router = useRouter();
   const [deathCount, setDeathCount] = useState<number>(0);
+  const hasPushed = useRef(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setDeathCount(gameManager.deathCount);
-      if (gameManager.deathCount <= 0 || gameManager.bossEntity?.death) router.push('/end');
+      if (gameManager.deathCount <= 0 || gameManager.bossEntity?.death) {
+        if (!hasPushed.current) {
+          router.push('/end');
+          hasPushed.current = true;
+        }
+      }
     }, 200);
 
     return () => {
       clearInterval(interval);
     };
-  });
+  }, []);
 
   return (
     <div style={{
