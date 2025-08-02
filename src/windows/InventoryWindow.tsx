@@ -14,13 +14,14 @@ const InventoryWindow: React.FC = () => {
   const isDragging = useRef<boolean>(false);
   const offset = useRef<Vector>({ x: 0, y: 0 });
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
-  const [showWindow, setShowWindow] = useState<boolean>(true);
+  const [showWindow, setShowWindow] = useState<boolean>(false);
   const [currentPlayerInventory, setCurrentPlayerInventory] = useState<Map<number, Item | null>>(gameManager.inventoryManager.currentPlayerInventoryMap);
-  const gridSize = 75;
+  const gridSize = 60;
 
   const getClickedLoc = (pos: Vector) => {
-    const relativeX = pos.x - positionRef.current.x;
+    const relativeX = pos.x - positionRef.current.x - 5;
     const relativeY = pos.y - positionRef.current.y - 25;
+    if (relativeX < 0 || relativeY < 0) return undefined;
     return Math.floor(relativeX / gridSize) + 4 * Math.floor(relativeY / gridSize);
   };
 
@@ -30,8 +31,8 @@ const InventoryWindow: React.FC = () => {
     setPos: setPosition,
     isDragging: isDragging,
     offset: offset,
-    width: gridSize * 4,
-    height: gridSize * 8,
+    width: gridSize * 4 + 10,
+    height: gridSize * 8 + 25,
     showWindow: showWindow,
     setZIndex: setZIndex,
     getClickedLoc: getClickedLoc,
@@ -61,7 +62,8 @@ const InventoryWindow: React.FC = () => {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     windowManager.makeTop('inventory');
-    gameManager.inventoryManager.moveItem('inventory', 'mouse', getClickedLoc({ x: e.clientX, y: e.clientY }), null);
+    const clickedLoc = getClickedLoc({ x: e.clientX, y: e.clientY }) ?? null;
+    gameManager.inventoryManager.moveItem('inventory', 'mouse', clickedLoc, null);
   };
 
   return (
@@ -73,7 +75,10 @@ const InventoryWindow: React.FC = () => {
         top: position.y,
         width: initWinData.width,
         height: initWinData.height,
-        backgroundColor: 'gray',
+        backgroundColor: 'rgba(0,0,0,0)',
+        border: '5px solid rgba(19,34,8,255)',
+        boxSizing: 'border-box',
+        borderRadius: 5,
         display: 'flex',
         flexDirection: 'column',
         userSelect: 'none',
@@ -88,16 +93,26 @@ const InventoryWindow: React.FC = () => {
           display: 'flex',
           cursor: 'grab',
           flexDirection: 'row',
+          backgroundColor: 'rgba(19,34,8,255)',
+          alignItems: 'center',
         }}
         onMouseDown={windowManager.handleMouseDown}
       >
-        <p style={{ marginLeft: 10 }}>인벤토리(제작중)</p>
+        <p style={{
+          fontSize: 12,
+          color: '#f3f029ff',
+          width: '100%',
+          textAlign: 'center'
+        }}>ITEM INVENTORY</p>
         <div style={{ flexGrow: 1 }} />
         <button
           onClick={() => setShowWindow(false)}
           style={{
             width: 25,
             height: 25,
+            color: 'white',
+            border: '0px solid black',
+            backgroundColor: '#00000000'
           }}>X</button>
       </div>
       <div
@@ -105,6 +120,7 @@ const InventoryWindow: React.FC = () => {
           flexGrow: 1,
           position: 'relative',
           backgroundColor: 'white',
+          borderRadius: 5,
           overflow: 'hidden',
         }}
         onMouseDown={handleMouseDown}
@@ -116,23 +132,35 @@ const InventoryWindow: React.FC = () => {
             pointerEvents: 'auto',
             zIndex: 0,
             position: 'absolute',
-            border: '2px solid black',
-            background: 'white',
+            border: '2px solid #f4f7f8',
+            borderRadius: 5,
+            background: 'linear-gradient(0deg, white 0%, white 80%, #cbcbcb 100%)',
             left: `${(key % 4) * gridSize}px`,
             top: `${Math.floor(key / 4) * gridSize}px`,
           }}>
             {item &&
-              <Image
-                src={item.itemIconPath}
-                alt={`Item ${item.name}`}
-                width={gridSize - 4}
-                height={gridSize - 4}
-                style={{
-                  objectFit: 'cover',
+              <>
+                <div style={{
                   position: 'absolute',
-                  pointerEvents: 'none',
-                }}
-              />
+                  top: 50,
+                  left: 13,
+                  width: 30,
+                  height: 5,
+                  background: 'radial-gradient(ellipse at center, #989a99 0%, rgba(0,0,0,0) 100%)',
+                  borderRadius: '50%',
+                }} />
+                <Image
+                  src={item.itemIconPath}
+                  alt={`Item ${item.name}`}
+                  width={gridSize - 4}
+                  height={gridSize - 4}
+                  style={{
+                    objectFit: 'cover',
+                    position: 'absolute',
+                    pointerEvents: 'none',
+                  }}
+                />
+              </>
             }
           </div>
         ))}

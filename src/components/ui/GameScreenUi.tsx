@@ -13,6 +13,7 @@ import CaptchaWindow from '@/windows/CaptchaWindow';
 import BossPhaseClockWindow from '@/windows/BossPhaseClockWindow';
 import InventoryWindow from '@/windows/InventoryWindow';
 import ArmorWindow from '@/windows/ArmorWindow';
+import DialogWindow from '@/windows/DialogWindow';
 
 const GameScreenUi: React.FC = () => {
   return (
@@ -29,6 +30,7 @@ const GameScreenUi: React.FC = () => {
       <CaptchaWindow />
       <ArmorWindow />
       <InventoryWindow />
+      <DialogWindow />
       <DraggableItem />
       <div style={{
         position: 'absolute',

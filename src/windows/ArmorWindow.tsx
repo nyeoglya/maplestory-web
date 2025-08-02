@@ -12,7 +12,7 @@ const ArmorWindow: React.FC = () => {
   const [position, setPosition] = useState<Vector>(positionRef.current);
   const isDragging = useRef<boolean>(false);
   const offset = useRef<Vector>({ x: 0, y: 0 });
-  const [showWindow, setShowWindow] = useState<boolean>(true);
+  const [showWindow, setShowWindow] = useState<boolean>(false);
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
   const [currentArmorInventory, setCurrentArmorInventory] = useState<Map<string, { pos: Vector, item: Item | null }>>(gameManager.inventoryManager.currentArmorInventoryMap);
 
@@ -55,7 +55,7 @@ const ArmorWindow: React.FC = () => {
     gameManager.inventoryManager.moveItem('armor', 'mouse', loc, null);
   };
 
-  const gridSize = 75;
+  const gridSize = 60;
 
   return (
     <div
@@ -66,7 +66,10 @@ const ArmorWindow: React.FC = () => {
         top: position.y,
         width: initWinData.width,
         height: initWinData.height,
-        backgroundColor: 'gray',
+        backgroundColor: 'rgba(0,0,0,0)',
+        border: '5px solid rgba(19,34,8,255)',
+        boxSizing: 'border-box',
+        borderRadius: 5,
         display: 'flex',
         flexDirection: 'column',
         userSelect: 'none',
@@ -81,22 +84,33 @@ const ArmorWindow: React.FC = () => {
           display: 'flex',
           cursor: 'grab',
           flexDirection: 'row',
+          backgroundColor: 'rgba(19,34,8,255)',
+          alignItems: 'center',
         }}
         onMouseDown={windowManager.handleMouseDown}
       >
-        <p style={{ marginLeft: 10 }}>장비창(제작중)</p>
+        <p style={{
+          fontSize: 12,
+          color: '#f3f029ff',
+          width: '100%',
+          textAlign: 'center'
+        }}>EQUIPMENT INVENTORY</p>
         <div style={{ flexGrow: 1 }} />
         <button
           onClick={() => setShowWindow(false)}
           style={{
             width: 25,
             height: 25,
+            color: 'white',
+            border: '0px solid black',
+            backgroundColor: '#00000000'
           }}>X</button>
       </div>
       <div id='armorWindowInner'
         style={{
           flexGrow: 1,
           backgroundColor: 'white',
+          borderRadius: 5,
         }}
         onMouseDown={handleMouseDown}
       >
@@ -105,23 +119,37 @@ const ArmorWindow: React.FC = () => {
             position: 'absolute',
             left: value.pos.x,
             top: value.pos.y,
-            backgroundColor: 'lightblue',
+            background: 'linear-gradient(to top, rgba(117,133,149,255) 0%, rgba(109,116,124,255) 100%)',
+            border: '1px solid #39463f',
+            borderRadius: 5,
             pointerEvents: 'auto',
-            width: 75,
-            height: 75,
+            width: gridSize,
+            height: gridSize,
+            padding: 2,
           }}>
             {value.item &&
-              <Image
-                src={value.item.itemIconPath}
-                alt={`Item ${value.item.name}`}
-                width={gridSize - 4}
-                height={gridSize - 4}
-                style={{
-                  objectFit: 'cover',
+              <>
+                <div style={{
                   position: 'absolute',
-                  pointerEvents: 'none',
-                }}
-              />
+                  top: 49,
+                  left: 14,
+                  width: 30,
+                  height: 5,
+                  background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)',
+                  borderRadius: '50%',
+                }} />
+                <Image
+                  src={value.item.itemIconPath}
+                  alt={`Item ${value.item.name}`}
+                  width={gridSize - 4}
+                  height={gridSize - 4}
+                  style={{
+                    objectFit: 'cover',
+                    position: 'absolute',
+                    pointerEvents: 'none',
+                  }}
+                />
+              </>
             }
           </div>
         )}

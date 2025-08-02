@@ -11,7 +11,7 @@ const DraggableItem: React.FC = () => {
   const [position, setPosition] = useState<Vector>({ x: 0, y: 0 });
   const [imgPath, setImgPath] = useState<string>('/assets/item.png');
   const [isMouseItem, setIsMouseItem] = useState<boolean>(false);
-  const gridSize = 75;
+  const gridSize = 60;
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const clickedPos = { x: e.clientX, y: e.clientY };

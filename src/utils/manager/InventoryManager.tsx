@@ -23,8 +23,8 @@ class InventoryManager {
   public mouseItem: Item | null = null;
 
   public currentArmorInventoryMap: Map<string, { pos: Vector, item: Item | null }> = new Map([
-    ['armorHead', { pos: { x: 200, y: 200 }, item: null }],
-    ['armorChest', { pos: { x: 200, y: 300 }, item: null }],
+    ['armorHead', { pos: { x: 100, y: 100 }, item: null }],
+    ['armorChest', { pos: { x: 100, y: 170 }, item: null }],
   ]);
   public armorLocList: string[] = Array.from(this.currentArmorInventoryMap.keys());
 
