@@ -11,8 +11,7 @@ const PlayerbasicInfoUi: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPlayer({ ...gameManager.player });
-      if (!gameManager.starEntity) return;
-      setLevel(gameManager.starEntity.effectStack);
+      setLevel(gameManager.player.level);
       if (gameManager.player.health <= 0) {
         gameManager.phaserPlayer?.setDeath();
       }

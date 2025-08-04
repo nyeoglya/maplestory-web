@@ -14,6 +14,7 @@ import BossPhaseClockWindow from '@/windows/BossPhaseClockWindow';
 import InventoryWindow from '@/windows/InventoryWindow';
 import ArmorWindow from '@/windows/ArmorWindow';
 import DialogWindow from '@/windows/DialogWindow';
+import BossEnterWindow from '@/windows/BossEnterWindow';
 
 const GameScreenUi: React.FC = () => {
   return (
@@ -30,6 +31,7 @@ const GameScreenUi: React.FC = () => {
       <CaptchaWindow />
       <ArmorWindow />
       <InventoryWindow />
+      <BossEnterWindow />
       <DialogWindow />
       <DraggableItem />
       <div style={{

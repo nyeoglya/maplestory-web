@@ -6,8 +6,6 @@ import { getOverlapEntity } from "@/utils/Utils";
 class WaitingScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
-  private teleportPads: Phaser.Physics.Arcade.StaticGroup | null = null;
-  private teleportLoc: string = 'BossScene';
 
   constructor() {
     super('WaitingScene');
@@ -27,16 +25,9 @@ class WaitingScene extends Phaser.Scene {
 
     // 플랫폼 생성
     this.platforms = this.physics.add.staticGroup();
-    (this.platforms.create(0, this.physics.world.bounds.height - 130, 'default_pixel') as Phaser.Physics.Arcade.Sprite)
+    (this.platforms.create(0, this.physics.world.bounds.height - 110, 'default_pixel') as Phaser.Physics.Arcade.Sprite)
       .setOrigin(0, 0)
       .setScale(this.physics.world.bounds.width, 10)
-      .refreshBody();
-
-    // 발판 생성
-    this.teleportPads = this.physics.add.staticGroup();
-    (this.teleportPads.create(1150, this.physics.world.bounds.height - 150, 'default_pixel') as Phaser.Physics.Arcade.Sprite)
-      .setOrigin(0, 0)
-      .setScale(120, 20)
       .refreshBody();
 
     // 플레이어 생성
@@ -81,12 +72,6 @@ class WaitingScene extends Phaser.Scene {
   update(): void {
     if (!this.player) return;
     this.player.update();
-
-    if (!this.player.body || !this.teleportPads) return;
-    // val isCollideTeleportPads = false; // TODO: 발판에 닿아있지 않을 때는 텔레포트가 되면 안됨.
-    this.physics.overlap(this.player.body, this.teleportPads, () => {
-      if (this.player) this.player.teleportLoc = this.teleportLoc;
-    }, undefined, this);
   }
 }
 

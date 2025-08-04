@@ -9,7 +9,7 @@ import SkillManager from "./SkillManager";
 import { PlayerStat } from "@/utils/Utils";
 import Entity from "@/components/phaser/entity/PhaserEntity";
 import EntityPizza from "@/components/phaser/entity/PhaserPizzaEntity";
-import EntityStar from "@/components/phaser/entity/PhaserStarEntity";
+import NPCManager from "./NPCManager";
 
 class GameManager {
   public player: PlayerStat = {
@@ -24,6 +24,7 @@ class GameManager {
     flipKey: false,
     damageMultiplier: 1.0,
     attackMultiplier: 1.0,
+    level: 0,
   };
   public gameWidth: number = 0;
   public gameHeight: number = 0;
@@ -36,13 +37,14 @@ class GameManager {
   public fallingEntityManager: EntityManager = new EntityManager();
   public bossEntityManager: EntityManager = new EntityManager();
 
+  public npcManager: NPCManager = new NPCManager();
+
   public effectManager: EffectManager = new EffectManager();
   public skillManager: SkillManager = new SkillManager(this.player, this.normalEntityManager, this.effectManager);
 
   public phaserPlayer: PhaserPlayer | undefined = undefined;
   public bossEntity: BossEntity | undefined = undefined;
   public pizzaEntity: EntityPizza | undefined = undefined;
-  public starEntity: EntityStar | undefined = undefined;
 
   constructor() { }
 }

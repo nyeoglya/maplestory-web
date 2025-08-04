@@ -1,4 +1,5 @@
 import Entity from "@/components/phaser/entity/PhaserEntity";
+import NPC from "@/components/phaser/npc/PhaserNPC";
 import { Vector } from "matter";
 
 export interface PlayerStat {
@@ -13,6 +14,7 @@ export interface PlayerStat {
   flipKey: boolean;
   damageMultiplier: number;
   attackMultiplier: number;
+  level: number;
 }
 
 export function getDistance(v1: Vector, v2: Vector): number {
@@ -51,4 +53,24 @@ export function getOverlapEntity(
   });
 
   return overlapUuidList;
+}
+
+export function getOverlapNPC(
+  scene: Phaser.Scene,
+  detectionZone: Phaser.Physics.Arcade.StaticBody,
+  targetGroup: NPC[],
+): NPC[] {
+  const overlapNPCList: NPC[] = [];
+  if (!detectionZone) return [];
+
+  targetGroup.forEach(npc => {
+    const npcBody: Phaser.Physics.Arcade.Body = npc.getBody();
+    if (!npcBody) return;
+
+    scene.physics.overlap(detectionZone, npcBody, () => {
+      overlapNPCList.push(npc);
+    }, undefined, scene);
+  });
+
+  return overlapNPCList;
 }

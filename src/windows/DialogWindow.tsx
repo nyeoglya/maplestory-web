@@ -10,7 +10,7 @@ const DialogWindow: React.FC = () => {
   const isDragging = useRef<boolean>(false);
   const offset = useRef<Vector>({ x: 0, y: 0 });
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
-  const [showWindow, setShowWindow] = useState<boolean>(true);
+  const [showWindow, setShowWindow] = useState<boolean>(false);
   // const [currentDialog, setCurrentDialog] = useState<string>('');
 
   const initWinData = {

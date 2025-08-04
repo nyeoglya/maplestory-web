@@ -11,14 +11,14 @@ import { Vector } from 'matter';
 import Entity from '../entity/PhaserEntity';
 import EntityCleaner from '../entity/PhaserCleanerEntity';
 import EntityPizza from '../entity/PhaserPizzaEntity';
-import EntityStar from '../entity/PhaserStarEntity';
 import { EntityFallingEum, EntityFallingGreenTea, EntityFallingMint } from '../entity/PhaserFallingEntity';
+import NPCStar from '../npc/PhaserStarNPC';
 
 class PhaserBossScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
   private boss: BossEntity | null = null;
   private pizza: EntityPizza | null = null;
-  private star: EntityStar | null = null;
+  private star: NPCStar | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
   private bgm!: Phaser.Sound.BaseSound;
 
@@ -37,12 +37,12 @@ class PhaserBossScene extends Phaser.Scene {
     this.bgm.play();
 
     gameManager.gameHeight = 800; // this.sys.game.config.height as number
-    const image = this.textures.get('bossMap').getSourceImage() as HTMLImageElement;
+    const image = this.textures.get('bossNoonMap').getSourceImage() as HTMLImageElement;
     const scale = gameManager.gameHeight / image.height;
     gameManager.gameWidth = image.width * scale;
     this.physics.world.setBounds(0, 0, gameManager.gameWidth, gameManager.gameHeight);
 
-    const floorY = this.physics.world.bounds.height - 130;
+    const floorY = this.physics.world.bounds.height - 140;
 
     // 몹 생성 위치
     const step = gameManager.gameWidth / 8;
@@ -50,7 +50,7 @@ class PhaserBossScene extends Phaser.Scene {
     for (let i = 1; i <= 6; i++) xList.push(step * i);
     this.normalEntityLoc = xList.map(x => ({ x, y: floorY - 100 }));
 
-    const sky = this.add.image(0, 0, 'bossMap').setOrigin(0, 0);
+    const sky = this.add.image(0, 0, 'bossNoonMap').setOrigin(0, 0);
     sky.setScale(this.physics.world.bounds.width / sky.width, this.physics.world.bounds.height / sky.height);
 
     this.cameras.main.setZoom(1.5); // 카메라 줌
@@ -63,8 +63,8 @@ class PhaserBossScene extends Phaser.Scene {
       .refreshBody();
 
     // 별 생성
-    this.star = new EntityStar(this, { x: 100, y: floorY - 100 })
-    gameManager.starEntity = this.star;
+    this.star = new NPCStar(this, { x: 100, y: floorY - 100 })
+    gameManager.npcManager.npcList = [this.star];
 
     // 적 생성
     this.boss = new BossEntity({ scene: this, pos: { x: gameManager.gameWidth / 2, y: floorY - 120 }, floorY: floorY });

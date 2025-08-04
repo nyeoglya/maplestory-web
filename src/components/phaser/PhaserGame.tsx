@@ -6,6 +6,7 @@ import * as Phaser from 'phaser';
 import BossScene from './scene/PhaserBossScene';
 import WaitingScene from './scene/PhaserWaitingScene';
 import BaseScene from './scene/PhaserBaseScene';
+import TownScene from './scene/PhaserTownScene';
 
 const PhaserGame = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -23,13 +24,13 @@ const PhaserGame = () => {
         default: 'arcade',
         arcade: {
           gravity: { x: 0, y: 500 },
-          debug: false
+          debug: true
         }
       },
       scale: {
         mode: Phaser.Scale.RESIZE,
       },
-      scene: [BaseScene, WaitingScene, BossScene]
+      scene: [BaseScene, TownScene, WaitingScene, BossScene]
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {

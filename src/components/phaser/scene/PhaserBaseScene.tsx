@@ -15,8 +15,12 @@ class BaseScene extends Phaser.Scene {
 
   preload() {
     this.load.setBaseURL('/');
+    this.load.image('townMap', 'assets/townmap.png');
     this.load.image('waitingMap', 'assets/waitingmap.png');
-    this.load.image('bossMap', 'assets/bossmap.png');
+    this.load.image('bossNoonMap', 'assets/bossfightnoon.png');
+    this.load.image('bossNightMap', 'assets/bossfightnight.png');
+
+    this.load.image('teleportpad', 'assets/teleportpad.png');
 
     this.load.image('pizza', 'assets/pizza.png');
     this.load.image('brmint', 'assets/brmint.png');
@@ -42,7 +46,7 @@ class BaseScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start('WaitingScene');
+    this.scene.start('TownScene');
   }
 }
 

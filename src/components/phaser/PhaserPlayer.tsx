@@ -1,7 +1,8 @@
 import gameManager from '@/utils/manager/GameManager';
 import * as Phaser from 'phaser';
 import Entity from './entity/PhaserEntity';
-import { getRandomInt } from '@/utils/Utils';
+import { getOverlapNPC, getRandomInt } from '@/utils/Utils';
+import NPC from './npc/PhaserNPC';
 
 class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   public detectionZone: Phaser.Physics.Arcade.StaticBody | undefined; // 플레이어 주변 감지 영역
@@ -19,6 +20,8 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   protected doubleClickJumpTime: number = this.scene.time.now;
   protected disableJump: boolean = false;
   public mesoCount: number = 0;
+
+  public interactNPC: NPC[] = [];
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame);
@@ -45,18 +48,16 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
       }
     });
 
-    if (gameManager.starEntity) {
-      this.interactKey?.on('down', () => {
-        if (!gameManager.starEntity) return;
-        gameManager.starEntity.pressStartTime = this.scene.time.now;
-      });
+    this.interactKey?.on('down', () => {
+      this.interactNPC = getOverlapNPC(this.scene, this.getBody(), gameManager.npcManager.npcList);
+      if (this.interactNPC.length === 0) return;
+      this.interactNPC.forEach((npc: NPC) => npc.onInteractStart());
+    });
 
-      this.interactKey?.on('up', () => {
-        if (!gameManager.starEntity) return;
-        gameManager.starEntity.pressStartTime = null;
-        gameManager.starEntity.resetPressTime();
-      });
-    }
+    this.interactKey?.on('up', () => {
+      this.interactNPC.forEach((npc: NPC) => npc.onInteractEnd());
+      this.interactNPC = [];
+    });
 
     // 충돌 존
     this.detectionZone = scene.physics.add.staticBody(this.x, this.y, 300, 200);
@@ -134,6 +135,10 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   public disablePlatform: (() => void) | null = null;
   public teleportLoc: string | null = null;
 
+  protected getBody(): Phaser.Physics.Arcade.StaticBody {
+    return this.body as Phaser.Physics.Arcade.StaticBody;
+  }
+
   update() {
     if (!this.leftKey || !this.rightKey || !this.downKey || !this.upKey || !this.jumpKey || !this.retrieveKey || !this.interactKey) return;
     if (!gameManager.player.isMove) {
@@ -141,10 +146,9 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
       return;
     }
 
-    if (this.interactKey.isDown && gameManager.starEntity && gameManager.starEntity.pressStartTime) {
-      const now = this.scene.time.now;
-      gameManager.starEntity.holdingDuration = (now - gameManager.starEntity.pressStartTime) / 1000;
-      gameManager.starEntity.increaseStarLevel();
+    if (this.interactKey.isDown && this.interactNPC.length !== 0) {
+      this.interactNPC.forEach((npc: NPC) => npc.onInteracting());
+      return;
     }
 
     const playerSpeed: number = gameManager.player.speed.x;
@@ -166,7 +170,6 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
         } else {
           this.setFrame(3);
         }
-        // this.anims.play('turn');
       }
     }
 
