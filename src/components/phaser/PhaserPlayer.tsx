@@ -3,6 +3,7 @@ import * as Phaser from 'phaser';
 import Entity from './entity/PhaserEntity';
 import { getOverlapNPC, getRandomInt } from '@/utils/Utils';
 import NPC from './npc/PhaserNPC';
+import DirectionalPlatform from './etc/PhaserDirectionalPlatform';
 
 class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   public detectionZone: Phaser.Physics.Arcade.StaticBody | undefined; // 플레이어 주변 감지 영역
@@ -98,18 +99,22 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
   }
 
   public createAnimations() {
-    this.scene.anims.create({
-      key: 'left',
-      frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 2 }),
-      frameRate: 10,
-      repeat: -1
-    });
-    this.scene.anims.create({
-      key: 'right',
-      frames: this.scene.anims.generateFrameNumbers('player', { start: 3, end: 5 }),
-      frameRate: 10,
-      repeat: -1
-    });
+    if (!this.scene.anims.exists('left')) {
+      this.scene.anims.create({
+        key: 'left',
+        frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 2 }),
+        frameRate: 10,
+        repeat: -1
+      });
+    }
+    if (!this.scene.anims.exists('right')) {
+      this.scene.anims.create({
+        key: 'right',
+        frames: this.scene.anims.generateFrameNumbers('player', { start: 3, end: 5 }),
+        frameRate: 10,
+        repeat: -1
+      });
+    }
   }
 
   public showSkillImg(skillImgName: string | undefined) {
@@ -132,7 +137,7 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  public disablePlatform: (() => void) | null = null;
+  public directionalPlatformList: DirectionalPlatform[] = [];
   public teleportLoc: string | null = null;
 
   protected getBody(): Phaser.Physics.Arcade.StaticBody {
@@ -178,17 +183,24 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
     if (isBodyTouchingDown) this.disableJump = false;
 
     if (Phaser.Input.Keyboard.JustDown(this.jumpKey) && this.body instanceof Phaser.Physics.Arcade.Body) {
-      if (this.downKey?.isDown && this.disablePlatform && this.body.touching.down) {
-        this.disablePlatform();
+      if (this.downKey?.isDown && this.directionalPlatformList.length !== 0 && this.body.touching.down) {
+        for (const platform of this.directionalPlatformList) {
+          if (platform.isPlayerOnTop()) platform.temporarilyDisableCollision();
+        }
       } else {
         if (this.disableJump) return;
 
         const now = this.scene.time.now;
 
         if (now - this.doubleClickJumpTime < this.doubleClickCriteria) {
-          this.disableJump = true;
-          this.setVelocityY(-300);
-          this.setVelocityX(700 * (this.directingLeft ? -1 : 1) * flipDirection);
+          if (this.upKey.isDown) {
+            this.disableJump = true;
+            this.setVelocityY(-400);
+          } else if (this.leftKey.isDown || this.rightKey.isDown) {
+            this.disableJump = true;
+            this.setVelocityY(-300);
+            this.setVelocityX(700 * (this.directingLeft ? -1 : 1) * flipDirection);
+          }
         } else {
           if (this.body.touching.down) {
             this.setVelocityY(-250);
@@ -200,7 +212,16 @@ class PhaserPlayer extends Phaser.Physics.Arcade.Sprite {
 
     if (this.upKey.isDown && this.body instanceof Phaser.Physics.Arcade.Body && this.body.touching.down) {
       if (!this.teleportLoc) return;
-      this.scene.scene.start(this.teleportLoc);
+      gameManager.moveScene = { sceneName: this.teleportLoc, fadeOutTime: 500 };
+    }
+
+    if (gameManager.moveScene != null) {
+      this.scene.cameras.main.fadeOut(gameManager.moveScene.fadeOutTime, 0, 0, 0);
+      const moveScene = gameManager.moveScene.sceneName;
+      this.scene.cameras.main.once('camerafadeoutcomplete', () => {
+        this.scene.scene.start(moveScene);
+      });
+      gameManager.moveScene = null;
     }
 
     if (this.detectionZone) {

@@ -13,7 +13,7 @@ class EntityGalus extends Entity {
     public scene: Phaser.Scene,
     public pos: Vector,
     public texture: string = 'galus',
-    public health: number = 100,
+    public health: number = 50000000,
     public affectGravity: boolean = true,
     public isMove: boolean = true,
     public damage: number = 100,

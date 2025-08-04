@@ -31,10 +31,20 @@ class PhaserBossScene extends Phaser.Scene {
   create() {
     this.bgm = this.sound.add('bossfight', {
       loop: true,
-      volume: 0.05
+      volume: 0.3
+    });
+    this.bgm.play();
+    this.events.on('shutdown', () => {
+      this.bgm.stop();
     });
 
-    this.bgm.play();
+    this.input.setDefaultCursor('url(assets/point.cur), pointer'); // 메이플 마우스 포인터
+    this.input.on('pointerdown', () => {
+      this.input.setDefaultCursor('url(assets/point_low.cur), pointer');
+    });
+    this.input.on('pointerup', () => {
+      this.input.setDefaultCursor('url(assets/point.cur), pointer');
+    });
 
     gameManager.gameHeight = 800; // this.sys.game.config.height as number
     const image = this.textures.get('bossNoonMap').getSourceImage() as HTMLImageElement;
@@ -48,12 +58,13 @@ class PhaserBossScene extends Phaser.Scene {
     const step = gameManager.gameWidth / 8;
     const xList = [];
     for (let i = 1; i <= 6; i++) xList.push(step * i);
-    this.normalEntityLoc = xList.map(x => ({ x, y: floorY - 100 }));
+    this.normalEntityLoc = xList.map(x => ({ x, y: floorY - 90 }));
 
     const sky = this.add.image(0, 0, 'bossNoonMap').setOrigin(0, 0);
     sky.setScale(this.physics.world.bounds.width / sky.width, this.physics.world.bounds.height / sky.height);
 
     this.cameras.main.setZoom(1.5); // 카메라 줌
+    this.cameras.main.fadeIn(500, 0, 0, 0);
 
     // 플랫폼 생성
     this.platforms = this.physics.add.staticGroup();
@@ -62,12 +73,12 @@ class PhaserBossScene extends Phaser.Scene {
       .setScale(this.physics.world.bounds.width, 10)
       .refreshBody();
 
-    // 별 생성
-    this.star = new NPCStar(this, { x: 100, y: floorY - 100 })
+    // 스타포스 생성
+    this.star = new NPCStar(this, { x: 100, y: floorY - 110 })
     gameManager.npcManager.npcList = [this.star];
 
     // 적 생성
-    this.boss = new BossEntity({ scene: this, pos: { x: gameManager.gameWidth / 2, y: floorY - 120 }, floorY: floorY });
+    this.boss = new BossEntity({ scene: this, pos: { x: gameManager.gameWidth / 2, y: floorY - 100 }, floorY: floorY });
     this.boss.mainPlatform = this.platforms;
     this.pizza = new EntityPizza({ scene: this, pos: { x: 0, y: 0 } });
     this.pizza.setDeath();

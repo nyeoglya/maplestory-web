@@ -10,15 +10,30 @@ const tempDialog = new Dialog(
 );
 
 class NPCTemp extends NPC {
+
+  public onInteractStart() {
+    this.isInteracting = true;
+  }
+
+  public onInteracting() {
+
+  }
+
+  public onInteractEnd() {
+    this.isInteracting = false;
+  }
+
   constructor(
     public scene: Phaser.Scene,
     protected currentPos: Vector,
     protected dialog: Dialog = tempDialog,
     public texture: string = 'npc',
-    public affectGravity: boolean = true,
+    public affectGravity: boolean = false,
     public name: string = '',
     public uuid: string = uuidv4(),
   ) {
     super(scene, currentPos, dialog, texture, affectGravity, name, uuid);
   }
 }
+
+export default NPCTemp;

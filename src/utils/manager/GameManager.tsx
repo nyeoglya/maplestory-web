@@ -6,7 +6,7 @@ import EffectManager from "./EffectManager";
 import EntityManager from "./EntityManager";
 import InventoryManager from "./InventoryManager";
 import SkillManager from "./SkillManager";
-import { PlayerStat } from "@/utils/Utils";
+import { PlayerStat, SceneMoveData } from "@/utils/Utils";
 import Entity from "@/components/phaser/entity/PhaserEntity";
 import EntityPizza from "@/components/phaser/entity/PhaserPizzaEntity";
 import NPCManager from "./NPCManager";
@@ -14,7 +14,7 @@ import NPCManager from "./NPCManager";
 class GameManager {
   public player: PlayerStat = {
     speed: { x: 200, y: 200 },
-    name: "TEST",
+    name: "메린이",
     health: 500,
     maxHealth: 500,
     mainStat: 50,
@@ -45,6 +45,11 @@ class GameManager {
   public phaserPlayer: PhaserPlayer | undefined = undefined;
   public bossEntity: BossEntity | undefined = undefined;
   public pizzaEntity: EntityPizza | undefined = undefined;
+
+  public toggleBossWindow: ((value: boolean) => void) | undefined = undefined;
+  public toggleVideoPlay: ((value: boolean) => void) | undefined = undefined;
+  public moveScene: SceneMoveData | null = null;
+  public backgroundBGM: Phaser.Sound.BaseSound | undefined = undefined;
 
   constructor() { }
 }

@@ -16,7 +16,7 @@ class EntityCleaner extends Entity {
       pos.x,
       pos.y,
       'cleaner',
-      200,
+      80000000,
       true,
       true,
       20,

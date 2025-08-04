@@ -15,6 +15,7 @@ import InventoryWindow from '@/windows/InventoryWindow';
 import ArmorWindow from '@/windows/ArmorWindow';
 import DialogWindow from '@/windows/DialogWindow';
 import BossEnterWindow from '@/windows/BossEnterWindow';
+import VideoUi from './VideoUi';
 
 const GameScreenUi: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ const GameScreenUi: React.FC = () => {
       zIndex: 999,
       pointerEvents: 'none',
     }}>
+      <VideoUi />
       <BossPhaseClockWindow />
       <CaptchaWindow />
       <ArmorWindow />

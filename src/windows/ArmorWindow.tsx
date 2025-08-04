@@ -46,6 +46,9 @@ const ArmorWindow: React.FC = () => {
 
     gameManager.inventoryManager.setCurrentArmorInventory = handleInventoryUpdate;
 
+    return () => {
+      gameManager.inventoryManager.setCurrentArmorInventory = undefined;
+    };
   }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {

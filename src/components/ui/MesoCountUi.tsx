@@ -5,9 +5,14 @@ import React, { useEffect, useState } from 'react';
 
 const MesoCountUi: React.FC = () => {
   const [mesoCount, setMesoCount] = useState<number>(0);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
+      if (!gameManager.bossEntity) {
+        if (isVisible) setIsVisible(false);
+        return;
+      } else if (!isVisible) setIsVisible(true);
       const mesoCount = gameManager.phaserPlayer?.mesoCount;
       if (mesoCount) setMesoCount(mesoCount);
     }, 200);
@@ -19,6 +24,7 @@ const MesoCountUi: React.FC = () => {
 
   return (
     <div style={{
+      visibility: isVisible ? 'visible' : 'collapse',
       position: 'absolute',
       display: 'flex',
       flexDirection: 'row',

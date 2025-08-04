@@ -8,10 +8,17 @@ const DeathCountUi: React.FC = () => {
   const router = useRouter();
   const [deathCount, setDeathCount] = useState<number>(0);
   const hasPushed = useRef(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
+      if (!gameManager.bossEntity) {
+        if (isVisible) setIsVisible(false);
+        return;
+      } else if (!isVisible) setIsVisible(true);
+
       setDeathCount(gameManager.deathCount);
+
       if (gameManager.deathCount <= 0 || gameManager.bossEntity?.death) {
         if (!hasPushed.current) {
           router.push('/end');
@@ -27,6 +34,7 @@ const DeathCountUi: React.FC = () => {
 
   return (
     <div style={{
+      visibility: isVisible ? 'visible' : 'collapse',
       position: 'absolute',
       display: 'flex',
       flexDirection: 'row',

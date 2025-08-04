@@ -55,7 +55,6 @@ class BossEntity extends Entity {
   }
 
   public bossEvent() {
-    this.phaseDefault();
     switch (this.getPhase()) {
       case BossPhaseStatus.CHICKEN: {
         this.phaseChicken();
@@ -108,6 +107,12 @@ class BossEntity extends Entity {
       callbackScope: this,
       loop: true
     });
+    this.scene.time.addEvent({
+      delay: 15000,
+      callback: this.phaseDefault,
+      callbackScope: this,
+      loop: true
+    });
 
     this.scene.time.addEvent({
       delay: 1000,
@@ -122,7 +127,7 @@ class BossEntity extends Entity {
   public phaseChicken() {
     if (!this.mainPlatform) return;
     const randomX = getRandomInt(0, gameManager.gameWidth);
-    const galus = new EntityGalus(this.scene, { x: randomX, y: 500 });
+    const galus = new EntityGalus(this.scene, { x: randomX, y: 600 });
     galus.targetPos = this.getCurrentPos();
     gameManager.bossEntityManager.entityList.push(galus);
     gameManager.bossEntityManager.resetEntityMap();

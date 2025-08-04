@@ -32,11 +32,6 @@ class TeleportPad extends Phaser.GameObjects.Container {
     return this.body as Phaser.Physics.Arcade.Body;
   }
 
-  // 충돌 여부 반환
-  public isCollide(body: Phaser.Physics.Arcade.Body): boolean {
-    return false;
-  }
-
   // 개체 삭제
   public destroy(fromScene?: boolean): void {
     if (this.sprite) this.sprite.destroy();

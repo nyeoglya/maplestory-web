@@ -30,6 +30,7 @@ class BaseScene extends Phaser.Scene {
 
     this.load.image('boss', 'assets/boss.png');
     this.load.image('cleaner', 'assets/cleaner.png');
+    this.load.image('bossNpc', 'assets/bossNpc.png');
     this.load.image('galus', 'assets/galus.png');
     this.load.image('targetpos', 'assets/targetpos.png');
     this.load.image('bossHand', 'assets/bossHand.png');
@@ -39,6 +40,8 @@ class BaseScene extends Phaser.Scene {
 
     this.load.image('skillUse', 'assets/skillUse.png');
     this.load.audio('bossfight', 'assets/bossfight.mp3');
+    this.load.audio('bosswaiting', 'assets/bosswaiting.mp3');
+    this.load.audio('townsong', 'assets/town.mp3');
 
     this.load.spritesheet('player', 'assets/player.png', { frameWidth: 54, frameHeight: 76 });
 

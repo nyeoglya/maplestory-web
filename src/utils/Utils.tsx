@@ -17,6 +17,11 @@ export interface PlayerStat {
   level: number;
 }
 
+export interface SceneMoveData {
+  sceneName: string,
+  fadeOutTime: number,
+};
+
 export function getDistance(v1: Vector, v2: Vector): number {
   const dx = v2.x - v1.x;
   const dy = v2.y - v1.y;

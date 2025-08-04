@@ -8,12 +8,30 @@ class TownScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
   private teleportPadList: TeleportPad[] = [];
+  private bgm!: Phaser.Sound.BaseSound;
 
   constructor() {
     super('TownScene');
   }
 
   create() {
+    this.bgm = this.sound.add('townsong', {
+      loop: true,
+      volume: 0.3
+    });
+    this.bgm.play();
+    this.events.on('shutdown', () => {
+      this.bgm.stop();
+    });
+
+    this.input.setDefaultCursor('url(assets/point.cur), pointer'); // 메이플 마우스 포인터
+    this.input.on('pointerdown', () => {
+      this.input.setDefaultCursor('url(assets/point_low.cur), pointer');
+    });
+    this.input.on('pointerup', () => {
+      this.input.setDefaultCursor('url(assets/point.cur), pointer');
+    });
+
     gameManager.gameHeight = 800; // this.sys.game.config.height as number
     const image = this.textures.get('townMap').getSourceImage() as HTMLImageElement;
     const scale = gameManager.gameHeight / image.height;
@@ -24,6 +42,7 @@ class TownScene extends Phaser.Scene {
     sky.setScale(this.physics.world.bounds.width / sky.width, this.physics.world.bounds.height / sky.height);
 
     this.cameras.main.setZoom(1.5); // 카메라 줌
+    this.cameras.main.fadeIn(500, 0, 0, 0);
 
     // 플랫폼 생성
     this.platforms = this.physics.add.staticGroup();
@@ -34,7 +53,7 @@ class TownScene extends Phaser.Scene {
 
     // 발판 생성
     this.teleportPadList.push(
-      new TeleportPad(this, { x: 1150, y: this.physics.world.bounds.height - 125 }, 'WaitingScene')
+      new TeleportPad(this, { x: 800, y: this.physics.world.bounds.height - 125 }, 'WaitingScene')
     );
 
     // 플레이어 생성

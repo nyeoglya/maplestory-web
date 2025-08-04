@@ -67,6 +67,8 @@ class NPCStar extends NPC {
   ) {
     super(scene, pos, dialog, texture, affectGravity, name, uuid);
     this.createGaugeBar();
+    this.nameText.setVisible(false);
+    this.nameBackground.setVisible(false);
   }
 
   public createGaugeBar() {

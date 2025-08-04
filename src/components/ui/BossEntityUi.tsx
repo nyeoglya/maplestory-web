@@ -8,11 +8,15 @@ const BossEntityUi: React.FC = () => {
   const [currentHealth, setCurrentHealth] = useState<number>(50);
   const [currentGalos, setCurrentGalos] = useState<number>(0);
   const [bossTimer, setBossTimer] = useState<number>(30 * 60);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       const boss = gameManager.bossEntity;
-      if (!boss) return;
+      if (!boss) {
+        if (isVisible) setIsVisible(false);
+        return;
+      } else if (!isVisible) setIsVisible(true);
       setCurrentHealth(50 * boss.currentHealth / boss.maxHealth);
       setCurrentGalos(boss.chickenCount);
       setBossTimer(boss.bossTimeLeft);
@@ -24,7 +28,9 @@ const BossEntityUi: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{
+      visibility: isVisible ? 'visible' : 'collapse'
+    }}>
       <Image
         id='bossFace'
         key='bossFace'

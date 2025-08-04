@@ -19,7 +19,6 @@ const DynamicPhaserGame = dynamic(() => import('./PhaserGame'), {
         justifyContent: 'center',
       }}
     >
-      <p>Maplestory Web v0.1</p>
       <p>Loading game...</p>
     </div>
   ),
@@ -44,7 +43,7 @@ const PhaserGameLoader = () => {
     >
       {!started ? (
         <>
-          <p>Maplestory Web v0.1</p>
+          <p>Maplestory Web v0.2</p>
           <button
             onClick={() => setStarted(true)}
             style={{

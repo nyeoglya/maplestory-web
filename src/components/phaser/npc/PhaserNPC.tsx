@@ -5,6 +5,8 @@ import Dialog from '@/utils/Dialog';
 
 class NPC extends Phaser.GameObjects.Container {
   protected sprite: Phaser.GameObjects.Sprite;
+  protected nameText: Phaser.GameObjects.Text;
+  protected nameBackground: Phaser.GameObjects.Graphics;
   protected questVisible: boolean = false;
 
   public isInteracting: boolean = false;
@@ -27,6 +29,9 @@ class NPC extends Phaser.GameObjects.Container {
     this.isInteracting = false;
   }
 
+  // 클릭 상호작용의 발생
+  public onClickInteract(pointer: Phaser.Input.Pointer) { }
+
   constructor(
     public scene: Phaser.Scene,
     protected currentPos: Vector,
@@ -43,6 +48,25 @@ class NPC extends Phaser.GameObjects.Container {
 
     this.sprite = scene.add.sprite(0, 0, texture);
     this.add(this.sprite);
+
+    // 이름 텍스트 생성
+    this.nameText = scene.add.text(0, -this.sprite.height / 2 - 6, name, {
+      fontSize: '10px',
+      color: '#ffffff',
+      fontFamily: 'Arial',
+      padding: { x: 2, y: 1 }, // 텍스트 내부 여백
+    }).setOrigin(0.5, 1);
+
+    this.nameBackground = scene.add.graphics();
+    this.updateNameBackground();
+
+    this.add(this.nameBackground);
+    this.add(this.nameText);
+
+    this.sprite.setInteractive();
+    this.sprite.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+      this.onClickInteract(pointer);
+    });
 
     const body = this.body as Phaser.Physics.Arcade.Body;
     body.setCollideWorldBounds(true);
@@ -61,6 +85,25 @@ class NPC extends Phaser.GameObjects.Container {
     return { x: this.x, y: this.y };
   }
 
+  // 이름 배경 업데이트
+  private updateNameBackground() {
+    this.nameBackground.clear();
+    const padding = 1;
+
+    const width = this.nameText.width + padding * 2;
+    const height = this.nameText.height + padding * 2;
+
+    // 배경 사각형 그리기
+    this.nameBackground.fillStyle(0x000000, 0.6); // 검정, 60% 불투명
+    this.nameBackground.fillRoundedRect(
+      -width / 2,
+      -this.sprite.height / 2 - this.nameText.height - padding - 6,
+      width,
+      height,
+      4
+    );
+  }
+
   // update
   public update(time: number, delta: number): void {
     return;
@@ -69,6 +112,8 @@ class NPC extends Phaser.GameObjects.Container {
   // 개체 삭제
   public destroy(fromScene?: boolean): void {
     if (this.sprite) this.sprite.destroy();
+    if (this.nameText) this.nameText.destroy();
+    if (this.nameBackground) this.nameBackground.destroy();
     super.destroy(fromScene);
   }
 }
