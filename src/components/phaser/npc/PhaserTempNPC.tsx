@@ -28,7 +28,7 @@ class NPCTemp extends NPC {
     protected currentPos: Vector,
     protected dialog: Dialog = tempDialog,
     public texture: string = 'npc',
-    public affectGravity: boolean = false,
+    public affectGravity: boolean = true,
     public name: string = '',
     public uuid: string = uuidv4(),
   ) {

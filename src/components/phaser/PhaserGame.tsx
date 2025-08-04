@@ -24,7 +24,7 @@ const PhaserGame = () => {
         default: 'arcade',
         arcade: {
           gravity: { x: 0, y: 500 },
-          debug: true
+          debug: false
         }
       },
       scale: {

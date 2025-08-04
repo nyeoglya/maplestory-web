@@ -3,6 +3,7 @@ import PhaserPlayer from "../PhaserPlayer";
 import { Skill } from "@/utils/Skill";
 import { getOverlapEntity } from "@/utils/Utils";
 import TeleportPad from "../etc/PhaserTeleportPad";
+import NPCTemp from "../npc/PhaserTempNPC";
 
 class TownScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
@@ -55,6 +56,10 @@ class TownScene extends Phaser.Scene {
     this.teleportPadList.push(
       new TeleportPad(this, { x: 800, y: this.physics.world.bounds.height - 125 }, 'WaitingScene')
     );
+
+    // npc 생성
+    // const tempNPC = new NPCTemp(this, { x: 850, y: this.physics.world.bounds.height - 200 });
+    // gameManager.npcManager.setNPCs([tempNPC]);
 
     // 플레이어 생성
     this.player = new PhaserPlayer(this, 500, this.physics.world.bounds.height - 200, 'player');
