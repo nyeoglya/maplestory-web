@@ -17,10 +17,19 @@ const BossPhaseClockWindow: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const boss = gameManager.bossEntity;
-      if (!boss) {
-        if (showWindow) setShowWindow(false);
+      if (!boss || !boss.scene) {
+        setShowWindow((prev) => {
+          if (prev) return false;
+          return prev;
+        });
         return;
-      } else if (!showWindow) setShowWindow(true);
+      }
+
+      setShowWindow((prev) => {
+        if (!prev) return true;
+        return prev;
+      });
+
       setRotation(Math.ceil((150 - boss.bossTimeLeft % 150) * 12 / 5));
     }, 1000);
 

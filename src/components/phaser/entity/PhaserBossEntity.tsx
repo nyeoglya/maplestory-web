@@ -127,7 +127,7 @@ class BossEntity extends Entity {
   public phaseChicken() {
     if (!this.mainPlatform) return;
     const randomX = getRandomInt(0, gameManager.gameWidth);
-    const galus = new EntityGalus(this.scene, { x: randomX, y: 600 });
+    const galus = new EntityGalus(this.scene, { x: randomX, y: 550 });
     galus.targetPos = this.getCurrentPos();
     gameManager.bossEntityManager.entityList.push(galus);
     gameManager.bossEntityManager.resetEntityMap();

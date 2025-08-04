@@ -4,10 +4,12 @@ import { Skill } from "@/utils/Skill";
 import { getOverlapEntity } from "@/utils/Utils";
 import DirectionalPlatform from "../etc/PhaserDirectionalPlatform";
 import NPCBossEnter from "../npc/PhaserBossEnterNPC";
+import TeleportPad from '../etc/PhaserTeleportPad';
 
 class WaitingScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
+  private teleportPadList: TeleportPad[] = [];
   private bgm!: Phaser.Sound.BaseSound;
 
   constructor() {
@@ -52,6 +54,11 @@ class WaitingScene extends Phaser.Scene {
       .setOrigin(0, 0)
       .setScale(this.physics.world.bounds.width, 10)
       .refreshBody();
+
+    // 순간이동 발판 생성
+    this.teleportPadList.push(
+      new TeleportPad(this, { x: 20, y: this.physics.world.bounds.height - 365 }, 'TownScene')
+    );
 
     const bossEnterNPC = new NPCBossEnter(this, { x: 850, y: this.physics.world.bounds.height - 400 });
     gameManager.npcManager.setNPCs([bossEnterNPC]);
@@ -107,7 +114,21 @@ class WaitingScene extends Phaser.Scene {
 
   update(): void {
     if (!this.player) return;
-    this.player.update();
+    const player = this.player;
+    player.update();
+
+    if (!player.body) return;
+    const playerBody = player.body;
+    if (this.teleportPadList.length !== 0) {
+      this.teleportPadList.forEach((teleportPad: TeleportPad) => {
+        let overlapped = false;
+        this.physics.overlap(playerBody, teleportPad, () => {
+          overlapped = true;
+          player.teleportLoc = teleportPad.teleportLoc;
+        }, undefined, this);
+        if (!overlapped) player.teleportLoc = null;
+      });
+    }
   }
 }
 

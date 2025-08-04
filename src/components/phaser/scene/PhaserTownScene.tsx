@@ -52,7 +52,7 @@ class TownScene extends Phaser.Scene {
       .setScale(this.physics.world.bounds.width, 10)
       .refreshBody();
 
-    // 발판 생성
+    // 순간이동 발판 생성
     this.teleportPadList.push(
       new TeleportPad(this, { x: 800, y: this.physics.world.bounds.height - 125 }, 'WaitingScene')
     );

@@ -13,6 +13,7 @@ import EntityCleaner from '../entity/PhaserCleanerEntity';
 import EntityPizza from '../entity/PhaserPizzaEntity';
 import { EntityFallingEum, EntityFallingGreenTea, EntityFallingMint } from '../entity/PhaserFallingEntity';
 import NPCStar from '../npc/PhaserStarNPC';
+import TeleportPad from '../etc/PhaserTeleportPad';
 
 class PhaserBossScene extends Phaser.Scene {
   private player: PhaserPlayer | null = null;
@@ -20,6 +21,7 @@ class PhaserBossScene extends Phaser.Scene {
   private pizza: EntityPizza | null = null;
   private star: NPCStar | null = null;
   private platforms: Phaser.Physics.Arcade.StaticGroup | null = null;
+  private teleportPadList: TeleportPad[] = [];
   private bgm!: Phaser.Sound.BaseSound;
 
   private normalEntityLoc: Vector[] = [];
@@ -72,6 +74,11 @@ class PhaserBossScene extends Phaser.Scene {
       .setOrigin(0, 0)
       .setScale(this.physics.world.bounds.width, 10)
       .refreshBody();
+
+    // 순간이동 발판 생성
+    this.teleportPadList.push(
+      new TeleportPad(this, { x: 50, y: this.physics.world.bounds.height - 155 }, 'WaitingScene')
+    );
 
     // 스타포스 생성
     this.star = new NPCStar(this, { x: 100, y: floorY - 110 })
@@ -159,20 +166,35 @@ class PhaserBossScene extends Phaser.Scene {
       },
       loop: true
     });
+
+    // 씬 종료 시
+    this.events.once('shutdown', () => {
+      this.boss?.destroy();
+      gameManager.bossEntity = undefined;
+    });
   }
 
   update(time: number, delta: number): void {
-    if (!this.boss) return;
-    this.boss.update();
+    if (this.boss) this.boss.update();
+    if (this.pizza) this.pizza.update();
+    if (this.star) this.star.update();
 
     if (!this.player) return;
-    this.player.update();
+    const player = this.player;
+    player.update();
 
-    if (!this.pizza) return;
-    this.pizza.update();
-
-    if (!this.star) return;
-    this.star.update();
+    if (!player.body) return;
+    const playerBody = player.body;
+    if (this.teleportPadList.length !== 0) {
+      this.teleportPadList.forEach((teleportPad: TeleportPad) => {
+        let overlapped = false;
+        this.physics.overlap(playerBody, teleportPad, () => {
+          overlapped = true;
+          player.teleportLoc = teleportPad.teleportLoc;
+        }, undefined, this);
+        if (!overlapped) player.teleportLoc = null;
+      });
+    }
 
     gameManager.normalEntityManager.entityList.forEach((entity: Entity) => entity.update(time, delta));
     gameManager.fallingEntityManager.entityList.forEach((entity: Entity) => entity.update(time, delta));

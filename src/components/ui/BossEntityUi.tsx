@@ -14,9 +14,16 @@ const BossEntityUi: React.FC = () => {
     const interval = setInterval(() => {
       const boss = gameManager.bossEntity;
       if (!boss) {
-        if (isVisible) setIsVisible(false);
+        setIsVisible((prev) => {
+          if (prev) return false;
+          else return prev;
+        });
         return;
-      } else if (!isVisible) setIsVisible(true);
+      }
+      setIsVisible((prev) => {
+        if (!prev) return true;
+        else return prev;
+      });
       setCurrentHealth(50 * boss.currentHealth / boss.maxHealth);
       setCurrentGalos(boss.chickenCount);
       setBossTimer(boss.bossTimeLeft);

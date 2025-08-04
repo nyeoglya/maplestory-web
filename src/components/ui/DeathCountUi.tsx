@@ -13,9 +13,16 @@ const DeathCountUi: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (!gameManager.bossEntity) {
-        if (isVisible) setIsVisible(false);
+        setIsVisible((prev) => {
+          if (prev) return false;
+          else return prev;
+        });
         return;
-      } else if (!isVisible) setIsVisible(true);
+      }
+      setIsVisible((prev) => {
+        if (!prev) return true;
+        else return prev;
+      });
 
       setDeathCount(gameManager.deathCount);
 

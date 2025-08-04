@@ -10,9 +10,17 @@ const MesoCountUi: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (!gameManager.bossEntity) {
-        if (isVisible) setIsVisible(false);
+        setIsVisible((prev) => {
+          if (prev) return false;
+          else return prev;
+        });
         return;
-      } else if (!isVisible) setIsVisible(true);
+      }
+      setIsVisible((prev) => {
+        if (!prev) return true;
+        else return prev;
+      });
+
       const mesoCount = gameManager.phaserPlayer?.mesoCount;
       if (mesoCount) setMesoCount(mesoCount);
     }, 200);

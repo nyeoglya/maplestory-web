@@ -37,6 +37,13 @@ class EntityManager {
 
   // 엔티티가 주변 공격 시도
   public entityAttack(playerData: PlayerStat, collider: Phaser.Physics.Arcade.Sprite) {
+    this.entityList = this.entityList.filter((entity: Entity) => {
+      if (!entity.scene) {
+        return false;
+      }
+      return true;
+    });
+
     this.entityList.forEach((entity: Entity) => {
       if (entity.death) return;
       entity.tryAttack(playerData, collider);
