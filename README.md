@@ -20,9 +20,9 @@ OS: Windows 11
 To run the development server, run `yarn run dev`. You can get an extra information in the `package.json`.
 
 ## Screenshots
-<img width="500" src="https://github.com/user-attachments/assets/74272cf4-a00f-498d-93b1-a77e92193494" />
-<img width="500" src="https://github.com/user-attachments/assets/ed508eeb-5045-412b-877b-f8285653f6a7" />
-<img width="500" src="https://github.com/user-attachments/assets/9d07470d-3e0a-48cc-b158-064980808449" />
+<img width="700" src="https://github.com/user-attachments/assets/f6c567cb-28ce-40da-ac12-072f84660057" />
+<img width="700" src="https://github.com/user-attachments/assets/ebc2f4a0-5010-4a95-8656-c6a87e222403" />
+<img width="700" src="https://github.com/user-attachments/assets/7f086949-1dc0-4363-bcbf-ff0f46344648" />
 
 ### Lie Detector
 <img width="500" src="https://github.com/user-attachments/assets/fa58040b-3182-4bde-92a0-e339d60532a4" />
