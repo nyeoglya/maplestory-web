@@ -58,8 +58,8 @@ class TownScene extends Phaser.Scene {
     );
 
     // npc 생성
-    // const tempNPC = new NPCTemp(this, { x: 850, y: this.physics.world.bounds.height - 200 });
-    // gameManager.npcManager.setNPCs([tempNPC]);
+    const tempNPC = new NPCTemp(this, { x: 850, y: this.physics.world.bounds.height - 200 });
+    gameManager.npcManager.setNPCs([tempNPC]);
 
     // 플레이어 생성
     this.player = new PhaserPlayer(this, 500, this.physics.world.bounds.height - 200, 'player');

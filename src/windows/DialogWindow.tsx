@@ -3,6 +3,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import windowManager from './WindowManager';
 import { Vector } from 'matter';
+import gameManager from '@/utils/manager/GameManager';
+import Dialog, { SingleMessage } from '@/utils/Dialog';
+import Image from 'next/image';
 
 const DialogWindow: React.FC = () => {
   const positionRef = useRef<Vector>({ x: 50, y: 50 });
@@ -11,7 +14,8 @@ const DialogWindow: React.FC = () => {
   const offset = useRef<Vector>({ x: 0, y: 0 });
   const [zIndex, setZIndex] = useState<number | undefined>(undefined);
   const [showWindow, setShowWindow] = useState<boolean>(false);
-  // const [currentDialog, setCurrentDialog] = useState<string>('');
+  const [currentMsg, setCurrentMsg] = useState<SingleMessage | null>({} as SingleMessage);
+  const [currentDialog, setCurrentDialog] = useState<Dialog | null>(null);
 
   const initWinData = {
     id: 'dialog',
@@ -28,10 +32,28 @@ const DialogWindow: React.FC = () => {
 
   useEffect(() => {
     windowManager.addWindow(initWinData);
+
+    const handleDialogUpdate = (newDialog: Dialog) => {
+      setShowWindow(true);
+      setCurrentDialog(newDialog);
+      setCurrentMsg(newDialog.getNextDialog());
+    };
+
+    gameManager.setCurrentDialog = handleDialogUpdate;
+
+    return () => {
+      gameManager.setCurrentDialog = undefined;
+    };
   }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     windowManager.makeTop('dialog');
+  };
+
+  const onNextBtnClicked = (e: React.MouseEvent) => {
+    if (!currentDialog) return;
+    const nextMsg = currentDialog.getNextDialog();
+    setCurrentMsg(nextMsg);
   };
 
   const buttonCss = {
@@ -85,26 +107,45 @@ const DialogWindow: React.FC = () => {
         <div style={{
           height: '100%',
           width: 120,
-          color: 'black'
+          color: 'black',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}>
-          <p>브루스</p>
+          {currentDialog?.backgroundImg &&
+            <Image
+              src={currentDialog.backgroundImg}
+              alt={`currentDialog.backgroundImg`}
+              width={100}
+              height={200}
+              style={{
+                objectFit: 'contain',
+                position: 'absolute',
+                pointerEvents: 'none',
+              }}
+            />
+          }
+          <p style={{
+            position: 'absolute',
+            bottom: 10,
+          }}>{currentMsg?.name}</p>
         </div>
         <div style={{
           height: '100%',
           background: 'white',
-          flexGrow: 2,
+          flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
           color: 'black',
-          fontSize: 12,
           alignItems: 'center',
           justifyContent: 'center',
         }}>
           <p style={{
+            fontSize: 15,
             width: '70%',
             height: '70%',
             textAlign: 'left'
-          }}>혹시 고고학에 대해 관심이 있나요?</p>
+          }}>{currentMsg?.msg}</p>
         </div>
       </div>
       <div style={{
@@ -115,19 +156,28 @@ const DialogWindow: React.FC = () => {
         marginTop: 5,
         gap: 3,
       }}>
-        <button style={{
+        <button onClick={() => setShowWindow(false)} style={{
           ...buttonCss,
           border: '1px solid #207949',
           background: 'linear-gradient(to bottom, #c1ee21, #96ce77)',
         }}>대화 그만하기</button>
         <div style={{ flexGrow: 1 }} />
+        <button onClick={onNextBtnClicked}
+          style={{
+            ...buttonCss,
+            visibility: currentDialog?.isDialogEnd() ? 'collapse' : 'visible',
+            border: '1px solid #b4aa87',
+            background: 'linear-gradient(to bottom, #ffbb44, #ffa60a)',
+          }}>다음으로</button>
         <button style={{
           ...buttonCss,
+          visibility: 'collapse',
           border: '1px solid #b4aa87',
           background: 'linear-gradient(to bottom, #ffbb44, #ffa60a)',
         }}>수락하기</button>
         <button style={{
           ...buttonCss,
+          visibility: 'collapse',
           border: '1px solid #99204d',
           background: 'linear-gradient(to bottom, rgba(227, 128, 176, 1), #99204d)',
         }}>거절하기</button>

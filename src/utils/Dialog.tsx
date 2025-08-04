@@ -1,6 +1,10 @@
-interface SingleMessage {
+export interface SingleMessage {
   name: string | null,
   msg: string,
+}
+
+export interface BranchMessage extends SingleMessage {
+  branch: SingleMessage[],
 }
 
 class Dialog {
@@ -12,12 +16,19 @@ class Dialog {
     public onDialogEnd: () => null,
   ) { }
 
+  // 대화 초기화
   public resetDialog() {
     this.currentDialogIndicator = 0;
   }
 
+  public isDialogEnd() {
+    return this.currentDialogIndicator >= this.dialog.length;
+  }
+
+  // 다음 대화 가져오기
   public getNextDialog(): SingleMessage | null {
-    if (this.currentDialogIndicator == this.dialog.length - 1) {
+    console.log(this.currentDialogIndicator, this.dialog);
+    if (this.currentDialogIndicator == this.dialog.length) {
       this.onDialogEnd();
       return null;
     } else {

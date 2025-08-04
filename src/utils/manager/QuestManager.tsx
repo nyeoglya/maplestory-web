@@ -20,6 +20,4 @@ class QuestManager {
   }
 }
 
-const questManager = new QuestManager();
-
-export default questManager;
+export default QuestManager;

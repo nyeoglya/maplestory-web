@@ -30,6 +30,7 @@ class BaseScene extends Phaser.Scene {
 
     this.load.image('boss', 'assets/boss.png');
     this.load.image('cleaner', 'assets/cleaner.png');
+    this.load.image('npc', 'assets/npc.png');
     this.load.image('bossNpc', 'assets/bossNpc.png');
     this.load.image('galus', 'assets/galus.png');
     this.load.image('targetpos', 'assets/targetpos.png');

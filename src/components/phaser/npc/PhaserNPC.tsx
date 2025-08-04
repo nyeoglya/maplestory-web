@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as Phaser from 'phaser';
 import { Vector } from 'matter';
 import Dialog from '@/utils/Dialog';
+import gameManager from '@/utils/manager/GameManager';
 
 class NPC extends Phaser.GameObjects.Container {
   protected sprite: Phaser.GameObjects.Sprite;
@@ -31,6 +32,13 @@ class NPC extends Phaser.GameObjects.Container {
 
   // 클릭 상호작용의 발생
   public onClickInteract(pointer: Phaser.Input.Pointer) { }
+
+  // 대화 시작
+  public dialogStart() {
+    if (!gameManager.setCurrentDialog || !this.dialog) return;
+    this.dialog.resetDialog();
+    gameManager.setCurrentDialog(this.dialog);
+  }
 
   constructor(
     public scene: Phaser.Scene,

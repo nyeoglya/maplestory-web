@@ -10,6 +10,8 @@ import { PlayerStat, SceneMoveData } from "@/utils/Utils";
 import Entity from "@/components/phaser/entity/PhaserEntity";
 import EntityPizza from "@/components/phaser/entity/PhaserPizzaEntity";
 import NPCManager from "./NPCManager";
+import Dialog, { SingleMessage } from "../Dialog";
+import QuestManager from "./QuestManager";
 
 class GameManager {
   public player: PlayerStat = {
@@ -42,6 +44,8 @@ class GameManager {
   public effectManager: EffectManager = new EffectManager();
   public skillManager: SkillManager = new SkillManager(this.player, this.normalEntityManager, this.effectManager);
 
+  public questManager: QuestManager = new QuestManager();
+
   public phaserPlayer: PhaserPlayer | undefined = undefined;
   public bossEntity: BossEntity | undefined = undefined;
   public pizzaEntity: EntityPizza | undefined = undefined;
@@ -50,6 +54,9 @@ class GameManager {
   public toggleVideoPlay: ((value: boolean) => void) | undefined = undefined;
   public moveScene: SceneMoveData | null = null;
   public backgroundBGM: Phaser.Sound.BaseSound | undefined = undefined;
+
+  public currentDialog: Dialog | null = null;
+  public setCurrentDialog: ((value: Dialog) => void) | undefined = undefined;
 
   constructor() { }
 }
