@@ -3,9 +3,11 @@ export interface SingleMessage {
   msg: string,
 }
 
+/*
 export interface BranchMessage extends SingleMessage {
   branch: SingleMessage[],
 }
+*/
 
 class Dialog {
   protected currentDialogIndicator: number = 0;
@@ -13,7 +15,7 @@ class Dialog {
   constructor(
     public backgroundImg: string | null,
     public dialog: SingleMessage[] = [],
-    public onDialogEnd: () => null,
+    public onDialogAccept: () => void,
   ) { }
 
   // 대화 초기화
@@ -29,7 +31,6 @@ class Dialog {
   public getNextDialog(): SingleMessage | null {
     console.log(this.currentDialogIndicator, this.dialog);
     if (this.currentDialogIndicator == this.dialog.length) {
-      this.onDialogEnd();
       return null;
     } else {
       const currentDialog = this.dialog[this.currentDialogIndicator];

@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import windowManager from './WindowManager';
 import { Vector } from 'matter';
 import Quest from '@/utils/Quest';
+import gameManager from '@/utils/manager/GameManager';
 
 const QuestWindow: React.FC = () => {
   const positionRef = useRef<Vector>({ x: 50, y: 50 });
@@ -15,13 +16,13 @@ const QuestWindow: React.FC = () => {
   const [currentQuests, setCurrentQuests] = useState<Quest[]>([]);
 
   const initWinData = {
-    id: 'inventory',
+    id: 'quest',
     posRef: positionRef,
     setPos: setPosition,
     isDragging: isDragging,
     offset: offset,
-    width: 300,
-    height: 600,
+    width: 250,
+    height: 400,
     showWindow: showWindow,
     setZIndex: setZIndex,
     getClickedLoc: (pos: Vector) => undefined,
@@ -34,14 +35,14 @@ const QuestWindow: React.FC = () => {
       setCurrentQuests(newQuests);
     };
 
-    // gameManager.questManager.setCurrentPlayerInventory = handleQuestUpdate;
+    gameManager.questManager.setCurrentQuest = handleQuestUpdate;
     return () => {
-      // gameManager.inventoryManager.setCurrentPlayerInventory = undefined;
+      gameManager.questManager.setCurrentQuest = undefined;
     };
   }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    windowManager.makeTop('inventory');
+    windowManager.makeTop('quest');
   };
 
   return (

@@ -7,14 +7,14 @@ import { Vector } from "matter";
 class InventoryManager {
   public itemList: typeof Item[] = [ItemTestA];
   public currentPlayerInventoryMap: Map<number, Item | null> = (() => {
-    const map = new Map<number, Item | null>([
+    const map = new Map<number, Item | null>(/*[
       [0, new ItemTestA()],
       [1, new ItemTestB()],
       [2, new ItemTestC()],
       [3, new ItemTestD()],
-    ]);
+    ]*/);
 
-    for (let i = 4; i < 32; i++) {
+    for (let i = 0; i < 32; i++) {
       map.set(i, null);
     }
 
@@ -22,15 +22,33 @@ class InventoryManager {
   })();
   public mouseItem: Item | null = null;
 
+  // 가지고 있는 아이템 개수
+  public itemCount(item: typeof Item) {
+    let count = 0;
+    for (let i = 0; i < 32; i++) {
+      if (this.currentPlayerInventoryMap.get(i) instanceof item) count += 1;
+    }
+    return count;
+  }
+
+  // 인벤토리에 새로운 아이템을 추가
+  public addItemToInventory(item: Item): boolean {
+    for (let i = 0; i < 32; i++) {
+      if (this.currentPlayerInventoryMap.get(i)) {
+        this.currentPlayerInventoryMap.set(i, item);
+        return true;
+      }
+    }
+    return false;
+  }
+
   public currentArmorInventoryMap: Map<string, { pos: Vector, item: Item | null }> = new Map([
     ['armorHead', { pos: { x: 100, y: 100 }, item: null }],
     ['armorChest', { pos: { x: 100, y: 170 }, item: null }],
   ]);
   public armorLocList: string[] = Array.from(this.currentArmorInventoryMap.keys());
 
-  constructor() {
-
-  }
+  constructor() { }
 
   public setCurrentPlayerInventory: ((newInventory: Map<number, Item | null>) => void) | undefined = undefined;
   public setCurrentArmorInventory: ((newInventory: Map<string, { pos: Vector, item: Item | null }>) => void) | undefined = undefined;

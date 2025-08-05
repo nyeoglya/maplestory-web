@@ -106,8 +106,7 @@ const DialogWindow: React.FC = () => {
       >
         <div style={{
           height: '100%',
-          width: 120,
-          color: 'black',
+          width: 100,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -116,7 +115,7 @@ const DialogWindow: React.FC = () => {
             <Image
               src={currentDialog.backgroundImg}
               alt={`currentDialog.backgroundImg`}
-              width={100}
+              width={80}
               height={200}
               style={{
                 objectFit: 'contain',
@@ -128,12 +127,13 @@ const DialogWindow: React.FC = () => {
           <p style={{
             position: 'absolute',
             bottom: 10,
+            color: 'black',
           }}>{currentMsg?.name}</p>
         </div>
         <div style={{
           height: '100%',
+          width: 300,
           background: 'white',
-          flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
           color: 'black',
@@ -149,38 +149,49 @@ const DialogWindow: React.FC = () => {
         </div>
       </div>
       <div style={{
+        position: 'relative',
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
-        position: 'relative',
         marginTop: 5,
-        gap: 3,
       }}>
         <button onClick={() => setShowWindow(false)} style={{
           ...buttonCss,
           border: '1px solid #207949',
           background: 'linear-gradient(to bottom, #c1ee21, #96ce77)',
         }}>대화 그만하기</button>
-        <div style={{ flexGrow: 1 }} />
-        <button onClick={onNextBtnClicked}
-          style={{
-            ...buttonCss,
-            visibility: currentDialog?.isDialogEnd() ? 'collapse' : 'visible',
-            border: '1px solid #b4aa87',
-            background: 'linear-gradient(to bottom, #ffbb44, #ffa60a)',
-          }}>다음으로</button>
-        <button style={{
-          ...buttonCss,
-          visibility: 'collapse',
-          border: '1px solid #b4aa87',
-          background: 'linear-gradient(to bottom, #ffbb44, #ffa60a)',
-        }}>수락하기</button>
-        <button style={{
-          ...buttonCss,
-          visibility: 'collapse',
-          border: '1px solid #99204d',
-          background: 'linear-gradient(to bottom, rgba(227, 128, 176, 1), #99204d)',
-        }}>거절하기</button>
+        <div style={{
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          gap: 3,
+        }} >
+          {showWindow && !currentDialog?.isDialogEnd() &&
+            <button onClick={onNextBtnClicked}
+              style={{
+                ...buttonCss,
+                border: '1px solid #b4aa87',
+                background: 'linear-gradient(to bottom, #ffbb44, #ffa60a)',
+              }}>다음으로</button>
+          }
+          {showWindow && currentDialog?.isDialogEnd() &&
+            <>
+              <button onClick={currentDialog?.onDialogAccept}
+                style={{
+                  ...buttonCss,
+                  border: '1px solid #b4aa87',
+                  background: 'linear-gradient(to bottom, #ffbb44, #ffa60a)',
+                }}>수락하기</button>
+              <button onClick={() => setShowWindow(false)}
+                style={{
+                  ...buttonCss,
+                  border: '1px solid #99204d',
+                  background: 'linear-gradient(to bottom, rgba(227, 128, 176, 1), #99204d)',
+                }}>거절하기</button>
+            </>
+          }
+        </div>
       </div>
     </div>
   );

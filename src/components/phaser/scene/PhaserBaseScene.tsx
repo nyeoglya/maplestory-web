@@ -16,6 +16,7 @@ class BaseScene extends Phaser.Scene {
   preload() {
     this.load.setBaseURL('/');
     this.load.image('townMap', 'assets/townmap.png');
+    this.load.image('outerTownMap', 'assets/outertown.png');
     this.load.image('waitingMap', 'assets/waitingmap.png');
     this.load.image('bossNoonMap', 'assets/bossfightnoon.png');
     this.load.image('bossNightMap', 'assets/bossfightnight.png');

@@ -16,6 +16,7 @@ import ArmorWindow from '@/windows/ArmorWindow';
 import DialogWindow from '@/windows/DialogWindow';
 import BossEnterWindow from '@/windows/BossEnterWindow';
 import VideoUi from './VideoUi';
+import QuestWindow from '@/windows/QuestWindow';
 
 const GameScreenUi: React.FC = () => {
   return (
@@ -28,13 +29,21 @@ const GameScreenUi: React.FC = () => {
       zIndex: 999,
       pointerEvents: 'none',
     }}>
-      <VideoUi />
-      <BossPhaseClockWindow />
-      <CaptchaWindow />
-      <ArmorWindow />
-      <InventoryWindow />
-      <BossEnterWindow />
-      <DialogWindow />
+      <div
+        style={{ pointerEvents: 'auto' }}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <VideoUi />
+        <QuestWindow />
+        <BossPhaseClockWindow />
+        <CaptchaWindow />
+        <ArmorWindow />
+        <InventoryWindow />
+        <BossEnterWindow />
+        <DialogWindow />
+      </div>
       <DraggableItem />
       <div style={{
         position: 'absolute',

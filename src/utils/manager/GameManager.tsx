@@ -10,7 +10,7 @@ import { PlayerStat, SceneMoveData } from "@/utils/Utils";
 import Entity from "@/components/phaser/entity/PhaserEntity";
 import EntityPizza from "@/components/phaser/entity/PhaserPizzaEntity";
 import NPCManager from "./NPCManager";
-import Dialog, { SingleMessage } from "../Dialog";
+import Dialog from "../Dialog";
 import QuestManager from "./QuestManager";
 
 class GameManager {
